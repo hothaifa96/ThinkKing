@@ -741,7 +741,7 @@ class Answer(Resource):
         """
         data = request.json
         if check_keys(data, 'kid _id', 'question_id', 'start_at', 'ends_at', 'seq', 'first_try'):
-            return {'Error': 'miss`ing data'}, 400
+            return {'Error': 'missing data'}, 400
         if data['score'] == 0:
             return {'message': 'wrong answer'}
         elif data['first_try']:
