@@ -18,8 +18,12 @@ api.add_resource(PinCode, '/pin')
 api.add_resource(Password, '/password')
 api.add_resource(Apps, '/apps')
 api.add_resource(BlockApps, '/block')
-
-
+api.add_resource(Avatar, '/avatar')
+api.add_resource(KidScreen, '/kid_screen')
+api.add_resource(KidProfile, '/change_kid')
+api.add_resource(QuestionsStatus, '/stat/question')
+api.add_resource(Questions, '/question')
+api.add_resource(Answer, '/answer')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

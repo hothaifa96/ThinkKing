@@ -62,6 +62,7 @@ class ParentRegister(Resource):
         - post(): Handles the POST request for the Parent resource.
         - delete(): Handles the DELETE request for the Parent resource.
     """
+
     def post(self):
         """
             Handle POST request for the Parent resource.
@@ -125,6 +126,7 @@ class ParentLogin(Resource):
     Methods:
     - post(): Handles the HTTP POST request for parent login.
     """
+
     def post(self):
         """
         Handles the HTTP POST request for parent login.
@@ -160,6 +162,7 @@ class Kid(Resource):
     - get(): Handles the HTTP GET request for retrieving kid information.
     - delete(): Handles the HTTP DELETE request for deleting a kid.
     """
+
     def post(self):
         """
         Handles the HTTP POST request for creating a kid.
@@ -233,6 +236,7 @@ class School(Resource):
     - get(): Handles the GET request and returns a list of schools.
     - post(): Handles the POST request and adds a new kid's school information.
     """
+
     def get(self):
         """
         Handles the GET request and returns a list of schools.
@@ -274,6 +278,7 @@ class Class(Resource):
     - get: Retrieves a list of classes.
     - post: Creates a new class.
     """
+
     def get(self):
         """
         Retrieves a list of classes.
@@ -318,6 +323,7 @@ class SubClass(Resource):
     - get: Retrieves a list of subclasses.
     - post: Creates a new subclass.
     """
+
     def get(self):
         """
         Retrieves a list of subclasses.
@@ -362,6 +368,7 @@ class Topics(Resource):
     - get: Retrieves the list of topics.
     - post: Creates a new topic.
     """
+
     def get(self):
         """
         Retrieves the list of topics.
@@ -403,7 +410,9 @@ class PinCode(Resource):
     Methods:
     - post: Creates a new pin code.
     - put: Updates an existing pin code.
+    - get: send new PIN code to email
     """
+
     def post(self):
         """
         Creates a new pin code.
@@ -440,6 +449,13 @@ class PinCode(Resource):
             return {'Error': 'missing data'}, 400
         return {'message': 'success'}
 
+    def get(self):
+        data = request.json
+        # Check if the data is valid JSON
+        if check_keys(data, 'parent _id', 'email'):
+            return {'Error': 'missing data'}, 400
+        return {'message': 'sent to the email'}
+
 
 class Password(Resource):
     """
@@ -450,6 +466,7 @@ class Password(Resource):
     Methods:
     - put: Updates the password.
     """
+
     def put(self):
         """
         Updates the password.
@@ -479,6 +496,7 @@ class Apps(Resource):
     - post: Creates a new app.
     - get: Retrieves the list of apps.
     """
+
     def post(self):
         """
         Creates a new app.
@@ -523,6 +541,7 @@ class BlockApps(Resource):
     Methods:
     - post: Handles the HTTP POST request for blocking apps.
     """
+
     def post(self):
         """
         Handles the HTTP POST request for blocking apps.
@@ -543,6 +562,7 @@ class BlockApps(Resource):
             return {'Error': 'missing data'}, 400
         return {'message': 'success'}
 
+
 class Avatar(Resource):
     """
     A class representing a resource for updating a user's avatar.
@@ -550,6 +570,7 @@ class Avatar(Resource):
     Methods:
     - put: Handles the HTTP PUT request for updating the avatar.
     """
+
     def put(self):
         """
         Handles the HTTP PUT request for updating the avatar.
@@ -569,6 +590,7 @@ class Avatar(Resource):
             return {'Error': 'missing data'}, 400
         return {'message': 'success'}
 
+
 class KidScreen(Resource):
     """
     A class representing a resource for retrieving kid's screen information.
@@ -576,6 +598,7 @@ class KidScreen(Resource):
     Methods:
     - get: Handles the HTTP GET request for retrieving kid's screen information.
     """
+
     def get(self):
         """
         Handles the HTTP GET request for retrieving kid's screen information.
@@ -593,3 +616,135 @@ class KidScreen(Resource):
         if check_keys(data, 'kid _id'):
             return {'Error': 'missing data'}, 400
         return {'message': 'kid'}
+
+
+class KidProfile(Resource):
+    """
+       A class representing a resource for managing a kid's profile.
+
+       This resource allows updating the kid's profile information.
+
+       Methods:
+       - put: Update the kid's profile information based on the provided data.
+
+       Attributes:
+       None
+       """
+
+    def put(self):
+        """
+            Update the kid's profile information based on the provided data.
+
+            The data should be sent in the request body as a JSON object.
+
+            Returns:
+            dict: A response message indicating the success of the update.
+
+            Raises:
+            None
+            """
+        data = request.json
+        response = {}
+        if 'new_name' in data:
+            response['message'] = 'success'
+        elif 'topic_list' in data:
+            response['message'] = 'success'
+        elif 'time_per_question' in data:
+            response['message'] = 'success'
+        else:
+            return {'message': 'error'}, 400
+        return response
+
+
+class QuestionsStatus(Resource):
+    """
+        A class representing a resource for retrieving the status of questions.
+
+        This resource allows getting the status of questions for a specific kid.
+
+        Methods:
+        - get: Get the status of questions for a specific kid.
+
+        Attributes:
+        None
+        """
+    def get(self):
+        """
+            Get the status of questions for a specific kid.
+
+            The kid_id should be sent in the request body as a JSON object.
+
+            Returns:
+            dict: The status of questions for the specified kid.
+
+            Raises:
+            None
+        """
+        try:
+            kid_id = request.json['kid_id']
+        except:
+            return {'Error': 'kid_id'}, 400
+        stats = {'image': '1.png', 'sequence': '3', 'earned_time': 1415515, 'progress': '1'}
+
+        return stats
+
+
+class Questions(Resource):
+    """
+        A class representing a resource for retrieving questions.
+
+        This resource allows getting questions.
+
+        Methods:
+        - get: Get the questions.
+
+        Attributes:
+        None
+        """
+    def get(self):
+        """
+            Get the questions.
+
+            Returns:
+            dict: The questions.
+
+            Raises:
+            None
+        """
+        question = {'question1': 'q1'}
+        return question
+
+
+class Answer(Resource):
+    """
+        A class representing a resource for submitting answers.
+
+        This resource allows submitting answers for a specific kid and question.
+
+        Methods:
+        - get: Submit an answer for a specific kid and question.
+
+        Attributes:
+        None
+        """
+    def get(self):
+        """
+            Submit an answer for a specific kid and question.
+
+            The data should be sent in the request body as a JSON object.
+
+            Returns:
+            dict: A response message indicating the success of the answer submission.
+
+            Raises:
+            None
+        """
+        data = request.json
+        if check_keys(data, 'kid _id', 'question_id', 'start_at', 'ends_at', 'seq', 'first_try'):
+            return {'Error': 'miss`ing data'}, 400
+        if data['score'] == 0:
+            return {'message': 'wrong answer'}
+        elif data['first_try']:
+            return {'message': 'session1 saved'}
+        else:
+            return {'message': 'session2 saved'}
