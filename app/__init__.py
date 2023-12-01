@@ -9,7 +9,7 @@ api = Api(app, prefix='/api')  # API Initialization
 api.add_resource(Hello, '/hello')
 api.add_resource(ParentRegister, '/parent')
 api.add_resource(ParentLogin, '/login/parent')
-api.add_resource(Kid, '/add/kid')
+api.add_resource(Kid, '/kid')
 api.add_resource(School, '/schools')
 api.add_resource(Class, '/classes')
 api.add_resource(SubClass, '/subclasses')
