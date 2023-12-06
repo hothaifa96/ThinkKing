@@ -1,8 +1,13 @@
+// UploadForm.jsx
+
 import React, { useState } from 'react';
-// import { Storage } from 'aws-amplify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUpload, faCheck } from '@fortawesome/free-solid-svg-icons';
+import './UploadForm.css';
 
 const UploadForm = () => {
   const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   const handleChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -12,21 +17,33 @@ const UploadForm = () => {
   const handleUpload = async () => {
     try {
       if (file) {
-        const result = await Storage.put(file.name, file);
+        // Mocking the Storage object for the example
+        setUploading(true);
+        const result = { key: file.name, bucket: 'your-bucket' };
         console.log('File uploaded successfully:', result);
+        setUploading(false);
       } else {
         console.error('No file selected');
       }
     } catch (error) {
       console.error('Error uploading file:', error);
+      setUploading(false);
     }
   };
 
   return (
-    <div>
-      <h2>Upload Form</h2>
-      <input type="file" onChange={handleChange} />
-      <button onClick={handleUpload}>Upload</button>
+    <div className="container">
+      <h1>ThinKing</h1>
+      <br />
+      <h2>Upload Question's xlsx file</h2>
+      <label htmlFor="fileInput" className="file-label">
+        <FontAwesomeIcon icon={faUpload} className="upload-icon" />
+        {file ? <span>{file.name}</span> : <span>Choose a file</span>}
+        <input type="file" id="fileInput" onChange={handleChange} />
+      </label>
+      <button onClick={handleUpload} disabled={!file || uploading}>
+        {uploading ? <FontAwesomeIcon icon={faCheck} spin /> : 'Upload'}
+      </button>
     </div>
   );
 };
