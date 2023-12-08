@@ -5,7 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3036a416-803d-45b4-adb4-0458ae4e63a4" name="Changes" comment="final v1">
+      <change afterPath="$PROJECT_DIR$/app/api/frontend.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/DAL/DAO/data_access_object.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/DAL/DAO/data_access_object.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/asset-manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/robots.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/static/css/main.de2f05bc.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/static/css/main.de2f05bc.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/static/js/787.a1bdedcb.chunk.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/static/js/787.a1bdedcb.chunk.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/static/js/main.1b4ee15b.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/static/js/main.1b4ee15b.js.LICENSE.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/static/js/main.1b4ee15b.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,9 +31,10 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Dockerfile" />
         <option value="Freeze Requirements File" />
         <option value="Python Script" />
+        <option value="HTML File" />
+        <option value="Dockerfile" />
       </list>
     </option>
   </component>
@@ -33,12 +50,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/hothaifa/Desktop/ThinkKing&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "/Users/hothaifa/Desktop/ThinkKing"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -46,7 +64,7 @@
       <recent name="$PROJECT_DIR$/app/api" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.__init__">
+  <component name="RunManager" selected="Python.app2 (1)">
     <configuration name="__init__ (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThinkKing" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -89,6 +107,48 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="app2 (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ThinkKing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/client" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/client/app2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="app2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ThinkKing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app/client" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app/client/app2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="resources" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThinkKing" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -110,33 +170,13 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="ThinkKing" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.app2 (1)" />
+        <item itemvalue="Python.app2" />
         <item itemvalue="Python.__init__" />
         <item itemvalue="Python.resources" />
         <item itemvalue="Python.__init__ (1)" />
-        <item itemvalue="Python.test" />
       </list>
     </recent_temporary>
   </component>
