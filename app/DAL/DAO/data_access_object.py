@@ -4,16 +4,15 @@ from ..db import get_db_connection
 
 
 class GenderDAO:
+    # @staticmethod
+    # def create(gender):
+    #     # Database interaction logic here (insert into the 'genders' table)
+    #     connection = get_db_connection()
+    #     query = "INSERT INTO genders (gender) VALUES (?);", (gender.gender,)
+    #
+    #     connection.close()
+
     @staticmethod
-    def create(gender):
-        # Database interaction logic here (insert into the 'genders' table)
-        connection = get_db_connection()
-        query = "INSERT INTO genders (gender) VALUES (?);", (gender.gender,)
-
-        connection.close()
-
-    @staticmethodcd s3-upload-form
-
     def get_all():
         # Database interaction logic here (select all from the 'genders' table)
         connection = get_db_connection()
@@ -61,13 +60,13 @@ class GenderDAO:
 
 
 class AvatarDAO:
-    @staticmethod
-    def create(avatar):
-        # Database interaction logic here (insert into the 'avatars' table)
-        connection = get_db_connection()
-        query = "INSERT INTO avatars (avatar) VALUES (?);", (avatar.avatar,)
-
-        connection.close()
+    # @staticmethod
+    # def create(avatar):
+    #     # Database interaction logic here (insert into the 'avatars' table)
+    #     connection = get_db_connection()
+    #     query = "INSERT INTO avatars (avatar) VALUES (?);", (avatar.avatar,)
+    #
+    #     connection.close()
 
     @staticmethod
     def get_all():
@@ -107,17 +106,17 @@ class AvatarDAO:
             cursor.close()
             connection.close()
 
-    @staticmethod
-    def update(avatar):
-        # Database interaction logic here (update the 'avatars' table)
-        connection = get_db_connection()
-        connection.close()
+    # @staticmethod
+    # def update(avatar):
+    #     # Database interaction logic here (update the 'avatars' table)
+    #     connection = get_db_connection()
+    #     connection.close()
 
-    @staticmethod
-    def delete(avatar_id):
-        # Database interaction logic here (delete from the 'avatars' table by ID)
-        connection = get_db_connection()
-        connection.close()
+    # @staticmethod
+    # def delete(avatar_id):
+    #     # Database interaction logic here (delete from the 'avatars' table by ID)
+    #     connection = get_db_connection()
+    #     connection.close()
 
 
 class KidDAO:
@@ -135,7 +134,26 @@ class KidDAO:
             kid.parent_id, kid.first_name, kid.gender_id, kid.school_id, kid.c_grade_id,
             kid.crowns, kid.time_per_correct_answer, kid.current_correct_seq, kid.avatar_id,
             kid.unlock, kid.available_screen_time, kid.created_at)
-        connection.close()
+
+        cursor = connection.cursor()
+        try:
+
+            cursor.execute(query)
+            result = cursor.fetchall()
+
+            if result:
+                # Assuming the columns order matches the KidDTO constructor parameters
+                return [KidDAO(*row).__dict__ for row in result]
+            else:
+                return None
+
+        except psycopg2.Error as e:
+            print("Error fetching kid by ID:", e)
+            return None
+
+        finally:
+            cursor.close()
+            connection.close()
 
     @staticmethod
     def get_all():
@@ -156,45 +174,43 @@ class KidDAO:
             cursor.close()
             connection.close()
 
+    @staticmethod
+    def get_by_id(kid_id):
+        # Database interaction logic here (select from the 'kids' table by ID)
+        connection = get_db_connection()
+        query = "SELECT * FROM kids WHERE kid_id = ?;", (kid_id,)
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            return result
 
-@staticmethod
-def get_by_id(kid_id):
-    # Database interaction logic here (select from the 'kids' table by ID)
-    connection = get_db_connection()
-    query = "SELECT * FROM kids WHERE kid_id = ?;", (kid_id,)
-    cursor = connection.cursor()
-    try:
-        cursor.execute(query)
-        result = cursor.fetchall()
-        return result
+        except psycopg2.Error as e:
+            print("Error fetching kid by ID:", e)
+            return None
 
-    except psycopg2.Error as e:
-        print("Error fetching kid by ID:", e)
-        return None
+        finally:
+            cursor.close()
+            connection.close()
 
-    finally:
-        cursor.close()
+    # TODO: update kid profile
+    @staticmethod
+    def update(kid):
+        # Database interaction logic here (update the 'kids' table)
+        connection = get_db_connection()
         connection.close()
 
-
-@staticmethod
-def update(kid):
-    # Database interaction logic here (update the 'kids' table)
-    connection = get_db_connection()
-    connection.close()
-
-
-@staticmethod
-def delete(kid_id):
-    # Database interaction logic here (delete from the 'kids' table by ID)
-    connection = get_db_connection()
-    connection.close()
+    # TODO: delete kid profile
+    @staticmethod
+    def delete(kid_id):
+        # Database interaction logic here (delete from the 'kids' table by ID)
+        connection = get_db_connection()
+        connection.close()
 
 
 class ParentDAO:
     @staticmethod
     def create(parent):
-        # Database interaction logic here (insert into the 'parents' table)
         connection = get_db_connection()
         query = """
             INSERT INTO parents (
@@ -204,7 +220,22 @@ class ParentDAO:
             parent.email, parent.first_name, parent.last_name, parent.pin_code, parent.avatar_id,
             parent.created_at, parent.password
         )
-        connection.close()
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            if result:
+                return [ParentDAO(*row).__dict__ for row in result]
+            else:
+                return None
+
+        except psycopg2.Error as e:
+            print("Error fetching paretn by ID:", e)
+            return None
+
+        finally:
+            cursor.close()
+            connection.close()
 
     @staticmethod
     def get_all():
@@ -245,12 +276,14 @@ class ParentDAO:
             cursor.close()
             connection.close()
 
+    # TODO: upload parent
     @staticmethod
     def update(parent):
         # Database interaction logic here (update the 'parents' table)
         connection = get_db_connection()
         connection.close()
 
+    # TODO: delete parent
     @staticmethod
     def delete(parent_id):
         # Database interaction logic here (delete from the 'parents' table by ID)
@@ -331,11 +364,23 @@ class AnswerOptionDAO:
     #     connection.close()
 
     @staticmethod
-    def get_by_id(question_option_id):
+    def get_by_question_id(question_option_id):
         # Database interaction logic here (select from the 'answer_options' table by ID)
         connection = get_db_connection()
         query = "SELECT * FROM answer_options WHERE answer_option_id = ?;", (question_option_id,)
-        connection.close()
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            return result
+
+        except psycopg2.Error as e:
+            print("Error fetching answers by ID:", e)
+            return None
+
+        finally:
+            cursor.close()
+            connection.close()
 
     # @staticmethod
     # def update(answer_option):
@@ -349,26 +394,51 @@ class AnswerOptionDAO:
     #     connection = get_db_connection()
     #     connection.close()
 
-    # class SchoolDAO:
-    #     @staticmethod
-    #     def create(school):
-    #         # Database interaction logic here (insert into the 'schools' table)
-    #         connection = get_db_connection()
-    #         connection.close()
+
+class SchoolDAO:
+    # @staticmethod
+    # def create(school):
+    #     # Database interaction logic here (insert into the 'schools' table)
+    #     connection = get_db_connection()
+    #     connection.close()
 
     @staticmethod
     def get_all():
         # Database interaction logic here (select all from the 'schools' table)
         connection = get_db_connection()
         query = "SELECT * FROM Schools"
-        connection.close()
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            return result
+
+        except psycopg2.Error as e:
+            print("Error fetching schools table:", e)
+            return None
+
+        finally:
+            cursor.close()
+            connection.close()
 
     @staticmethod
     def get_by_id(school_id):
         # Database interaction logic here (select from the 'schools' table by ID)
         connection = get_db_connection()
         query = "SELECT * FROM schools WHERE school_id = ?;", (school_id,)
-        connection.close()
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            return result
+
+        except psycopg2.Error as e:
+            print("Error fetching school by ID:", e)
+            return None
+
+        finally:
+            cursor.close()
+            connection.close()
 
     # @staticmethod
     # def update(school):
@@ -395,26 +465,50 @@ class TopicDAO:
         # Database interaction logic here (select all from the 'topics' table)
         connection = get_db_connection()
         query = "SELECT * from Topics"
-        connection.close()
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            return result
+
+        except psycopg2.Error as e:
+            print("Error fetching topic by ID:", e)
+            return None
+
+        finally:
+            cursor.close()
+            connection.close()
 
     @staticmethod
     def get_by_id(topic_id):
         # Database interaction logic here (select from the 'topics' table by ID)
         connection = get_db_connection()
         query = "SELECT * from Topics WHERE topic_id =?;", (topic_id,)
-        connection.close()
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            return result
 
+        except psycopg2.Error as e:
+            print("Error fetching topic by ID:", e)
+            return None
+
+        finally:
+            cursor.close()
+            connection.close()
+    # TODO update topics
     @staticmethod
     def update(topic):
         # Database interaction logic here (update the 'topics' table)
         connection = get_db_connection()
         connection.close()
 
-    @staticmethod
-    def delete(topic_id):
-        # Database interaction logic here (delete from the 'topics' table by ID)
-        connection = get_db_connection()
-        connection.close()
+    # @staticmethod
+    # def delete(topic_id):
+    #     # Database interaction logic here (delete from the 'topics' table by ID)
+    #     connection = get_db_connection()
+    #     connection.close()
 
 
 class UserTopicDAO:
