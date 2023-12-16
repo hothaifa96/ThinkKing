@@ -1,5 +1,11 @@
+import json
+from datetime import date
+
 from flask_restful import Resource
+from flask import make_response
 from flask import request
+from app.DAL.DAO.data_access_object import *
+from app.DAL.POPO.db_objects import *
 
 
 def check_keys(data, *args):
@@ -20,6 +26,16 @@ def check_keys(data, *args):
     if not all(key in data for key in args):
         return True
     return False
+
+
+def get_json_obj(o):
+    d = {}
+    for k, v in o.__dict__.items():
+        if isinstance(v, (date, datetime)):
+            d[k] = v.strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            d[k] = v
+    return d
 
 
 # This is example API Resource
@@ -85,35 +101,41 @@ class ParentRegister(Resource):
         if check_keys(parent, 'first_name', 'last_name', 'email', 'password', 'gender', 'terms_accepted'):
             return {'Error': 'missing data'}, 400
 
-        for k, v in parent.items():
-            print(f"{k}: {v}")
-
-        return {**parent, 'success': True}
+        parent = Parent(**parent)
+        print(parent.__dict__)
+        ParentDAO.create(parent)
+        response = make_response(parent.__dict__, 200)
+        response.headers['Content-Type'] = 'application/json'
 
     def delete(self):
         """
             Handle DELETE request for the Parent resource.
-    
+
             This method receives a JSON payload containing parent data and performs the following steps:
             1. Checks if the 'parent_id' key is present in the JSON data.
             2. If the 'parent_id' key is missing, returns an error response with status code 400.
             3. If the 'parent_id' key is present, prints each key-value pair in the parent data.
             4. Returns a dictionary indicating successful deletion.
-    
+
             Returns:
             dict: A dictionary indicating successful deletion.
-    
+
             Raises:
             None
         """
         parent = request.json
-        if check_keys(parent, 'parent_id'):
+        if check_keys(parent, 'email'):
             return {'Error': 'missing data'}, 400
-
-        for k, v in parent.items():
-            print(f"{k}: {v}")
-
-        return {'Deleted': True}
+        try:
+            if ParentDAO.delete(parent.get('email')):
+                response = make_response('user deleted', 200)
+                response.headers['Content-Type'] = 'application/json'
+                return response
+        except Exception as e:
+            print('error message ', e)
+            response = make_response('error', 500)
+            response.headers['Content-Type'] = 'application/json'
+            return response
 
 
 class ParentLogin(Resource):
@@ -143,11 +165,26 @@ class ParentLogin(Resource):
         if check_keys(parent_credentials, 'email', 'password'):
             return {'Error': 'missing data'}, 400
 
-        for k, v in parent_credentials.items():
-            print(f"{k}: {v}")
+        parent_data = ParentDAO.get_by_email(parent_credentials['email'])
+        if parent_data and parent_data['email'] == parent_credentials['email'] and \
+                parent_data['password'] == parent_credentials['password']:
+            parent = Parent(
+                email=parent_data[1],
+                first_name=parent_data[2],
+                last_name=parent_data[3],
+                pin_code=parent_data[4],
+                avatar_id=parent_data[5],
+                created_at=parent_data[6],
+                password=parent_data[7],
+                terms_accepted=True,  # parent_data[8],
+                gender='Male',  # parent_data[9]
+            )
+            parent = get_json_obj(parent)
 
-        return {
-            'jwt': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'}
+            return parent
+        else:
+            return 'wrong credentials', 400
+    # TODO add jwt coding
 
 
 class Kid(Resource):
@@ -668,6 +705,7 @@ class QuestionsStatus(Resource):
         Attributes:
         None
         """
+
     def get(self):
         """
             Get the status of questions for a specific kid.
@@ -701,6 +739,7 @@ class Questions(Resource):
         Attributes:
         None
         """
+
     def get(self):
         """
             Get the questions.
@@ -727,6 +766,7 @@ class Answer(Resource):
         Attributes:
         None
         """
+
     def get(self):
         """
             Submit an answer for a specific kid and question.

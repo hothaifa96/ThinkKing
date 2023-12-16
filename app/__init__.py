@@ -1,7 +1,6 @@
 from flask import Flask, send_from_directory
 from flask_restful import Api
-from api.resources import *
-from api.frontend import *
+from app.api.resources import *
 # import os
 
 app = Flask('Thinking')
@@ -27,8 +26,7 @@ api.add_resource(QuestionsStatus, '/stat/question')
 api.add_resource(Questions, '/question')
 api.add_resource(Answer, '/answer')
 # react app hosting
-api.add_resource(UploadFilePath, '/upload/static/<path:path>')
-api.add_resource(UploadFile, '/upload')
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

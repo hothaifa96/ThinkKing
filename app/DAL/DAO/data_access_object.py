@@ -199,6 +199,11 @@ class KidDAO:
         # Database interaction logic here (update the 'kids' table)
         connection = get_db_connection()
         connection.close()
+        query = """
+        UPDATE kids
+        SET crowns = %s, unlock = %s, available_screen_time = %s
+        WHERE kid_id = %s
+        """
 
     # TODO: delete kid profile
     @staticmethod
@@ -212,22 +217,19 @@ class ParentDAO:
     @staticmethod
     def create(parent):
         connection = get_db_connection()
-        query = """
-            INSERT INTO parents (
-                email, first_name, last_name, pin_code, avatar_id, created_at, password
-            ) VALUES (?, ?, ?, ?, ?, ?, ?);
-        """, (
-            parent.email, parent.first_name, parent.last_name, parent.pin_code, parent.avatar_id,
-            parent.created_at, parent.password
-        )
+        query = f"INSERT INTO parents (email, first_name, last_name, pin_code, avatar_id, created_at, password) " \
+                f"VALUES ('{parent.email}', '{parent.first_name}', '{parent.last_name}', '{parent.pin_code}', {parent.avatar_id},CURRENT_TIMESTAMP, '{parent.password}')"
+        print(query)
         cursor = connection.cursor()
         try:
             cursor.execute(query)
-            result = cursor.fetchall()
-            if result:
-                return [ParentDAO(*row).__dict__ for row in result]
-            else:
-                return None
+            connection.commit()
+            # result = cursor.fetchall()
+            # if result:
+            #     return [ParentDAO(*row).__dict__ for row in result]
+            return True
+            # else:
+            #     return None
 
         except psycopg2.Error as e:
             print("Error fetching paretn by ID:", e)
@@ -257,16 +259,17 @@ class ParentDAO:
             connection.close()
 
     @staticmethod
-    def get_by_id(parent_id):
+    def get_by_email(email):
         # Database interaction logic here (select from the 'parents' table by ID)
         connection = get_db_connection()
-        query = "SELECT * FROM parents WHERE parent_id = ?;", (parent_id,)
+        query = f"SELECT * FROM parents WHERE email = '{email}'"
 
         cursor = connection.cursor()
         try:
             cursor.execute(query)
-            result = cursor.fetchall()
-            return result
+            result = cursor.fetchone()
+            if result:
+                return result
 
         except psycopg2.Error as e:
             print("Error fetching parent by ID:", e)
@@ -285,10 +288,20 @@ class ParentDAO:
 
     # TODO: delete parent
     @staticmethod
-    def delete(parent_id):
+    def delete(parent_email):
         # Database interaction logic here (delete from the 'parents' table by ID)
         connection = get_db_connection()
-        connection.close()
+        query = f"DELETE FROM parents WHERE email='{parent_email}';"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            connection.commit()
+            return True
+        except Exception as e:
+            print(e)
+            return False
+        finally:
+            connection.close()
 
 
 class QuestionDAO:
@@ -368,6 +381,25 @@ class AnswerOptionDAO:
         # Database interaction logic here (select from the 'answer_options' table by ID)
         connection = get_db_connection()
         query = "SELECT * FROM answer_options WHERE answer_option_id = ?;", (question_option_id,)
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            return result
+
+        except psycopg2.Error as e:
+            print("Error fetching answers by ID:", e)
+            return None
+
+        finally:
+            cursor.close()
+            connection.close()
+
+    @staticmethod
+    def get_by_topic_id(topic_id):
+        # Database interaction logic here (select from the 'answer_options' table by ID)
+        connection = get_db_connection()
+        query = "SELECT * FROM your_table_name WHERE topic_id = %s"
         cursor = connection.cursor()
         try:
             cursor.execute(query)
@@ -497,6 +529,7 @@ class TopicDAO:
         finally:
             cursor.close()
             connection.close()
+
     # TODO update topics
     @staticmethod
     def update(topic):
@@ -511,6 +544,7 @@ class TopicDAO:
     #     connection.close()
 
 
+# TODO
 class UserTopicDAO:
     @staticmethod
     def create(user_topic):

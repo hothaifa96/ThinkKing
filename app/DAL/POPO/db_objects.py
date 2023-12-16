@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 class Gender:
     def __init__(self, gender_id, gender):
         self.gender_id = gender_id
@@ -12,7 +15,7 @@ class Avatar:
 
 class Kid:
     def __init__(self, kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns,
-                 time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at):
+                 time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time):
         self.kid_id = kid_id
         self.parent_id = parent_id
         self.first_name = first_name
@@ -25,12 +28,12 @@ class Kid:
         self.avatar_id = avatar_id
         self.unlock = unlock
         self.available_screen_time = available_screen_time
-        self.created_at = created_at
+        self.created_at = time_per_correct_answer
 
 
 class Parent:
-    def __init__(self, parent_id, email, first_name, last_name, pin_code, avatar_id, created_at, password):
-        self.parent_id = parent_id
+    def __init__(self,  email, first_name, last_name, pin_code, avatar_id, password,terms_accepted,gender='male',created_at = datetime.timestamp(datetime.now()),parent_id=1):
+        self.parent_id = 3
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
@@ -38,6 +41,8 @@ class Parent:
         self.avatar_id = avatar_id
         self.created_at = created_at
         self.password = password
+        self.terms_accepted=terms_accepted
+        self.gender =gender
 
 
 class Question:

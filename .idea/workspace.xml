@@ -4,24 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3036a416-803d-45b4-adb4-0458ae4e63a4" name="Changes" comment="final v1">
-      <change afterPath="$PROJECT_DIR$/app/api/frontend.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+    <list default="true" id="3036a416-803d-45b4-adb4-0458ae4e63a4" name="Changes" comment="final v2">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/DAL/DAO/data_access_object.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/DAL/DAO/data_access_object.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/DAL/POPO/db_objects.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/DAL/POPO/db_objects.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/DAL/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/DAL/db.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/asset-manifest.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/manifest.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/robots.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/static/css/main.de2f05bc.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/static/css/main.de2f05bc.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/static/js/787.a1bdedcb.chunk.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/static/js/787.a1bdedcb.chunk.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/static/js/main.1b4ee15b.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/static/js/main.1b4ee15b.js.LICENSE.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/static/js/main.1b4ee15b.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/frontend.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/resources.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/resources.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/client/Dockerfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,13 +41,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "/Users/hothaifa/Desktop/ThinkKing"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/hothaifa/Desktop/ThinkKing&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -64,7 +55,7 @@
       <recent name="$PROJECT_DIR$/app/api" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.app2 (1)">
+  <component name="RunManager" selected="Python.__init__">
     <configuration name="__init__ (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThinkKing" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -172,10 +163,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.app2 (1)" />
-        <item itemvalue="Python.app2" />
         <item itemvalue="Python.__init__" />
         <item itemvalue="Python.resources" />
+        <item itemvalue="Python.app2 (1)" />
+        <item itemvalue="Python.app2" />
         <item itemvalue="Python.__init__ (1)" />
       </list>
     </recent_temporary>
@@ -197,7 +188,23 @@
       <option name="project" value="LOCAL" />
       <updated>1701349956367</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="final v2">
+      <option name="closed" value="true" />
+      <created>1702031916257</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1702031916257</updated>
+    </task>
+    <task id="LOCAL-00003" summary="final v2">
+      <option name="closed" value="true" />
+      <created>1702031923824</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1702031923824</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -213,6 +220,18 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="final v1" />
-    <option name="LAST_COMMIT_MESSAGE" value="final v1" />
+    <MESSAGE value="final v2" />
+    <option name="LAST_COMMIT_MESSAGE" value="final v2" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
