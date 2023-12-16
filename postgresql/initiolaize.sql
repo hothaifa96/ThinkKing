@@ -7,16 +7,6 @@ CREATE TABLE avatars (
   avatar_id serial PRIMARY KEY,
   avatar varchar
 );
-CREATE TABLE parents (
-  parent_id serial PRIMARY KEY,
-  email varchar,
-  first_name varchar,
-  last_name varchar,
-  pin_code varchar(4),
-  avatar_id integer,
-  created_at timestamp,
-  password varchar
-);
 
 
 
@@ -55,6 +45,20 @@ CREATE TABLE c_grades (
   class_letter varchar
 );
 
+CREATE TABLE parents (
+  parent_id serial PRIMARY KEY,
+  email varchar,
+  first_name varchar,
+  last_name varchar,
+  pin_code varchar(4),
+  avatar_id integer,
+  created_at timestamp,
+  password varchar(255),
+  gender_id integer,
+  CONSTRAINT fk_parent_gender FOREIGN KEY (gender_id) REFERENCES genders(gender_id),
+  CONSTRAINT fk_parent_avatar FOREIGN KEY (avatar_id) REFERENCES avatars(avatar_id)
+
+);
 
 CREATE TABLE kids (
   kid_id serial PRIMARY KEY,
