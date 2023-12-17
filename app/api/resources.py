@@ -5,8 +5,8 @@ from datetime import date
 from flask_restful import Resource
 from flask import make_response
 from flask import request
-from app.DAL.DAO.data_access_object import *
-from app.DAL.POPO.db_objects import *
+from ..DAL.DAO.data_access_object import *
+from ..DAL.POPO.db_objects import *
 
 
 def check_keys(data, *args):

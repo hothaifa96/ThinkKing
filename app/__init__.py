@@ -1,6 +1,6 @@
 from flask import Flask, send_from_directory
 from flask_restful import Api
-from app.api.resources import *
+from .api.resources import *
 # import os
 
 app = Flask('Thinking')
