@@ -1,6 +1,6 @@
 FROM  python:3.8-slim-buster
 
-WORKDIR /app
+WORKDIR /application
 
 COPY requirements.txt .
 
@@ -10,4 +10,4 @@ COPY /app .
 
 EXPOSE 5000
 
-CMD ["python3", "__init__.py"]
+CMD ["python3", "main.py"]
