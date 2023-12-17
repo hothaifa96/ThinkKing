@@ -13,13 +13,6 @@ pipeline {
     }
     agent any
     stages {
-    stage('Checkout') {
-            steps {
-                script {
-                    git 'https://github.com/hothaifa96/ThinkKing.git'
-                }
-            }
-        }
         stage('Build Docker Image') {
             steps {
                 // Build steps for the server
