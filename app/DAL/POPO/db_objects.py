@@ -32,8 +32,8 @@ class Kid:
 
 
 class Parent:
-    def __init__(self,  email, first_name, last_name, pin_code, avatar_id, password,terms_accepted,gender='male',created_at = datetime.timestamp(datetime.now()),parent_id=1):
-        self.parent_id = 3
+    def __init__(self, parent_id, email, first_name, last_name, pin_code, avatar_id, created_at, password, gender_id):
+        self.parent_id = parent_id
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
@@ -41,8 +41,35 @@ class Parent:
         self.avatar_id = avatar_id
         self.created_at = created_at
         self.password = password
-        self.terms_accepted=terms_accepted
-        self.gender =gender
+        self.gender_id = gender_id
+
+    def to_dict(self):
+        return {
+            "parent_id": self.parent_id,
+            "email": self.email,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "pin_code": self.pin_code,
+            "avatar_id": self.avatar_id,
+            "created_at": self.created_at,
+            "password": self.password,
+            "gender_id": self.gender_id
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            data.get( "parent_id"),
+            data["email"],
+            data["first_name"],
+            data["last_name"],
+            data["pin_code"],
+            data["avatar_id"],
+            data.get( "parent_id"),
+            data["password"],
+            data["gender_id"]
+        )
+
 
 
 class Question:

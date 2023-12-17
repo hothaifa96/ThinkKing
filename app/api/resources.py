@@ -1,4 +1,5 @@
 import json
+import time
 from datetime import date
 
 from flask_restful import Resource
@@ -98,14 +99,21 @@ class ParentRegister(Resource):
 
         parent = request.json
 
-        if check_keys(parent, 'first_name', 'last_name', 'email', 'password', 'gender', 'terms_accepted'):
+        if check_keys(parent, 'first_name', 'last_name', 'email', 'password', 'avatar_id', 'pin_code',
+                      'gender_id'):
             return {'Error': 'missing data'}, 400
-
-        parent = Parent(**parent)
-        print(parent.__dict__)
-        ParentDAO.create(parent)
-        response = make_response(parent.__dict__, 200)
-        response.headers['Content-Type'] = 'application/json'
+        parent = Parent.from_dict(parent)
+        if ParentDAO.create(parent):
+            print('from resource', parent)
+            try:
+                parent = ParentDAO.get_by_email(parent.email)
+                response = make_response(parent.to_dict(), 200)
+                response.headers['Content-Type'] = 'application/json'
+                return response
+            except:
+                pass
+        else:
+            return 'error', 502
 
     def delete(self):
         """
@@ -165,23 +173,12 @@ class ParentLogin(Resource):
         if check_keys(parent_credentials, 'email', 'password'):
             return {'Error': 'missing data'}, 400
 
-        parent_data = ParentDAO.get_by_email(parent_credentials['email'])
-        if parent_data and parent_data['email'] == parent_credentials['email'] and \
-                parent_data['password'] == parent_credentials['password']:
-            parent = Parent(
-                email=parent_data[1],
-                first_name=parent_data[2],
-                last_name=parent_data[3],
-                pin_code=parent_data[4],
-                avatar_id=parent_data[5],
-                created_at=parent_data[6],
-                password=parent_data[7],
-                terms_accepted=True,  # parent_data[8],
-                gender='Male',  # parent_data[9]
-            )
-            parent = get_json_obj(parent)
-
-            return parent
+        parent = ParentDAO.get_by_email(parent_credentials['email'])
+        if parent.email == parent_credentials['email'] and \
+                parent.password == parent_credentials['password']:
+            response = make_response(parent.to_dict(), 200)
+            response.headers['Content-Type'] = 'application/json'
+            return response
         else:
             return 'wrong credentials', 400
     # TODO add jwt coding

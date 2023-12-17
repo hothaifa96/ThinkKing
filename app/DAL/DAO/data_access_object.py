@@ -1,5 +1,6 @@
 import psycopg2
 
+from ..POPO.db_objects import Parent
 from ..db import get_db_connection
 
 
@@ -217,8 +218,8 @@ class ParentDAO:
     @staticmethod
     def create(parent):
         connection = get_db_connection()
-        query = f"INSERT INTO parents (email, first_name, last_name, pin_code, avatar_id, created_at, password) " \
-                f"VALUES ('{parent.email}', '{parent.first_name}', '{parent.last_name}', '{parent.pin_code}', {parent.avatar_id},CURRENT_TIMESTAMP, '{parent.password}')"
+        query = f"INSERT INTO parents (email, first_name, last_name, pin_code, avatar_id, created_at, password,gender_id) " \
+                f"VALUES ('{parent.email}', '{parent.first_name}', '{parent.last_name}', '{parent.pin_code}', {parent.avatar_id},CURRENT_TIMESTAMP, '{parent.password}',{parent.gender_id})"
         print(query)
         cursor = connection.cursor()
         try:
@@ -233,7 +234,7 @@ class ParentDAO:
 
         except psycopg2.Error as e:
             print("Error fetching paretn by ID:", e)
-            return None
+            return False
 
         finally:
             cursor.close()
@@ -269,11 +270,21 @@ class ParentDAO:
             cursor.execute(query)
             result = cursor.fetchone()
             if result:
-                return result
+                p = Parent(
+                    parent_id=result[0],
+                    email=result[1],
+                    first_name=result[2],
+                    last_name=result[3],
+                    pin_code=result[4],
+                    avatar_id=result[5],
+                    created_at=result[6],
+                    password=result[7],
+                    gender_id=result[8])
+                return p
 
         except psycopg2.Error as e:
             print("Error fetching parent by ID:", e)
-            return None
+            return False
 
         finally:
             cursor.close()
