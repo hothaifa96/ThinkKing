@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3036a416-803d-45b4-adb4-0458ae4e63a4" name="Changes" comment="fix(business logic) : fix bug in the bl">
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,9 +16,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Freeze Requirements File" />
-        <option value="Python Script" />
         <option value="HTML File" />
         <option value="Dockerfile" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -34,14 +34,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/hothaifa/Desktop/ThinkKing&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "/Users/hothaifa/Desktop/ThinkKing/app/DAL/POPO"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/DAL/POPO" />
+      <recent name="$PROJECT_DIR$/app/DAL/DAO" />
+      <recent name="$PROJECT_DIR$/app/DAL" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/ThinkgApp" />
@@ -245,7 +250,31 @@
       <option name="project" value="LOCAL" />
       <updated>1702812468928</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702812513459</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1702812513459</updated>
+    </task>
+    <task id="LOCAL-00011" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702812520874</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1702812520874</updated>
+    </task>
+    <task id="LOCAL-00012" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702812955944</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1702812955944</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
