@@ -1,6 +1,6 @@
 import psycopg2
 
-from ..POPO.db_objects import Parent
+from ..POPO.db_objects import *
 from ..db import get_db_connection
 
 
