@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3036a416-803d-45b4-adb4-0458ae4e63a4" name="Changes" comment="final v2">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/client/Dockerfile" afterDir="false" />
-    </list>
+    <list default="true" id="3036a416-803d-45b4-adb4-0458ae4e63a4" name="Changes" comment="jenkins file" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,9 +14,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Freeze Requirements File" />
-        <option value="Python Script" />
         <option value="HTML File" />
         <option value="Dockerfile" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -35,21 +32,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/hothaifa/Desktop/ThinkKing&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "/Users/hothaifa/Desktop/ThinkKing/app/DAL/POPO"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/DAL/POPO" />
+      <recent name="$PROJECT_DIR$/app/DAL/DAO" />
+      <recent name="$PROJECT_DIR$/app/DAL" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/ThinkgApp" />
       <recent name="$PROJECT_DIR$/app/api" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.app2 (1)">
+  <component name="RunManager" selected="Python.__init__">
     <configuration name="__init__ (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThinkKing" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -157,10 +159,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.app2 (1)" />
-        <item itemvalue="Python.app2" />
         <item itemvalue="Python.__init__" />
         <item itemvalue="Python.resources" />
+        <item itemvalue="Python.app2 (1)" />
+        <item itemvalue="Python.app2" />
         <item itemvalue="Python.__init__ (1)" />
       </list>
     </recent_temporary>
@@ -198,7 +200,143 @@
       <option name="project" value="LOCAL" />
       <updated>1702031923824</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702809854860</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1702809854860</updated>
+    </task>
+    <task id="LOCAL-00005" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702811036371</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1702811036371</updated>
+    </task>
+    <task id="LOCAL-00006" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702811042541</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1702811042541</updated>
+    </task>
+    <task id="LOCAL-00007" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702811177041</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1702811177041</updated>
+    </task>
+    <task id="LOCAL-00008" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702811196684</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1702811196684</updated>
+    </task>
+    <task id="LOCAL-00009" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702812468928</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1702812468928</updated>
+    </task>
+    <task id="LOCAL-00010" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702812513459</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1702812513459</updated>
+    </task>
+    <task id="LOCAL-00011" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702812520874</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1702812520874</updated>
+    </task>
+    <task id="LOCAL-00012" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702812955944</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1702812955944</updated>
+    </task>
+    <task id="LOCAL-00013" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702814130465</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1702814130465</updated>
+    </task>
+    <task id="LOCAL-00014" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702814177734</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1702814177734</updated>
+    </task>
+    <task id="LOCAL-00015" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702814497260</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1702814497260</updated>
+    </task>
+    <task id="LOCAL-00016" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702824878686</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1702824878686</updated>
+    </task>
+    <task id="LOCAL-00017" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702829988908</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1702829988908</updated>
+    </task>
+    <task id="LOCAL-00018" summary="fix(business logic) : fix bug in the bl">
+      <option name="closed" value="true" />
+      <created>1702830095116</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1702830095116</updated>
+    </task>
+    <task id="LOCAL-00019" summary="jenkins file">
+      <option name="closed" value="true" />
+      <created>1702835476729</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1702835476729</updated>
+    </task>
+    <task id="LOCAL-00020" summary="jenkins file">
+      <option name="closed" value="true" />
+      <created>1702837591564</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1702837591564</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -215,6 +353,19 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="final v1" />
     <MESSAGE value="final v2" />
-    <option name="LAST_COMMIT_MESSAGE" value="final v2" />
+    <MESSAGE value="fix(business logic) : fix bug in the bl" />
+    <MESSAGE value="jenkins file" />
+    <option name="LAST_COMMIT_MESSAGE" value="jenkins file" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
