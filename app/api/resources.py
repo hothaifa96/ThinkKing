@@ -48,7 +48,7 @@ class Hello(Resource):
         happy coding
         """
 
-        return {'message': 'hello'}
+        return {'message': 'Ping'}
 
     def post(self):
         """
