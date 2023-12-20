@@ -13,7 +13,7 @@ CREATE TABLE avatars (
 
 
 CREATE TABLE questions (
-  question_id serial PRIMARY KEY,
+  question_id varchar PRIMARY KEY,
   language_id integer,
   topic_id integer,
   c_grade_id integer,
@@ -25,7 +25,7 @@ CREATE TABLE questions (
 
 CREATE TABLE answer_options (
   answer_option_id serial PRIMARY KEY,
-  question_id integer,
+  question_id varchar,
   correct_answer boolean,
   answer_text varchar,
   CONSTRAINT fk_answer_options_question FOREIGN KEY (question_id) REFERENCES questions(question_id)
@@ -113,7 +113,7 @@ CREATE TABLE languages (
 
 CREATE TABLE sessions (
   session_id serial PRIMARY KEY,
-  question_id integer,
+  question_id varchar,
   kid_id integer,
   start_time timestamp,
   completion_time timestamp,

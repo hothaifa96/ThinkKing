@@ -21,19 +21,30 @@ def read_excel_and_generate_sql(excel_file_path, sql_file_path):
             # merged_cells = [cell for merged_cell in sheet.merged_cells.ranges if is_cell_in_merged_range(sheet.cell(row=sheet._current_row, column=idx + 1), merged_cell)]
 
             values = []
+            dict1={}
+            for idx, cell_value in enumerate(row):
+                if idx == 1:
+                    cell_value = str(cell_value)
+                    id = cell_value
             for idx, cell_value in enumerate(row):
                 # if any(is_cell_in_merged_range(sheet.cell(row=sheet._current_row, column=idx + 1), merged_cell) for merged_cell in merged_cells):
                 #     # Skip merged cells
                 #     continue
                 if isinstance(cell_value, str):
                     cell_value = cell_value.replace("'",'`')
-                if idx==1:
-                    cell_value=str(cell_value)
-                values.append(f"'{cell_value}'" if cell_value is not None and isinstance(cell_value, str) else str(cell_value))
-
-            sql_values = ', '.join([values[i] for i in range(len(values)) if i in [2,7,1] ])
-            sql_statement = f"INSERT INTO questions (topic_id, c_grade_id, level,question_id,interesting_fact , question_text) VALUES (1,3,1,{sql_values});"
-            sql_file.write(sql_statement + '\n')
+                if id == 0:
+                    continue
+                if idx in [3, 4, 5, 6]:
+                    values.append(f"{cell_value}" if cell_value is not None and isinstance(cell_value, str) else str(cell_value))
+                dict1[id]=values
+            for ids,answers in dict1.items():
+                for i in range(len(answers)):
+                    sql_statement = f"INSERT INTO answer_options (question_id, correct_answer, answer_text) VALUES ('{ids}',{'false' if i != 0 else 'true'},'{answers[i]}');"
+                    print(sql_statement)
+                    sql_file.write(sql_statement + '\n')
+            # sql_values = ', '.join([values[i] for i in range(len(values)) if idx in [3,4,5,6] ])
+            # sql_statement = f"INSERT INTO answer_options (question_id, correct_answer, answer_text) VALUES ({sql_values});"
+            # sql_file.write(sql_statement + '\n')
 
 if __name__ == "__main__":
     excel_file_path = "/Users/hothaifa/Desktop/ThinkKing/c_knowlage.xlsx"

@@ -8,17 +8,17 @@ INSERT INTO avatars (avatar) VALUES
   ('Avatar1'),
   ('Avatar2');
 
--- Insert data into the questions table
-INSERT INTO questions (language_id, topic_id, c_grade_id, level, question_text, explanation, interesting_fact) VALUES
-  (1, 1, 1, 2, 'What is the capital of France?', 'Paris is the capital of France.', 'The Eiffel Tower is located in Paris.'),
-  (2, 2, 3, 1, 'What is the largest planet in our solar system?', 'Jupiter is the largest planet.', 'It has a strong magnetic field.');
+---- Insert data into the questions table
+--INSERT INTO questions (language_id, topic_id, c_grade_id, level, question_text, explanation, interesting_fact) VALUES
+--  (1, 1, 1, 2, 'What is the capital of France?', 'Paris is the capital of France.', 'The Eiffel Tower is located in Paris.'),
+--  (2, 2, 3, 1, 'What is the largest planet in our solar system?', 'Jupiter is the largest planet.', 'It has a strong magnetic field.');
 
 -- Insert data into the answer_options table
-INSERT INTO answer_options (question_id, correct_answer, answer_text) VALUES
-  (1, true, 'Paris'),
-  (1, false, 'Berlin'),
-  (2, true, 'Jupiter'),
-  (2, false, 'Saturn');
+--INSERT INTO answer_options (question_id, correct_answer, answer_text) VALUES
+--  (1, true, 'Paris'),
+--  (1, false, 'Berlin'),
+--  (2, true, 'Jupiter'),
+--  (2, false, 'Saturn');
 
 -- Insert data into the schools table
 INSERT INTO schools (school_name) VALUES
@@ -66,9 +66,9 @@ INSERT INTO languages (language) VALUES
   ('French');
 
 -- Insert data into the sessions table
-INSERT INTO sessions (question_id, kid_id, start_time, completion_time, first_try_end_at, second_try_start_at, second_try_end_at, score) VALUES
-  (1, 1, '2023-01-05 09:30:00', '2023-01-05 10:00:00', '2023-01-05 09:45:00', '2023-01-05 10:15:00', '2023-01-05 10:30:00', 80),
-  (2, 2, '2023-01-06 11:00:00', '2023-01-06 11:45:00', '2023-01-06 11:15:00', '2023-01-06 12:00:00', '2023-01-06 12:15:00', 75);
+INSERT INTO sessions ( kid_id, start_time, completion_time, first_try_end_at, second_try_start_at, second_try_end_at, score) VALUES
+  ( 1, '2023-01-05 09:30:00', '2023-01-05 10:00:00', '2023-01-05 09:45:00', '2023-01-05 10:15:00', '2023-01-05 10:30:00', 80),
+  ( 2, '2023-01-06 11:00:00', '2023-01-06 11:45:00', '2023-01-06 11:15:00', '2023-01-06 12:00:00', '2023-01-06 12:15:00', 75);
 
 -- Insert data into the logs table
 INSERT INTO logs (timestamp, log_value) VALUES
