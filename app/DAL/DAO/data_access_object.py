@@ -342,10 +342,10 @@ class QuestionDAO:
             connection.close()
 
     @staticmethod
-    def get_by_id(question_id):
+    def get_5(package_number):
         # Database interaction logic here (select from the 'questions' table by ID)
         connection = get_db_connection()
-        query = "SELECT * FROM questions WHERE question_id = ?;", (question_id,)
+        query = f"SELECT * FROM questions LIMIT 5 OFFSET {5*package_number-1};"
         cursor = connection.cursor()
         try:
             cursor.execute(query)

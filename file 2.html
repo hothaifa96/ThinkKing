@@ -1,0 +1,79 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React Component</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // UploadForm.jsx
+import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUpload, faCheck } from '@fortawesome/free-solid-svg-icons';
+import './UploadForm.css';
+import { jsx as _jsx } from "react/jsx-runtime";
+import { jsxs as _jsxs } from "react/jsx-runtime";
+const UploadForm = () => {
+  const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const handleChange = e => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+  };
+  const handleUpload = async () => {
+    try {
+      if (file) {
+        // Mocking the Storage object for the example
+        setUploading(true);
+        const result = {
+          key: file.name,
+          bucket: 'your-bucket'
+        };
+        console.log('File uploaded successfully:', result);
+        setUploading(false);
+      } else {
+        console.error('No file selected');
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      setUploading(false);
+    }
+  };
+  return /*#__PURE__*/_jsxs("div", {
+    className: "container",
+    children: [/*#__PURE__*/_jsx("h1", {
+      children: "ThinKing"
+    }), /*#__PURE__*/_jsx("br", {}), /*#__PURE__*/_jsx("h2", {
+      children: "Upload Question's xlsx file"
+    }), /*#__PURE__*/_jsxs("label", {
+      htmlFor: "fileInput",
+      className: "file-label",
+      children: [/*#__PURE__*/_jsx(FontAwesomeIcon, {
+        icon: faUpload,
+        className: "upload-icon"
+      }), file ? /*#__PURE__*/_jsx("span", {
+        children: file.name
+      }) : /*#__PURE__*/_jsx("span", {
+        children: "Choose a file"
+      }), /*#__PURE__*/_jsx("input", {
+        type: "file",
+        id: "fileInput",
+        onChange: handleChange
+      })]
+    }), /*#__PURE__*/_jsx("button", {
+      onClick: handleUpload,
+      disabled: !file || uploading,
+      children: uploading ? /*#__PURE__*/_jsx(FontAwesomeIcon, {
+        icon: faCheck,
+        spin: true
+      }) : 'Upload'
+    })]
+  });
+};
+export default UploadForm;
+  </script>
+</body>
+</html>

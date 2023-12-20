@@ -39,6 +39,15 @@ def get_json_obj(o):
     return d
 
 
+def convert_to_json(result):
+    columns = result[0]._fields if result else None
+
+    # Convert the result to a list of dictionaries
+    result_dict_list = [dict(zip(columns, row)) for row in result]
+
+    # Convert the list of dictionaries to a JSON string
+    json_result = json.dumps(result_dict_list, indent=2)
+    return json_result
 # This is example API Resource
 class Hello(Resource):
     def get(self):
@@ -99,7 +108,7 @@ class ParentRegister(Resource):
 
         parent = request.json
 
-        if check_keys(parent, 'first_name', 'last_name', 'email', 'password', 'avatar_id', 'pin_code',
+        if check_keys(parent, 'first_name', 'last_name', 'email', 'password', 'avatar_id',
                       'gender_id'):
             return {'Error': 'missing data'}, 400
         parent = Parent.from_dict(parent)
@@ -747,8 +756,11 @@ class Questions(Resource):
             Raises:
             None
         """
-        question = {'question1': 'q1'}
-        return question
+        pack = QuestionDAO.get_5(request.json['package_number'])
+        json_result = convert_to_json(pack)
+        response = make_response(json_result, 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
 
 
 class Answer(Resource):
