@@ -38,11 +38,10 @@ pipeline {
         stage('Delivery') {
             steps {
                    // Define the remote server details
-                    def remoteServer = 'ubuntu@ec2-52-59-216-219.eu-central-1.compute.amazonaws.com'
                     // SSH Agent to handle private key
                     sshagent(['server']) {
                         // SSH command to connect to the remote server and execute start.sh
-                        sh "ssh -o StrictHostKeyChecking=no  ${remoteServer} './start.sh'"
+                        sh "ssh -o StrictHostKeyChecking=no  ubuntu@ec2-52-59-216-219.eu-central-1.compute.amazonaws.co './start.sh'"
 
                    
                 }
