@@ -35,24 +35,18 @@ pipeline {
             }
         }
 
-        // stage('Delivery') {
-        //     steps {
-        //         // Change to the directory containing the Terraform script
-        //         dir('terraform') {
-        //             // Initialize Terraform
-        //             sh 'terraform init'
-        //             withEnv([
-        //                 "AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY_ID}",
-        //                 "AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_ACCESS_KEY}",
-        //                 "DOCKER_USERNAME=${env.DOCKER_USER}",
-        //                 "SERVER_IMAGE=${env.SERVER_IMAGE}",
-        //                 "FRONTEND_IMAGE=${env.FRONTEND_IMAGE}"
-        //                 ]) {
-        //                 // Apply the Terraform script automatically
-        //                 sh 'terraform apply -auto-approve'
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Delivery') {
+            steps {
+                   // Define the remote server details
+                    def remoteServer = 'ubuntu@ec2-52-59-216-219.eu-central-1.compute.amazonaws.com'
+                    // SSH Agent to handle private key
+                    sshagent(['server']) {
+                        // SSH command to connect to the remote server and execute start.sh
+                        sh "ssh -o StrictHostKeyChecking=no -i ${privateKey} ${remoteServer} './start.sh'"
+
+                   }
+                }
+            }
+        }
     }
 }
