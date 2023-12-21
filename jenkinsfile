@@ -42,7 +42,7 @@ pipeline {
                     // SSH Agent to handle private key
                     sshagent(['server']) {
                         // SSH command to connect to the remote server and execute start.sh
-                        sh "ssh -o StrictHostKeyChecking=no -i ${privateKey} ${remoteServer} './start.sh'"
+                        sh "ssh -o StrictHostKeyChecking=no  ${remoteServer} './start.sh'"
 
                    }
                 }
