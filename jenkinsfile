@@ -44,7 +44,7 @@ pipeline {
                         // SSH command to connect to the remote server and execute start.sh
                         sh "ssh -o StrictHostKeyChecking=no  ${remoteServer} './start.sh'"
 
-                   }
+                   
                 }
             }
         }
