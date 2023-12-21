@@ -1,0 +1,57 @@
+[
+    {
+        "question_id": "303001101",
+        "question_text": "לאיזו משפחה בממלכת החיים שייך הדולפין?",
+        "interesting_fact": "דולפינים יוצרים קולות גבוהים ומאזינים להדים כדי לאתר טרף ולנווט בים.",
+        "answers": [
+            {"correct_answer": true, "answer_text": "יונקים"},
+            {"correct_answer": false, "answer_text": "זוחלים"},
+            {"correct_answer": false, "answer_text": "דו חיים"},
+            {"correct_answer": false, "answer_text": "עופות"}
+        ]
+    },
+    {
+        "question_id": "303001102",
+        "question_text": "מיהו בעל החיים הגדול ביותר במשפחת הכלביים?",
+        "interesting_fact": "זעקות הזאבים משמשות לקיבוץ הלהקה ולסימון טריטוריה.",
+        "answers": [
+            {"correct_answer": true, "answer_text": "זאב"},
+            {"correct_answer": false, "answer_text": "שועל"},
+            {"correct_answer": false, "answer_text": "תן"},
+            {"correct_answer": false, "answer_text": "פנק"}
+        ]
+    },
+    {
+        "question_id": "303001103",
+        "question_text": "מה דברים יודעות לסמן באמצעות ריקוד דמוי הספרה 8?",
+        "interesting_fact": "דבורים משתמשות ריקוד דמוי הספרה 8 כדי להצביע על מיקום של פרחים.",
+        "answers": [
+            {"correct_answer": true, "answer_text": "מיקום של פרחים נושאי צוף"},
+            {"correct_answer": false, "answer_text": "היכן מסתתרים טורפים"},
+            {"correct_answer": false, "answer_text": "עם איזה דבור ברצונן להתחתן"},
+            {"correct_answer": false, "answer_text": "מהו תאריך יום ההולדת שלהן"}
+        ]
+    },
+    {
+        "question_id": "303001104",
+        "question_text": "איזו ציפור ידועה ביכולתה לדבר בשפת אדם?",
+        "interesting_fact": "תוכים מוזכרים פעמיים בתנ\"ך.",
+        "answers": [
+            {"correct_answer": true, "answer_text": "תוכי"},
+            {"correct_answer": false, "answer_text": "פלמינגו"},
+            {"correct_answer": false, "answer_text": "סנונית"},
+            {"correct_answer": false, "answer_text": "עיט"}
+        ]
+    },
+    {
+        "question_id": "303001105",
+        "question_text": "כיצד נקראות ה\"שיניים\" הארוכות של הפיל?",
+        "interesting_fact": "פיל אפריקני הוא בעל החיים היבשתי הכבד ביותר. משקלו עשוי להגיע עד 4 טון.",
+        "answers": [
+            {"correct_answer": true, "answer_text": "חטים"},
+            {"correct_answer": false, "answer_text": "פיגיון"},
+            {"correct_answer": false, "answer_text": "שפיצונים"},
+            {"correct_answer": false, "answer_text": "רומחים"}
+        ]
+    }
+]
