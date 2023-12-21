@@ -48,6 +48,8 @@ def convert_to_json(result):
     # Convert the list of dictionaries to a JSON string
     json_result = json.dumps(result_dict_list, indent=2)
     return json_result
+
+
 # This is example API Resource
 class Hello(Resource):
     def get(self):
@@ -757,11 +759,11 @@ class Questions(Resource):
             None
         """
         try:
-            id= request.json
-            question_and_answers = AnswerOptionDAO.fetch_question_and_answers('303001100')
+            id = request.json
+            id = id.get('question_id')
         except:
-            question_and_answers = AnswerOptionDAO.fetch_question_and_answers(
-            id.get('question_id') if id.get('question_id') else '303001100')
+            id= '303001100'
+        question_and_answers = AnswerOptionDAO.fetch_question_and_answers(id)
         return question_and_answers
 
 
