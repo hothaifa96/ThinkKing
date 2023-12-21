@@ -1,3 +1,5 @@
+import json
+
 import psycopg2
 
 from ..POPO.db_objects import *
@@ -342,23 +344,71 @@ class QuestionDAO:
             connection.close()
 
     @staticmethod
-    def get_5(package_number):
-        # Database interaction logic here (select from the 'questions' table by ID)
+    def get_5(question_id):
+        print('connecting to the data base')
         connection = get_db_connection()
-        query = f"SELECT * FROM questions LIMIT 5 OFFSET {5*package_number-1};"
         cursor = connection.cursor()
-        try:
-            cursor.execute(query)
-            result = cursor.fetchall()
-            return result
+        # Fetch the next 5 questions without their answer options based on the given question_id
+        query = """
+        SELECT *
+        FROM questions
+        WHERE question_id > %s
+        ORDER BY question_id
+        LIMIT 5;
+        """
+        cursor.execute(query, (question_id,))
+        result = cursor.fetchall()
 
-        except psycopg2.Error as e:
-            print("Error fetching question by ID:", e)
-            return None
+        questions = []
+        for row in result:
+            question = Question(*row[:7])
+            questions.append(question)
 
-        finally:
-            cursor.close()
-            connection.close()
+        return questions
+        # Fetch the next 5 questions with their answer options based on the given question_id
+        # query = """
+        # SELECT q.*, ao.*
+        #     FROM questions q
+        #     JOIN answer_options ao ON q.question_id = ao.question_id
+        #     WHERE q.question_id > '30'
+        #     ORDER BY q.question_id
+        #     LIMIT 20;
+        # """
+        # try:
+        #     cursor.execute(query, (question_id,))
+        #     result = cursor.fetchall()
+        #     print(result)
+        #
+        # except psycopg2.Error as e:
+        #     print("Error fetching questions :", e)
+        #     return None
+        #
+        # finally:
+        #     cursor.close()
+        #     connection.close()
+        #
+        # questions_and_answers = []
+        # for row in result:
+        #     question_id, question_text, answer_option_id, correct_answer, answer_text, topic_id = row[0], row[5], row[
+        #         7], row[8], row[9], row[2]
+        #
+        #     question = {
+        #         "question_id": question_id,
+        #         "question_text": question_text,
+        #         "topic_id": topic_id,  # Add topic_id to the dictionary
+        #         "interesting_fact": row[6],
+        #         "answers": []  # List to store answer dictionaries
+        #     }
+        #
+        #     answer_option = {
+        #         "correct_answer": correct_answer,
+        #         "answer_text": answer_text
+        #     }
+        #
+        #     question["answers"].append(answer_option)
+        #     questions_and_answers.append(question)
+        #
+        # return questions_and_answers
 
     # @staticmethod
     # def update(question):
@@ -391,7 +441,7 @@ class AnswerOptionDAO:
     def get_by_question_id(question_option_id):
         # Database interaction logic here (select from the 'answer_options' table by ID)
         connection = get_db_connection()
-        query = "SELECT * FROM answer_options WHERE answer_option_id = ?;", (question_option_id,)
+        query = "SELECT * FROM answer_options WHERE answer_option_id = '?';", (question_option_id,)
         cursor = connection.cursor()
         try:
             cursor.execute(query)
@@ -406,6 +456,42 @@ class AnswerOptionDAO:
             cursor.close()
             connection.close()
 
+    @staticmethod
+    def fetch_question_and_answers(question_id):
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        # Fetch the question and its associated answer options based on the given question_id
+        query = """
+        SELECT q.*, ao.*
+        FROM questions q
+        JOIN answer_options ao ON q.question_id = ao.question_id
+        WHERE q.question_id > %s
+        ORDER BY q.question_id
+    	LIMIT 20;
+        """
+        questions_list=[]
+        try:
+            cursor.execute(query, (question_id,))
+            result = cursor.fetchall()
+        except psycopg2.Error as e:
+            print("Error fetching answers by ID:", e)
+            return None
+
+        finally:
+            cursor.close()
+            connection.close()
+        for row in result:
+            question_id, _, _, _, _, interesting_fact, _, question_text, answer_option_id, _, answer_text, correct_answer = row
+
+            question = next((q for q in questions_list if q["question_id"] == question_id), None)
+
+            if question is None:
+                question = {"question_id": question_id, "question_text": question_text,
+                            "interesting_fact": interesting_fact, "answers": []}
+                questions_list.append(question)
+
+            question["answers"].append({"correct_answer": correct_answer, "answer_text": answer_text})
+        return questions_list
     @staticmethod
     def get_by_topic_id(topic_id):
         # Database interaction logic here (select from the 'answer_options' table by ID)
@@ -436,6 +522,12 @@ class AnswerOptionDAO:
     #     # Database interaction logic here (delete from the 'answer_options' table by ID)
     #     connection = get_db_connection()
     #     connection.close()
+
+    # print(answers_list)
+
+    # # Print answers as a list of lists
+    # answers_list = [[answer.answer_option_id, answer.correct_answer, answer.answer_text] for answer in answers]
+    # print(json.dumps(answers_list, indent=2))
 
 
 class SchoolDAO:

@@ -73,8 +73,7 @@ class Parent:
 
 
 class Question:
-    def __init__(self, question_id, language_id, topic_id, c_grade_id, level, question_text, explanation,
-                 interesting_fact):
+    def __init__(self, question_id, language_id, topic_id, c_grade_id, level, question_text, explanation, interesting_fact):
         self.question_id = question_id
         self.language_id = language_id
         self.topic_id = topic_id
@@ -84,6 +83,15 @@ class Question:
         self.explanation = explanation
         self.interesting_fact = interesting_fact
 
+    def __str__(self):
+        return f"Question ID: {self.question_id}\n" \
+               f"Language ID: {self.language_id}\n" \
+               f"Topic ID: {self.topic_id}\n" \
+               f"C Grade ID: {self.c_grade_id}\n" \
+               f"Level: {self.level}\n" \
+               f"Question Text: {self.question_text}\n" \
+               f"Explanation: {self.explanation}\n" \
+               f"Interesting Fact: {self.interesting_fact}"
 
 class AnswerOption:
     def __init__(self, answer_option_id, question_id, correct_answer, answer_text):

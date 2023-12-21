@@ -756,11 +756,13 @@ class Questions(Resource):
             Raises:
             None
         """
-        pack = QuestionDAO.get_5(request.json['package_number'])
-        json_result = convert_to_json(pack)
-        response = make_response(json_result, 200)
-        response.headers['Content-Type'] = 'application/json'
-        return response
+        try:
+            id= request.json
+            question_and_answers = AnswerOptionDAO.fetch_question_and_answers('303001100')
+        except:
+            question_and_answers = AnswerOptionDAO.fetch_question_and_answers(
+            id.get('question_id') if id.get('question_id') else '303001100')
+        return question_and_answers
 
 
 class Answer(Resource):
