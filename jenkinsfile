@@ -39,7 +39,7 @@ pipeline {
             steps {
                    // Define the remote server details
                     // SSH Agent to handle private key
-                    withCredentials[sshUserPrivateKey(credentialsId: 'server', keyFileVariable: 'SSH_PRIVATE_KEY')]){
+                    withCredentials([sshUserPrivateKey(credentialsId: 'server', keyFileVariable: 'SSH_PRIVATE_KEY')]){
                         // SSH command to connect to the remote server and execute start.s
                         sh 'ssh -o StrictHostKeyChecking=no -i /path/to/private/key ubuntu@ec2-52-59-216-219.eu-central-1.compute.amazonaws.com ./start.sh'
 
