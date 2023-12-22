@@ -269,7 +269,31 @@
       <option name="project" value="LOCAL" />
       <updated>1703202652507</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="add(DAO):add question logic">
+      <option name="closed" value="true" />
+      <created>1703202880727</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1703202880727</updated>
+    </task>
+    <task id="LOCAL-00014" summary="add(DAO):add question logic">
+      <option name="closed" value="true" />
+      <created>1703203097770</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1703203097770</updated>
+    </task>
+    <task id="LOCAL-00015" summary="add(DAO):add question logic">
+      <option name="closed" value="true" />
+      <created>1703203135783</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1703203135783</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

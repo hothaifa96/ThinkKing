@@ -39,8 +39,8 @@ pipeline {
             steps {
                    // Define the remote server details
                     // SSH Agent to handle private key
-                        // SSH command to connect to the remote server and execute start.s
-                        sh 'sudo ssh -i /key1.pem ubuntu@ec2-52-59-216-219.eu-central-1.compute.amazonaws.com ./start.sh'
+                        // SSH command to connect to the remote server and execute start.sh
+                        sh 'sudo ssh -i /key1.pem ubuntu@ec2-52-59-216-219.eu-central-1.compute.amazonaws.com ./stiteart.sh'
             }
         }
     }
