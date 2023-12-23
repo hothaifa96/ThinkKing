@@ -23,7 +23,8 @@ api.add_resource(Avatar, '/avatar')
 api.add_resource(KidScreen, '/kid_screen')
 api.add_resource(KidProfile, '/change_kid')
 api.add_resource(QuestionsStatus, '/stat/question')
-api.add_resource(Questions, '/question')
+api.add_resource(AllQuestions, '/questions')
+api.add_resource(Questions, '/question/<string:id>')
 api.add_resource(Answer, '/answer')
 # react app hosting
 

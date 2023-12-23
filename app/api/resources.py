@@ -54,12 +54,12 @@ def convert_to_json(result):
 class Hello(Resource):
     def get(self):
         """
-        Route get method
+        Route get method with path parameter
         type something :)
         happy coding
         """
 
-        return {'message': 'Ping'}
+        return {'message': f'Ping'}
 
     def post(self):
         """
@@ -735,6 +735,13 @@ class QuestionsStatus(Resource):
         return stats
 
 
+class AllQuestions(Resource):
+    def get(self):
+        id = '303001100',
+        question_and_answers = AnswerOptionDAO.fetch_question_and_answers(id)
+        return question_and_answers
+
+
 class Questions(Resource):
     """
         A class representing a resource for retrieving questions.
@@ -748,7 +755,7 @@ class Questions(Resource):
         None
         """
 
-    def get(self):
+    def get(self, id='303001100'):
         """
             Get the questions.
 
@@ -758,11 +765,8 @@ class Questions(Resource):
             Raises:
             None
         """
-        try:
-            id = request.json
-            id = id.get('question_id')
-        except:
-            id= '303001100'
+
+        # id'303001100',
         question_and_answers = AnswerOptionDAO.fetch_question_and_answers(id)
         return question_and_answers
 
