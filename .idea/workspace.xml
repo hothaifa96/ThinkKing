@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3036a416-803d-45b4-adb4-0458ae4e63a4" name="Changes" comment="add(DAO):add question logic">
-      <change beforePath="$PROJECT_DIR$/jenkinsfile" beforeDir="false" afterPath="$PROJECT_DIR$/jenkinsfile" afterDir="false" />
+    <list default="true" id="3036a416-803d-45b4-adb4-0458ae4e63a4" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/app/api/resources.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/resources.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
