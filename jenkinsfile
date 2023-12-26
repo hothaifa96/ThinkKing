@@ -1,0 +1,50 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_DEFAULT_REGION = 'your_aws_region'
+        BUCKET_NAME = 'your_s3_bucket'
+        FILE_NAME = 'your_file.xlsx'
+        DATABASE_URL = 'your_database_url'
+        DATABASE_USER = 'your_database_user'
+        DATABASE_PASSWORD = 'your_database_password'
+    }
+
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    sh 'pip install -r requirements.txt'
+                }
+            }
+        }
+
+        stage('Fetch XLSX from S3') {
+            steps {
+                script {
+                    sh 'aws s3 cp s3://${BUCKET_NAME}/${FILE_NAME} .'
+                }
+            }
+        }
+
+        stage('Run Converter Script') {
+            steps {
+                script {
+                    sh 'python converter.py'
+                }
+            }
+        }
+
+        stage('Install psql and Login to Server') {
+            steps {
+                script {
+                    // Install psql
+                    sh 'apt-get update && apt-get install -y postgresql-client'
+
+                    // Log in to the database server
+                    sh "psql -h ${DATABASE_URL} -U ${DATABASE_USER} -d ${DATABASE_NAME} -c 'your_sql_command;'"
+                }
+            }
+        }
+    }
+}

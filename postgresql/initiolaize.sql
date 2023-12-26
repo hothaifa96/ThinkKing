@@ -8,16 +8,12 @@ CREATE TABLE avatars (
   avatar varchar
 );
 
-
-
-
-
 CREATE TABLE questions (
   question_id varchar PRIMARY KEY,
   language_id integer,
   topic_id integer,
   c_grade_id integer,
-  level integer,
+  level int,
   question_text varchar,
   explanation varchar,
   interesting_fact varchar
@@ -37,7 +33,7 @@ CREATE TABLE schools (
 );
 
 CREATE TABLE topics (
-  topic_id serial PRIMARY KEY,
+  topic_id int PRIMARY KEY,
   topic_name varchar
 );
 CREATE TABLE c_grades (
