@@ -3,7 +3,7 @@ import time
 from datetime import date
 
 from flask_restful import Resource
-from flask import make_response
+from flask import make_response, jsonify
 from flask import request
 from app.DAL.DAO.data_access_object import *
 from app.DAL.POPO.db_objects import *
@@ -29,25 +29,21 @@ def check_keys(data, *args):
     return False
 
 
-def get_json_obj(o):
-    d = {}
-    for k, v in o.__dict__.items():
-        if isinstance(v, (date, datetime)):
-            d[k] = v.strftime("%Y-%m-%d %H:%M:%S")
-        else:
-            d[k] = v
-    return d
+class AddKidResource(Resource):
+    def post(self):
 
+        parent_data = request.json
+        if check_keys(parent_data, 'first_name', 'gender_id', 'parent_id'):
+            return {'Error': 'missing data'}, 400
+        try:
+            first_name = parent_data.get("first_name")
+            gender_id = parent_data.get("gender_id")
+            parent_id = parent_data.get("parent_id")
+            kid_id = KidDAO.create_first(first_name, parent_id,gender_id)
+            return ({"kid_id":kid_id}), 200
 
-def convert_to_json(result):
-    columns = result[0]._fields if result else None
-
-    # Convert the result to a list of dictionaries
-    result_dict_list = [dict(zip(columns, row)) for row in result]
-
-    # Convert the list of dictionaries to a JSON string
-    json_result = json.dumps(result_dict_list, indent=2)
-    return json_result
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
 
 
 # This is example API Resource
@@ -78,6 +74,147 @@ class Hello(Resource):
         """
 
         pass
+
+
+class RegisterParent(Resource):
+    def post(self):
+        """
+        Handle POST request for the Parent registration resource.
+
+        This method receives a JSON payload containing parent registration data and performs the following steps:
+        1. Checks if all the required keys are present in the JSON data.
+        2. If any required key is missing, returns an error response with status code 400.
+        3. If all required keys are present, creates a new Parent object and attempts to register it.
+        4. Returns a response with status code 201 if registration is successful, or an error response with status code 400.
+
+        Returns:
+        dict: A dictionary containing the response data.
+
+        Raises:
+        None
+        """
+        parent_data = request.json
+
+        # Check if all required keys are present
+        if check_keys(parent_data, 'first_name', 'last_name', 'email', 'gender_id', 'password'):
+            return {'Error': 'missing data'}, 400
+
+        # Create a new Parent object
+        parent = Parent.from_dict(parent_data)
+
+        # Attempt to register the new parent
+        p = ParentDAO.create(parent)
+        parent = ParentDAO.get_by_email(parent.email)
+        print(parent.parent_id)
+        if p:
+            response_data = {
+                'first_name': parent.first_name,
+                'last_name': parent.last_name,
+                'email': parent.email,
+                'avatar_id': parent.avatar_id,  # Replace with the actual avatar_id logic
+                'gender_id': parent.gender_id,
+                'pin_code': parent.pin_code,  # Replace with the actual pin_code logic
+                'kid_list': KidDAO.get_by_parent_id(parent.parent_id),
+                'jwt_token': 'sample_jwt_token',  # Replace with actual JWT logic
+                'parent_id': parent.parent_id,
+                'status': 'success'
+            }
+
+            return response_data, 201
+        else:
+            response_data = {
+                'status': 'error',
+                'message': 'Error registering parent'
+            }
+            return response_data, 400
+
+
+class LoginParent(Resource):
+    """
+        A class representing the Parent resource.
+
+        This class handles the POST and DELETE requests for the Parent resource.
+
+        Methods:
+        - post(): Handles the POST request for the Parent resource.
+        - delete(): Handles the DELETE request for the Parent resource.
+    """
+
+    def post(self):
+        """
+        Handle GET request for the Parent login resource.
+
+        This method receives a JSON payload containing the parent's email and password and performs the following steps:
+        1. Checks if all the required keys ('email' and 'password') are present in the JSON data.
+        2. If any required key is missing, returns an error response with status code 400.
+        3. If all required keys are present, retrieves the parent data by email and password.
+        4. Returns a dictionary containing the specified JSON response.
+
+        Returns:
+        dict: A dictionary containing the specified JSON response.
+
+        Raises:
+        None
+        """
+
+        login_data = request.json
+
+        if check_keys(login_data, 'email', 'password'):
+            return {'Error': 'missing data'}, 400
+
+        email = login_data['email']
+        password = login_data['password']
+
+        parent = ParentDAO.get_by_email(email)
+
+        if parent and parent.password == password:
+            # Sample response structure
+            response_data = {
+                'first_name': parent.first_name,
+                'last_name': parent.last_name,
+                'email': parent.email,
+                'avatar_id': parent.avatar_id,
+                'gender_id': parent.gender_id,
+                'pin_code': parent.pin_code,
+                'kid_list(count)': KidDAO.get_by_parent_id(parent.parent_id),  # Add actual kid list data here
+                'jwt_token': 'sample_jwt_token',
+                'parent_id': parent.parent_id,
+                'status': 'success'
+            }
+
+            return response_data
+        else:
+            return {'status': 'error', 'message': 'Invalid credentials'}, 401
+
+    def delete(self):
+        """
+            Handle DELETE request for the Parent resource.
+
+            This method receives a JSON payload containing parent data and performs the following steps:
+            1. Checks if the 'parent_id' key is present in the JSON data.
+            2. If the 'parent_id' key is missing, returns an error response with status code 400.
+            3. If the 'parent_id' key is present, prints each key-value pair in the parent data.
+            4. Returns a dictionary indicating successful deletion.
+
+            Returns:
+            dict: A dictionary indicating successful deletion.
+
+            Raises:
+            None
+        """
+        parent = request.json
+        if check_keys(parent, 'email'):
+            return {'Error': 'missing data'}, 400
+        try:
+            if ParentDAO.delete(parent.get('email')):
+                response = make_response('user deleted', 200)
+                response.headers['Content-Type'] = 'application/json'
+                return response
+        except Exception as e:
+            print('error message ', e)
+            response = make_response('error', 500)
+            response.headers['Content-Type'] = 'application/json'
+            return response
 
 
 class ParentRegister(Resource):

@@ -4,6 +4,7 @@ import psycopg2
 
 from ..POPO.db_objects import *
 from ..db import get_db_connection
+import datetime
 
 
 class GenderDAO:
@@ -23,8 +24,9 @@ class GenderDAO:
         cursor = connection.cursor()
         try:
             cursor.execute(query)
-            result = cursor.fetchall()
-            return result
+            results = cursor.fetchall()
+            return [Gender(*result) for result in results]
+
 
         except psycopg2.Error as e:
             print("Error fetching genders:", e)
@@ -44,7 +46,9 @@ class GenderDAO:
         try:
             cursor.execute(query)
             result = cursor.fetchall()
-            return result
+            if result:
+                return Gender(*result)
+            return None
 
         except psycopg2.Error as e:
             print("Error fetching gender by ID:", e)
@@ -79,8 +83,8 @@ class AvatarDAO:
         cursor = connection.cursor()
         try:
             cursor.execute(query)
-            result = cursor.fetchall()
-            return result
+            results = cursor.fetchall()
+            return [Avatar(*result) for result in results]
 
         except psycopg2.Error as e:
             print("Error fetching avatar:", e)
@@ -99,7 +103,7 @@ class AvatarDAO:
         try:
             cursor.execute(query)
             result = cursor.fetchall()
-            return result
+            return Avatar(*result)
 
         except psycopg2.Error as e:
             print("Error fetching avatar by ID:", e)
@@ -159,15 +163,45 @@ class KidDAO:
             connection.close()
 
     @staticmethod
-    def get_all():
+    def create_first(first_name, parent_id, gender_id):
+        # Database interaction logic here (insert into the 'kids' table)
+        connection = get_db_connection()
+        query = f"""
+            INSERT INTO kids (first_name,parent_id, gender_id) VALUES ('{first_name}', {parent_id}, {gender_id}); """
+
+        cursor = connection.cursor()
+        try:
+
+            cursor.execute(query)
+            connection.commit()
+            kid = KidDAO.get_all_by_parent_and_name(parent_id, first_name)
+            print(kid)
+
+            if kid:
+                return kid
+
+            else:
+                return None
+
+        except psycopg2.Error as e:
+            print("Error fetching kid by ID:", e)
+            return None
+
+        finally:
+            cursor.close()
+            connection.close()
+
+    @staticmethod
+    def get_all_by_parent_and_name(parent_id,firstname):
         # Database interaction logic here (select all from the 'kids' table)
         connection = get_db_connection()
-        query = "SELECT * FROM kids"
+        query = f"SELECT * FROM kids where parent_id ={parent_id} and first_name= '{firstname}'"
         cursor = connection.cursor()
         try:
             cursor.execute(query)
-            result = cursor.fetchall()
-            return result
+            result = cursor.fetchone()
+            print(result, f'parent_id = {parent_id} first_name= {firstname} ')
+            return result[0]
 
         except psycopg2.Error as e:
             print("Error fetching kids :", e)
@@ -178,6 +212,26 @@ class KidDAO:
             connection.close()
 
     @staticmethod
+    def get_by_parent_id( parent_id):
+        connection = get_db_connection()
+        query = f"SELECT * FROM kids where parent_id ={parent_id}"
+        cursor = connection.cursor()
+        query = "SELECT * FROM kids WHERE parent_id = %s"
+        cursor.execute(query, (parent_id,))
+        results = cursor.fetchall()
+        return [Kid(*result) for result in results]
+
+    @staticmethod
+    def get_by_parent_id_and_name( parent_id,firstname):
+        connection = get_db_connection()
+        query = f"SELECT * FROM kids where parent_id ={parent_id} and firstname={firstname}"
+        cursor = connection.cursor()
+        query = "SELECT * FROM kids WHERE parent_id = %s"
+        cursor.execute(query, (parent_id,))
+        results = cursor.fetchall()
+        return [Kid(*result) for result in results]
+
+    @staticmethod
     def get_by_id(kid_id):
         # Database interaction logic here (select from the 'kids' table by ID)
         connection = get_db_connection()
@@ -185,8 +239,59 @@ class KidDAO:
         cursor = connection.cursor()
         try:
             cursor.execute(query)
-            result = cursor.fetchall()
-            return result
+            results = cursor.fetchall()
+            kid_objects = []
+            for result in results:
+                kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns, \
+                    time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at = result
+
+                # Convert the created_at timestamp to a datetime object
+                created_at_datetime = datetime.datetime.utcfromtimestamp(created_at)
+
+                kid = Kid(
+                    kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns,
+                    time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time,
+                    created_at_datetime
+                )
+                kid_objects.append(kid)
+
+            return kid_objects
+
+
+        except psycopg2.Error as e:
+            print("Error fetching kid by ID:", e)
+            return None
+
+        finally:
+            cursor.close()
+            connection.close()
+
+    @staticmethod
+    def get_by_name_and_parent_id(parent_id, name):
+        # Database interaction logic here (select from the 'kids' table by ID)
+        connection = get_db_connection()
+        query = "SELECT * FROM kids WHERE parent_id = ? and first_name=?;", (parent_id,name)
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            results = cursor.fetchall()
+            kid_objects = []
+            for result in results:
+                kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns, \
+                    time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at = result
+
+                # Convert the created_at timestamp to a datetime object
+                created_at_datetime = datetime.datetime.utcfromtimestamp(created_at)
+
+                kid = Kid(
+                    kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns,
+                    time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time,
+                    created_at_datetime
+                )
+                kid_objects.append(kid)
+
+            return kid_objects
+
 
         except psycopg2.Error as e:
             print("Error fetching kid by ID:", e)
@@ -221,7 +326,7 @@ class ParentDAO:
     def create(parent):
         connection = get_db_connection()
         query = f"INSERT INTO parents (email, first_name, last_name, pin_code, avatar_id, created_at, password,gender_id) " \
-                f"VALUES ('{parent.email}', '{parent.first_name}', '{parent.last_name}', '{parent.pin_code}', {parent.avatar_id},CURRENT_TIMESTAMP, '{parent.password}',{parent.gender_id})"
+                f"VALUES ('{parent.email}', '{parent.first_name}', '{parent.last_name}', '{parent.pin_code}', '{parent.avatar_id}',CURRENT_TIMESTAMP, '{parent.password}',{parent.gender_id})"
         print(query)
         cursor = connection.cursor()
         try:
@@ -469,7 +574,7 @@ class AnswerOptionDAO:
         ORDER BY q.question_id
     	LIMIT 20;
         """
-        questions_list=[]
+        questions_list = []
         try:
             cursor.execute(query, (question_id,))
             result = cursor.fetchall()
@@ -492,6 +597,7 @@ class AnswerOptionDAO:
 
             question["answers"].append({"correct_answer": correct_answer, "answer_text": answer_text})
         return questions_list
+
     @staticmethod
     def get_by_topic_id(topic_id):
         # Database interaction logic here (select from the 'answer_options' table by ID)

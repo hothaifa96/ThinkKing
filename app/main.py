@@ -1,15 +1,22 @@
 from flask import Flask, send_from_directory
 from flask_restful import Api
 from app.api.resources import *
+
 # import os
 
 app = Flask('Thinking')
 
 api = Api(app, prefix='/api')  # API Initialization
 
+api.add_resource(LoginParent, '/parent/login')
+api.add_resource(RegisterParent, '/parent/register')
+api.add_resource(AddKidResource , '/add/name/gender')
+
+
+
 api.add_resource(Hello, '/hello')
 api.add_resource(ParentRegister, '/parent')
-api.add_resource(ParentLogin, '/login/parent')
+api.add_resource(ParentLogin, '/login/parent')  # deprecated
 api.add_resource(Kid, '/kid')
 api.add_resource(School, '/schools')
 api.add_resource(Class, '/classes')
