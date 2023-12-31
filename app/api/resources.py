@@ -877,6 +877,11 @@ class AllQuestions(Resource):
         id = '303001100',
         question_and_answers = AnswerOptionDAO.fetch_question_and_answers(id)
         return question_and_answers
+class GettAllQuestions(Resource):
+    def get(self):
+        id = '303001100',
+        question_and_answers = AnswerOptionDAO.new_fetch_question_and_answers(id)
+        return question_and_answers
 
 
 class Questions(Resource):
@@ -905,6 +910,33 @@ class Questions(Resource):
 
         # id'303001100',
         question_and_answers = AnswerOptionDAO.fetch_question_and_answers(id)
+        return question_and_answers
+class GetQuestions(Resource):
+    """
+        A class representing a resource for retrieving questions.
+
+        This resource allows getting questions.
+
+        Methods:
+        - get: Get the questions.
+
+        Attributes:
+        None
+        """
+
+    def get(self, id='303001100'):
+        """
+            Get the questions.
+
+            Returns:
+            dict: The questions.
+
+            Raises:
+            None
+        """
+
+        # id'303001100',
+        question_and_answers = AnswerOptionDAO.new_fetch_question_and_answers(id)
         return question_and_answers
 
 

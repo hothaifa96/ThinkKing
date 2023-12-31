@@ -11,6 +11,8 @@ api = Api(app, prefix='/api')  # API Initialization
 api.add_resource(LoginParent, '/parent/login')
 api.add_resource(RegisterParent, '/parent/register')
 api.add_resource(AddKidResource , '/add/name/gender')
+api.add_resource(GettAllQuestions, '/get/questions')
+api.add_resource(GetQuestions, '/get/questions/<string:id>')
 
 
 

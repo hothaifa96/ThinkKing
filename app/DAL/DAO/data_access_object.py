@@ -597,6 +597,42 @@ class AnswerOptionDAO:
 
             question["answers"].append({"correct_answer": correct_answer, "answer_text": answer_text})
         return questions_list
+    @staticmethod
+    def new_fetch_question_and_answers(question_id):
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        # Fetch the question and its associated answer options based on the given question_id
+        query = """
+        SELECT q.*, ao.*
+        FROM questions q
+        JOIN answer_options ao ON q.question_id = ao.question_id
+        WHERE q.question_id > %s
+        ORDER BY q.question_id
+    	LIMIT 20;
+        """
+        questions_list = []
+        try:
+            cursor.execute(query, (question_id,))
+            result = cursor.fetchall()
+        except psycopg2.Error as e:
+            print("Error fetching answers by ID:", e)
+            return None
+
+        finally:
+            cursor.close()
+            connection.close()
+        for row in result:
+            question_id, _, _, _, _, interesting_fact, _, question_text, answer_option_id, _, answer_text, correct_answer = row
+
+            question = next((q for q in questions_list if q["question_id"] == question_id), None)
+            print(question_id[0])
+            if question is None:
+                question = {"question_id": question_id, "question_text": question_text,
+                            "explanation": interesting_fact,"subject":"math" if question_id[0] == '1' else "common knowledge", "answers": []}
+                questions_list.append(question)
+
+            question["answers"].append({"correct_answer": correct_answer, "answer_text": answer_text})
+        return questions_list
 
     @staticmethod
     def get_by_topic_id(topic_id):
