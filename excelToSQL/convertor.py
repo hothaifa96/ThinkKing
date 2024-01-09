@@ -36,8 +36,8 @@ def read_excel_and_generate_sql(excel_file_path, sql_file_path):
             sql_file.write(sql_statement + '\n')
 
 if __name__ == "__main__":
-    excel_file_path = "/Users/hothaifa/Desktop/ThinkKing/c_knowlage.xlsx"
-    sql_file_path = "./ans.sql"
+    excel_file_path = "/Users/hothaifa/Desktop/s3/ידע עולם כתה ה 500 שאלות.xlsx"
+    sql_file_path = "./sql-vav.sql"
 
     read_excel_and_generate_sql(excel_file_path, sql_file_path)
     print(f"SQL file generated at: {sql_file_path}")
