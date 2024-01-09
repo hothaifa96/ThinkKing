@@ -655,7 +655,7 @@ class AnswerOptionDAO:
             cursor.close()
             connection.close()
         for row in result:
-            question_id, _, _, _, _, interesting_fact, _, question_text, answer_option_id, _, answer_text, correct_answer = row
+            question_id, _, _, _, _, question_text, _, interesting_fact, answer_option_id, _, answer_text, correct_answer = row
 
             question = next((q for q in questions_list if q["question_id"] == question_id), None)
 
