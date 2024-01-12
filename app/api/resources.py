@@ -46,7 +46,6 @@ class AddKidResource(Resource):
             return jsonify({"error": str(e)}), 500
 
 
-# This is example API Resource
 class Hello(Resource):
     def get(self):
         """
@@ -820,10 +819,61 @@ class Kids(Resource):
         kids_list = KidDAO.get_by_parent_id(parent['parent_id'])
         if len(kids_list) > 0:
             print(kids_list)
-            kids_list = [kid.to_dict() for kid in kids_list ]
+            kids_list = [kid.to_dict() for kid in kids_list]
             return make_response(kids_list, 200)
         else:
             return 'no kids found', 400
+    def delete(self):
+        kid = request.json
+        if check_keys(kid, 'kid_id'):
+            return {'Error': 'missing data'}, 400
+        response = KidDAO.get_by_parent_id(kid['parent_id'])
+
+        return make_response(response, 200)
+
+
+class KidLearing(Resource):
+    def get(self):
+        kid = request.json
+        if check_keys(kid, 'kid_id'):
+            return {'Error': 'missing data'}, 400
+        response = KidDAO.get_learning_speed(kid['kid_id'])
+
+        return make_response(response, 200)
+    def post(self):
+        kid = request.json
+        if check_keys(kid, 'kid_id','learning_speed'):
+            return {'Error': 'missing data'}, 400
+        response = KidDAO.update_learning_speed(kid['kid_id'],kid['learning_speed'])
+
+        return make_response(response, 200)
+
+class KidName(Resource):
+
+    def post(self):
+        kid = request.json
+        if check_keys(kid, 'kid_id','first_name'):
+            return {'Error': 'missing data'}, 400
+        response = KidDAO.update_kid_first_name(kid['kid_id'],kid['first_name'])
+
+        return make_response(response, 200)
+class ParentPasswrod(Resource):
+
+    def post(self):
+        parent = request.json
+        if check_keys(parent, 'parent_id', 'current_password', 'new_password'):
+            return {'Error': 'missing data'}, 400
+        response = ParentDAO.change_password(parent['parent_id'],parent['current_password'],parent['new_password'])
+
+        return make_response(response, 200)
+    def delete(self):
+        parent = request.json
+        if check_keys(parent, 'parent_id'):
+            return {'Error': 'missing data'}, 400
+        response = ParentDAO.delete(parent['parent_id'])
+
+        return make_response(response, 200)
+
 
 
 class Password(Resource):

@@ -2,11 +2,9 @@ from flask import Flask, send_from_directory
 from flask_restful import Api
 from app.api.resources import *
 
-# import os
-
 app = Flask('Thinking')
 
-api = Api(app, prefix='/api')  # API Initialization
+api = Api(app, prefix='/api')
 
 api.add_resource(LoginParent, '/parent/login')
 api.add_resource(RegisterParent, '/parent/register')
@@ -18,6 +16,10 @@ api.add_resource(Classes, '/grades')
 api.add_resource(Subjects, '/subjects')
 api.add_resource(PinCode, '/pin')
 api.add_resource(Kids, '/kids')
+api.add_resource(KidLearing, '/learning/kid')
+api.add_resource(KidName, '/name/kid')
+api.add_resource(ParentPasswrod, '/parent/update')
+
 
 
 
@@ -43,4 +45,4 @@ api.add_resource(Answer, '/answer')
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run( use_reloader=True,debug=True, host='0.0.0.0', port=5000)

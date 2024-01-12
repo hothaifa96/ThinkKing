@@ -232,6 +232,33 @@ class KidDAO:
         return [Kid(*result) for result in results]
 
     @staticmethod
+    def delete_kid(kid_id):
+        # Database interaction logic here (delete from the 'kids' table by ID)
+        connection = get_db_connection()
+        query = f"DELETE FROM kids WHERE kid_id = {kid_id};"
+
+        cursor = connection.cursor()
+        try:
+            # Use a tuple (kid_id,) in execute() to provide the parameter
+            cursor.execute(query)
+            connection.commit()
+
+            # Check if any rows were affected
+            if cursor.rowcount > 0:
+                return {'success': True, 'message': 'Kid deleted successfully'}
+            else:
+                return {'success': False, 'message': 'Kid not found'}
+
+        except Exception as e:
+            # Handle any exceptions that may occur during the delete
+            return {'success': False, 'message': str(e)}
+
+        finally:
+            # Make sure to close the cursor and connection in a finally block
+            cursor.close()
+            connection.close()
+
+    @staticmethod
     def get_by_id(kid_id):
         # Database interaction logic here (select from the 'kids' table by ID)
         connection = get_db_connection()
@@ -263,6 +290,84 @@ class KidDAO:
             return None
 
         finally:
+            cursor.close()
+            connection.close()
+    @staticmethod
+    def get_learning_speed(kid_id):
+        # Database interaction logic here (select from the 'kids' table by ID)
+        connection = get_db_connection()
+        query = f"SELECT learning_speed FROM kids WHERE kid_id = {kid_id};"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchone()
+
+            if result:
+                # Return the learning_speed value as a dictionary
+                response = {'learning_speed': result[0]}
+                return json.dumps(response)
+            else:
+                # Handle the case where no result is found for the given kid_id
+                return json.dumps({'error': 'Kid not found'})
+
+        except psycopg2.Error as e:
+            print("Error fetching kid by ID:", e)
+            return None
+
+        finally:
+            cursor.close()
+            connection.close()
+
+    @staticmethod
+    def update_learning_speed(kid_id, learning_speed):
+        # Database interaction logic here (update the 'kids' table by ID)
+        connection = get_db_connection()
+        query = f"UPDATE kids SET learning_speed = {learning_speed} WHERE kid_id = {kid_id};"
+
+        cursor = connection.cursor()
+        try:
+            # Use a tuple (learning_speed, kid_id) in execute() to provide the parameters
+            cursor.execute(query)
+            connection.commit()
+
+            # Check if any rows were affected
+            if cursor.rowcount > 0:
+                return {'success': True, 'message': 'Learning speed updated successfully'}
+            else:
+                return {'success': False, 'message': 'Kid not found'}
+
+        except Exception as e:
+            # Handle any exceptions that may occur during the update
+            return {'success': False, 'message': str(e)}
+
+        finally:
+            # Make sure to close the cursor and connection in a finally block
+            cursor.close()
+            connection.close()
+
+    @staticmethod
+    def update_kid_first_name(kid_id, new_first_name):
+        # Database interaction logic here (update the 'kids' table by ID)
+        connection = get_db_connection()
+        query = f"UPDATE kids SET first_name = '{new_first_name}' WHERE kid_id = {kid_id};"
+
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            connection.commit()
+
+            # Check if any rows were affected
+            if cursor.rowcount > 0:
+                return {'success': True, 'message': 'First name updated successfully'}
+            else:
+                return {'success': False, 'message': 'Kid not found'}
+
+        except Exception as e:
+            # Handle any exceptions that may occur during the update
+            return {'success': False, 'message': str(e)}
+
+        finally:
+            # Make sure to close the cursor and connection in a finally block
             cursor.close()
             connection.close()
 
@@ -466,6 +571,41 @@ class ParentDAO:
             cursor.close()
             connection.close()
 
+    from hashlib import sha256
+
+    @staticmethod
+    def change_password(parent_id, current_password, new_password):
+        # Database interaction logic here (check current password, update if correct)
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        try:
+            # Check if the current password is correct
+            check_query = f"SELECT password FROM parents WHERE parent_id = {parent_id};"
+            cursor.execute(check_query)
+            result = cursor.fetchone()
+
+            if result:
+                if current_password == result[0]:
+                    # Update the password with the new one
+                    update_query = f"UPDATE parents SET password = '{new_password}' WHERE parent_id = {parent_id};"
+                    cursor.execute(update_query)
+                    connection.commit()
+                    return {'success': True, 'message': 'Password changed successfully'}
+                else:
+                    return {'success': False, 'message': 'Current password is incorrect'}
+            else:
+                return {'success': False, 'message': 'Parent not found'}
+
+        except Exception as e:
+            # Handle any exceptions that may occur during the password change
+            return {'success': False, 'message': str(e)}
+
+        finally:
+            # Make sure to close the cursor and connection in a finally block
+            cursor.close()
+            connection.close()
+
     # TODO: upload parent
     @staticmethod
     def update(parent):
@@ -475,19 +615,30 @@ class ParentDAO:
 
     # TODO: delete parent
     @staticmethod
-    def delete(parent_email):
+    def delete(parent_id):
         # Database interaction logic here (delete from the 'parents' table by ID)
         connection = get_db_connection()
-        query = f"DELETE FROM parents WHERE email='{parent_email}';"
         cursor = connection.cursor()
+
         try:
-            cursor.execute(query)
-            connection.commit()
-            return True
+            # Check if the parent exists
+            check_query = f"SELECT * FROM parents WHERE parent_id = {parent_id};"
+            cursor.execute(check_query)
+            result = cursor.fetchone()
+
+            if result:
+                # Parent exists, proceed with deletion
+                delete_query = f"DELETE FROM parents WHERE parent_id = {parent_id};"
+                cursor.execute(delete_query)
+                connection.commit()
+                return {'success': True, 'message': 'Parent deleted successfully'}
+            else:
+                return {'success': False, 'message': 'Parent not found'}
+
         except Exception as e:
-            print(e)
-            return False
+            return {'success': False, 'message': str(e)}
         finally:
+            cursor.close()
             connection.close()
 
 

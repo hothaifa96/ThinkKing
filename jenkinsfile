@@ -37,17 +37,10 @@ pipeline {
 
         stage('Delivery') {
             steps {
-                   // Define the remote server details
-                    // SSH Agent to handle private key
-                        // SSH command to connect to the remote server and execute start.sh
-                        sh 'sudo ssh -i /key1.pem ubuntu@ec2-52-59-216-219.eu-central-1.compute.amazonaws.com ./start.sh'
+                sh 'sudo ssh -i /key1.pem ubuntu@ec2-52-59-216-219.eu-central-1.compute.amazonaws.com ./start.sh'
             }
         }
     }
 }
 
 
-// CREATE TABLE subjects (
-//     subject_id SERIAL PRIMARY KEY,
-//     name VARCHAR(255) NOT NULL
-// );

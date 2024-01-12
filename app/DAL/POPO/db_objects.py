@@ -41,7 +41,7 @@ class Avatar:
 
 class Kid:
     def __init__(self, kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns,
-                 time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time,created_at):
+                 time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time,created_at,learning_speed):
         self.kid_id = kid_id
         self.parent_id = parent_id
         self.first_name = first_name
@@ -56,6 +56,7 @@ class Kid:
         self.available_screen_time = available_screen_time
         self.created_at = time_per_correct_answer  # Assuming you want to set created_at to time_per_correct_answer
         self.created_at = created_at
+        self.learning_speed=learning_speed
 
     def to_dict(self):
         return {
