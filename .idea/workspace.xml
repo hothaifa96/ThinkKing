@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3036a416-803d-45b4-adb4-0458ae4e63a4" name="Changes" comment="add(DAO):add path param">
+      <change afterPath="$PROJECT_DIR$/app/email/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/email/sender.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/DAL/DAO/data_access_object.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/DAL/DAO/data_access_object.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/DAL/POPO/db_objects.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/DAL/POPO/db_objects.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/api/resources.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/resources.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
     </list>
@@ -20,9 +21,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Freeze Requirements File" />
-        <option value="Python Script" />
         <option value="HTML File" />
         <option value="Dockerfile" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>

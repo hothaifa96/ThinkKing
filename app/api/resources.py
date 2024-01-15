@@ -1179,6 +1179,59 @@ class GetQuestions(Resource):
         # id'303001100',
         question_and_answers = AnswerOptionDAO.new_fetch_question_and_answers(id)
         return question_and_answers
+class ChangeProfile(Resource):
+    """
+        A class representing a resource for retrieving questions.
+
+        This resource allows getting questions.
+
+        Methods:
+        - get: Get the questions.
+
+        Attributes:
+        None
+        """
+
+    def get(self):
+        parent = request.json
+        if check_keys(parent, 'parent_id'):
+            return {'Error': 'missing data'}, 400
+        parent_dict = ParentDAO.get_by_id(parent['parent_id'])
+        print(parent_dict.to_dict())
+        if isinstance(parent_dict,Parent):
+            kids_list = KidDAO.get_by_parent_id(parent['parent_id'])
+            print(kids_list)
+            if len(kids_list) >= 0:
+                print(kids_list)
+                p =parent_dict.to_dict()
+                p['kids'] = [kid.to_dict() for kid in kids_list]
+                print(p)
+                return make_response(p, 200)
+        else:
+            return {"message":'no parent found'}, 400
+class KidMain(Resource):
+    """
+        A class representing a resource for retrieving questions.
+
+        This resource allows getting questions.
+
+        Methods:
+        - get: Get the questions.
+
+        Attributes:
+        None
+        """
+
+    def get(self):
+        kid = request.json
+        if check_keys(kid, 'kid_id'):
+            return {'Error': 'missing data'}, 400
+        kid_dict = KidDAO.get_by_id(kid['kid_id'])
+        print(kid_dict)
+        if kid_dict is not None:
+            return make_response(kid_dict.to_dict(), 200)
+        else:
+            return {"message":'no kid found'}, 400
 
 
 class Answer(Resource):

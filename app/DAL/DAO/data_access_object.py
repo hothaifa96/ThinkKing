@@ -262,27 +262,20 @@ class KidDAO:
     def get_by_id(kid_id):
         # Database interaction logic here (select from the 'kids' table by ID)
         connection = get_db_connection()
-        query = "SELECT * FROM kids WHERE kid_id = ?;", (kid_id,)
+        query = f"SELECT * FROM kids WHERE kid_id = {kid_id};"
         cursor = connection.cursor()
         try:
             cursor.execute(query)
-            results = cursor.fetchall()
-            kid_objects = []
-            for result in results:
-                kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns, \
-                    time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at = result
+            result = cursor.fetchone()
+            kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns, time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at,learning_speed = result
+            # Convert the created_at timestamp to a datetime object
+            kid = Kid(
+                kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns,
+                time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time,
+                created_at,learning_speed
+            )
 
-                # Convert the created_at timestamp to a datetime object
-                created_at_datetime = datetime.datetime.utcfromtimestamp(created_at)
-
-                kid = Kid(
-                    kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns,
-                    time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time,
-                    created_at_datetime
-                )
-                kid_objects.append(kid)
-
-            return kid_objects
+            return kid
 
 
         except psycopg2.Error as e:
@@ -292,6 +285,7 @@ class KidDAO:
         finally:
             cursor.close()
             connection.close()
+
     @staticmethod
     def get_learning_speed(kid_id):
         # Database interaction logic here (select from the 'kids' table by ID)

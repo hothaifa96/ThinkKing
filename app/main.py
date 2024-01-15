@@ -19,6 +19,9 @@ api.add_resource(Kids, '/kids')
 api.add_resource(KidLearing, '/learning/kid')
 api.add_resource(KidName, '/name/kid')
 api.add_resource(ParentPasswrod, '/parent/update')
+api.add_resource(ChangeProfile, '/change/profile')
+api.add_resource(KidMain, '/main/kid')
+api.add_resource(Questions, '/question/<string:id>')
 
 
 
@@ -39,7 +42,6 @@ api.add_resource(KidScreen, '/kid_screen')
 api.add_resource(KidProfile, '/change_kid')
 api.add_resource(QuestionsStatus, '/stat/question')
 api.add_resource(AllQuestions, '/questions')
-api.add_resource(Questions, '/question/<string:id>')
 api.add_resource(Answer, '/answer')
 # react app hosting
 
