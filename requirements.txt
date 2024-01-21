@@ -13,7 +13,7 @@ jmespath==1.0.1
 MarkupSafe==2.1.4
 numpy==1.24.4
 openpyxl==3.1.2
-pandas==2.1.4
+pandas
 psycopg2==2.9.9
 python-dateutil==2.8.2
 pytz==2023.3.post1
