@@ -1,7 +1,6 @@
-import json
-import time
-from datetime import date
-
+from flask import send_file
+import pandas as pd
+from io import BytesIO
 from flask_restful import Resource
 from flask import make_response, jsonify
 from flask import request
@@ -823,6 +822,7 @@ class Kids(Resource):
             return make_response(kids_list, 200)
         else:
             return 'no kids found', 400
+
     def delete(self):
         kid = request.json
         if check_keys(kid, 'kid_id'):
@@ -840,32 +840,37 @@ class KidLearing(Resource):
         response = KidDAO.get_learning_speed(kid['kid_id'])
 
         return make_response(response, 200)
+
     def post(self):
         kid = request.json
-        if check_keys(kid, 'kid_id','learning_speed'):
+        if check_keys(kid, 'kid_id', 'learning_speed'):
             return {'Error': 'missing data'}, 400
-        response = KidDAO.update_learning_speed(kid['kid_id'],kid['learning_speed'])
+        response = KidDAO.update_learning_speed(kid['kid_id'], kid['learning_speed'])
 
         return make_response(response, 200)
+
 
 class KidName(Resource):
 
     def post(self):
         kid = request.json
-        if check_keys(kid, 'kid_id','first_name'):
+        if check_keys(kid, 'kid_id', 'first_name'):
             return {'Error': 'missing data'}, 400
-        response = KidDAO.update_kid_first_name(kid['kid_id'],kid['first_name'])
+        response = KidDAO.update_kid_first_name(kid['kid_id'], kid['first_name'])
 
         return make_response(response, 200)
+
+
 class ParentPasswrod(Resource):
 
     def post(self):
         parent = request.json
         if check_keys(parent, 'parent_id', 'current_password', 'new_password'):
             return {'Error': 'missing data'}, 400
-        response = ParentDAO.change_password(parent['parent_id'],parent['current_password'],parent['new_password'])
+        response = ParentDAO.change_password(parent['parent_id'], parent['current_password'], parent['new_password'])
 
         return make_response(response, 200)
+
     def delete(self):
         parent = request.json
         if check_keys(parent, 'parent_id'):
@@ -873,7 +878,6 @@ class ParentPasswrod(Resource):
         response = ParentDAO.delete(parent['parent_id'])
 
         return make_response(response, 200)
-
 
 
 class Password(Resource):
@@ -1152,6 +1156,46 @@ class Questions(Resource):
         return question_and_answers
 
 
+class Excel(Resource):
+
+    def get(self):
+        # id'303001100',
+        try:
+            connection = get_db_connection()
+            query = "SELECT * FROM sessions;"
+            df = pd.read_sql_query(query, connection)
+            df['start_time'] = pd.to_datetime(df['start_time']).dt.strftime('%Y-%m-%d %H:%M:%S')
+            df['first_try_end_at'] = pd.to_datetime(df['first_try_end_at']).dt.strftime('%Y-%m-%d %H:%M:%S')
+            df['completion_time'] = pd.to_datetime(df['completion_time']).dt.strftime('%Y-%m-%d %H:%M:%S')
+            df['second_try_start_at'] = pd.to_datetime(df['second_try_start_at']).dt.strftime('%Y-%m-%d %H:%M:%S')
+            df['second_try_end_at'] = pd.to_datetime(df['second_try_end_at']).dt.strftime('%Y-%m-%d %H:%M:%S')
+
+            # Extract date, month, and year from 'start_time'
+            df['day'] = pd.to_datetime(df['start_time']).dt.day
+            df['month'] = pd.to_datetime(df['start_time']).dt.month
+            df['year'] = pd.to_datetime(df['start_time']).dt.year
+
+            # Select relevant columns for export
+            export_columns = ['day', 'month', 'year', 'question_id', 'session_id', 'start_time',
+                              'first_try_end_at', 'completion_time', 'second_try_start_at',
+                              'second_try_end_at', 'score']
+
+            df_export = df[export_columns]
+
+            # Create an in-memory Excel file
+            excel_output = BytesIO()
+            df_export.to_excel(excel_output, index=False, sheet_name='sessions_data')
+
+            # Move to the beginning of the stream
+            excel_output.seek(0)
+
+            # Send the file to the client
+            return send_file(excel_output, download_name='sessions_data.xlsx', as_attachment=True)
+
+        except Exception as e:
+            return jsonify({'success': False, 'message': str(e)})
+
+
 class GetQuestions(Resource):
     """
         A class representing a resource for retrieving questions.
@@ -1179,6 +1223,8 @@ class GetQuestions(Resource):
         # id'303001100',
         question_and_answers = AnswerOptionDAO.new_fetch_question_and_answers(id)
         return question_and_answers
+
+
 class ChangeProfile(Resource):
     """
         A class representing a resource for retrieving questions.
@@ -1198,17 +1244,19 @@ class ChangeProfile(Resource):
             return {'Error': 'missing data'}, 400
         parent_dict = ParentDAO.get_by_id(parent['parent_id'])
         print(parent_dict.to_dict())
-        if isinstance(parent_dict,Parent):
+        if isinstance(parent_dict, Parent):
             kids_list = KidDAO.get_by_parent_id(parent['parent_id'])
             print(kids_list)
             if len(kids_list) >= 0:
                 print(kids_list)
-                p =parent_dict.to_dict()
+                p = parent_dict.to_dict()
                 p['kids'] = [kid.to_dict() for kid in kids_list]
                 print(p)
                 return make_response(p, 200)
         else:
-            return {"message":'no parent found'}, 400
+            return {"message": 'no parent found'}, 400
+
+
 class KidMain(Resource):
     """
         A class representing a resource for retrieving questions.
@@ -1231,7 +1279,7 @@ class KidMain(Resource):
         if kid_dict is not None:
             return make_response(kid_dict.to_dict(), 200)
         else:
-            return {"message":'no kid found'}, 400
+            return {"message": 'no kid found'}, 400
 
 
 class Answer(Resource):
