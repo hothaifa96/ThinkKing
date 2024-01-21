@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3036a416-803d-45b4-adb4-0458ae4e63a4" name="Changes" comment="add(DAO):add path param">
-      <change afterPath="$PROJECT_DIR$/app/thmail/sender.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/resources.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/resources.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/email/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/thmail/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/email/sender.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-    </list>
+    <list default="true" id="3036a416-803d-45b4-adb4-0458ae4e63a4" name="Changes" comment="add(DAO):add excel support" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -355,7 +347,15 @@
       <option name="project" value="LOCAL" />
       <updated>1704794719744</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="add(DAO):add excel support">
+      <option name="closed" value="true" />
+      <created>1705817428638</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1705817428638</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -374,6 +374,7 @@
     <MESSAGE value="final v2" />
     <MESSAGE value="add(DAO):add question logic" />
     <MESSAGE value="add(DAO):add path param" />
-    <option name="LAST_COMMIT_MESSAGE" value="add(DAO):add path param" />
+    <MESSAGE value="add(DAO):add excel support" />
+    <option name="LAST_COMMIT_MESSAGE" value="add(DAO):add excel support" />
   </component>
 </project>
