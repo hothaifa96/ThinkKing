@@ -33,7 +33,6 @@ def check_keys(data, *args):
 
 class AddKidResource(Resource):
     def post(self):
-
         parent_data = request.json
         error = check_keys(parent_data, 'first_name', 'gender_id', 'parent_id')
         if error is not False:
@@ -42,8 +41,11 @@ class AddKidResource(Resource):
             first_name = parent_data.get("first_name")
             gender_id = parent_data.get("gender_id")
             parent_id = parent_data.get("parent_id")
-            kid_id = KidDAO.create_first(first_name, parent_id, gender_id)
-            return ({"kid_id": kid_id}), 200
+            kid = KidDAO.create_first(first_name, parent_id, gender_id)
+            keys_to_include = ['kid_id', "first_name", 'gender_id', 'parent_id']
+            output_dict = {key: kid.to_dict().get(key) for key in keys_to_include}
+            output_dict['status'] = 'success'
+            return output_dict, 200
 
         except Exception as e:
             return jsonify({"error": str(e)}), 500
@@ -94,7 +96,7 @@ class RegisterParent(Resource):
         p = ParentDAO.create(parent)
         parent = ParentDAO.get_by_email(parent.email)
         print(parent.parent_id)
-        if p:
+        if p is True:
             response_data = {
                 'first_name': parent.first_name,
                 'last_name': parent.last_name,
@@ -103,7 +105,7 @@ class RegisterParent(Resource):
                 'gender_id': parent.gender_id,
                 'pin_code': parent.pin_code,  # Replace with the actual pin_code logic
                 'kid_list': KidDAO.get_by_parent_id(parent.parent_id),
-                'jwt_token': 'sample_jwt_token',  # Replace with actual JWT logic
+                'jwt_token': ParentDAO.get_jwt(parent),  # Replace with actual JWT logic
                 'parent_id': parent.parent_id,
                 'status': 'success'
             }
@@ -112,7 +114,7 @@ class RegisterParent(Resource):
         else:
             response_data = {
                 'status': 'error',
-                'message': 'Error registering parent'
+                'message': str(p)
             }
             return response_data, 400
 
@@ -548,14 +550,10 @@ class PinCode(Resource):
 
 
 class Kids(Resource):
-    def get(self):
-        parent = request.json
-        if check_keys(parent, 'parent_id'):
-            return {'Error': 'missing data'}, 400
-        kids_list = KidDAO.get_by_parent_id(parent['parent_id'])
+    def get(self, id):
+        kids_list = KidDAO.get_by_parent_id(id)
         if len(kids_list) > 0:
             print(kids_list)
-            kids_list = [kid.to_dict() for kid in kids_list]
             return make_response(kids_list, 200)
         else:
             return 'no kids found', 400
@@ -570,11 +568,8 @@ class Kids(Resource):
 
 
 class KidLearing(Resource):
-    def get(self):
-        kid = request.json
-        if check_keys(kid, 'kid_id'):
-            return {'Error': 'missing data'}, 400
-        response = KidDAO.get_learning_speed(kid['kid_id'])
+    def get(self, id):
+        response = KidDAO.get_learning_speed(id)
 
         return make_response(response, 200)
 
@@ -589,11 +584,8 @@ class KidLearing(Resource):
 
 class KidName(Resource):
 
-    def post(self):
-        kid = request.json
-        if check_keys(kid, 'kid_id', 'first_name'):
-            return {'Error': 'missing data'}, 400
-        response = KidDAO.update_kid_first_name(kid['kid_id'], kid['first_name'])
+    def post(self, id, name):
+        response = KidDAO.update_kid_first_name(id, name)
 
         return make_response(response, 200)
 
@@ -796,11 +788,8 @@ class ChangeProfile(Resource):
 
 class KidMain(Resource):
 
-    def get(self):
-        kid = request.json
-        if check_keys(kid, 'kid_id'):
-            return {'Error': 'missing data'}, 400
-        kid_dict = KidDAO.get_by_id(kid['kid_id'])
+    def get(self, id):
+        kid_dict = KidDAO.get_by_id(id)
         print(kid_dict)
         if kid_dict is not None:
             return make_response(kid_dict.to_dict(), 200)

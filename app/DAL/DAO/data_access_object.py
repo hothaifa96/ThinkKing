@@ -176,7 +176,7 @@ class KidDAO:
             cursor.execute(query)
             connection.commit()
             kid = KidDAO.get_all_by_parent_and_name(parent_id, first_name)
-            print(kid)
+            print(kid,'heressss')
 
             if kid:
                 return kid
@@ -202,7 +202,8 @@ class KidDAO:
             cursor.execute(query)
             result = cursor.fetchone()
             print(result, f'parent_id = {parent_id} first_name= {firstname} ')
-            return result[0]
+            kid = Kid(*result)
+            return kid
 
         except psycopg2.Error as e:
             print("Error fetching kids :", e)
@@ -489,16 +490,13 @@ class ParentDAO:
         try:
             cursor.execute(query)
             connection.commit()
-            # result = cursor.fetchall()
-            # if result:
-            #     return [ParentDAO(*row).__dict__ for row in result]
             return True
             # else:
             #     return None
 
         except psycopg2.Error as e:
             print("Error fetching paretn by ID:", e)
-            return False
+            return e
 
         finally:
             cursor.close()
