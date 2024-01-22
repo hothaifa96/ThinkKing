@@ -1,5 +1,6 @@
 import json
-
+from datetime import datetime, timedelta, timezone
+import jwt
 import psycopg2
 
 from ..POPO.db_objects import *
@@ -216,10 +217,10 @@ class KidDAO:
         connection = get_db_connection()
         query = f"SELECT * FROM kids where parent_id ={parent_id}"
         cursor = connection.cursor()
-        query = "SELECT * FROM kids WHERE parent_id = %s"
-        cursor.execute(query, (parent_id,))
+        cursor.execute(query)
         results = cursor.fetchall()
-        return [Kid(*result) for result in results]
+        print(results)
+        return [Kid(*result).to_dict() for result in results] if isinstance(results,list) else []
 
     @staticmethod
     def get_by_parent_id_and_name(parent_id, firstname):
@@ -599,6 +600,11 @@ class ParentDAO:
             # Make sure to close the cursor and connection in a finally block
             cursor.close()
             connection.close()
+    @staticmethod
+    def get_jwt(parent):
+        # User found, generate a JWT token
+        token = jwt.encode({"parent_id": f"{parent.parent_id}"}, "thinking_application", algorithm="HS256")
+        return token
 
     # TODO: upload parent
     @staticmethod
@@ -1148,10 +1154,21 @@ class SubjectDAO:
 
 class ClassNameDAO:
     @staticmethod
-    def create(class_name):
-        # Database interaction logic here (insert into the 'class_names' table)
+    def get_all():
         connection = get_db_connection()
-        connection.close()
+        query = "SELECT * from class_names"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            return result
+
+        except psycopg2.Error as e:
+            return {'error', "Error fetching className's:", e}
+
+        finally:
+            cursor.close()
+            connection.close()
 
     @staticmethod
     def get_all():

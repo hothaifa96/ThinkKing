@@ -23,8 +23,11 @@ def check_keys(data, *args):
         Returns:
         bool: True if all the keys are present in the dictionary, False otherwise.
     """
-    if not all(key in data for key in args):
-        return True
+    # if not all(key in data for key in args):
+    keys = data.keys()
+    for key in args:
+        if key not in keys:
+            return key
     return False
 
 
@@ -32,8 +35,9 @@ class AddKidResource(Resource):
     def post(self):
 
         parent_data = request.json
-        if check_keys(parent_data, 'first_name', 'gender_id', 'parent_id'):
-            return {'Error': 'missing data'}, 400
+        error = check_keys(parent_data, 'first_name', 'gender_id', 'parent_id')
+        if error is not False:
+            return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
         try:
             first_name = parent_data.get("first_name")
             gender_id = parent_data.get("gender_id")
@@ -94,8 +98,9 @@ class RegisterParent(Resource):
         parent_data = request.json
 
         # Check if all required keys are present
-        if check_keys(parent_data, 'first_name', 'last_name', 'email', 'gender_id', 'password'):
-            return {'Error': 'missing data'}, 400
+        error= check_keys(parent_data, 'first_name', 'last_name', 'email', 'gender_id', 'password')
+        if error is not False:
+            return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
 
         # Create a new Parent object
         parent = Parent.from_dict(parent_data)
@@ -157,15 +162,19 @@ class LoginParent(Resource):
 
         login_data = request.json
 
-        if check_keys(login_data, 'email', 'password'):
-            return {'Error': 'missing data'}, 400
+        error = check_keys(login_data, 'email', 'password')
+        if error is not False:
+            return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
 
         email = login_data['email']
         password = login_data['password']
 
         parent = ParentDAO.get_by_email(email)
 
-        if parent and parent.password == password:
+        if not parent:
+            return {'status': 'error', 'message': 'username not found credentials'}, 401
+
+        if parent.password == password:
             # Sample response structure
             response_data = {
                 'first_name': parent.first_name,
@@ -175,14 +184,13 @@ class LoginParent(Resource):
                 'gender_id': parent.gender_id,
                 'pin_code': parent.pin_code,
                 'kid_list(count)': KidDAO.get_by_parent_id(parent.parent_id),  # Add actual kid list data here
-                'jwt_token': 'sample_jwt_token',
+                'jwt_token': ParentDAO.get_jwt(parent),
                 'parent_id': parent.parent_id,
                 'status': 'success'
             }
-
             return response_data
         else:
-            return {'status': 'error', 'message': 'Invalid credentials'}, 401
+            return {'status': 'error', 'message': 'Invalid password credentials'}, 401
 
     def delete(self):
         """
@@ -201,8 +209,10 @@ class LoginParent(Resource):
             None
         """
         parent = request.json
-        if check_keys(parent, 'email'):
-            return {'Error': 'missing data'}, 400
+        error=  check_keys(parent, 'email')
+        if error is not False:
+            return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
+
         try:
             if ParentDAO.delete(parent.get('email')):
                 response = make_response('user deleted', 200)
@@ -245,9 +255,11 @@ class ParentRegister(Resource):
 
         parent = request.json
 
-        if check_keys(parent, 'first_name', 'last_name', 'email', 'password', 'avatar_id',
-                      'gender_id'):
-            return {'Error': 'missing data'}, 400
+        error=check_keys(parent, 'first_name', 'last_name', 'email', 'password', 'avatar_id',
+                      'gender_id')
+        if error is not False:
+            return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
+
         parent = Parent.from_dict(parent)
         if ParentDAO.create(parent):
             print('from resource', parent)
@@ -278,8 +290,10 @@ class ParentRegister(Resource):
             None
         """
         parent = request.json
-        if check_keys(parent, 'email'):
-            return {'Error': 'missing data'}, 400
+        error= check_keys(parent, 'email')
+        if error is not False:
+            return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
+
         try:
             if ParentDAO.delete(parent.get('email')):
                 response = make_response('user deleted', 200)
@@ -509,8 +523,64 @@ class Classes(Resource):
         - KeyError: If the required keys 'kid_id' and 'school_id' are missing in the request data.
         """
         kid_grade = request.json
-        if check_keys(kid_grade, 'kid_id', 'c_grade_id'):
-            return {'Error': 'missing data'}, 400
+        error = check_keys(kid_grade, 'kid_id', 'grade_id')
+        if error is not False:
+            return {'Error': 'missing data','message':f'missing -- {error} -- key'}, 400
+        res = KidDAO.add_grade(kid_grade['kid_id'], kid_grade['c_grade_id'])
+        if res is None:
+            return {'message': 'success'}
+        else:
+            return make_response(jsonify(res), 400)
+class ClassesName(Resource):
+    """
+    A class representing a school resource.
+
+    This class provides methods to handle HTTP GET and POST requests related to schools.
+
+    Methods:
+    - get(): Handles the GET request and returns a list of schools.
+    - post(): Handles the POST request and adds a new kid's school information.
+    """
+
+    def post(self):
+        """
+        Handles the GET request and returns a list of schools.
+
+        Returns:
+        list: A list of dictionaries representing schools.
+        """
+        class_list = []
+        results = ClassNameDAO.get_all()
+        if not isinstance(results, dict):
+            for row in results:
+                class_name_id, class_name = row
+                class_name_result_json = {
+                    'class_name_id': class_name_id,
+                    'class_name': class_name,
+                }
+                class_list.append(class_name_result_json)
+            json_result = json.dumps(class_list, indent=2)
+            print(json_result)
+            # Return JSON response
+            return jsonify(json.loads(json_result))
+        else:
+            return make_response(jsonify(results), 400)
+
+    def post(self):
+        """
+        Handles the POST request and adds a new kid's school information.
+
+        Returns:
+        dict: A dictionary with a success message.
+        {'message': 'success'}
+
+        Raises:
+        - KeyError: If the required keys 'kid_id' and 'school_id' are missing in the request data.
+        """
+        kid_grade = request.json
+        error = check_keys(kid_grade, 'kid_id', 'grade_id')
+        if error is not False:
+            return {'Error': 'missing data','message':f'missing -- {error} -- key'}, 400
         res = KidDAO.add_grade(kid_grade['kid_id'], kid_grade['c_grade_id'])
         if res is None:
             return {'message': 'success'}
@@ -564,9 +634,9 @@ class Subjects(Resource):
         - KeyError: If the required keys 'kid_id' and 'school_id' are missing in the request data.
         """
         kid_grade = request.json
-        if check_keys(kid_grade, 'kid_id', 'c_grade_id'):
+        if check_keys(kid_grade, 'kid_id', 'grade_id'):
             return {'Error': 'missing data'}, 400
-        res = KidDAO.add_grade(kid_grade['kid_id'], kid_grade['c_grade_id'])
+        res = KidDAO.add_grade(kid_grade['kid_id'], kid_grade['grade_id'])
         if res is None:
             return {'message': 'success'}
         else:
@@ -774,10 +844,14 @@ class PinCode(Resource):
         """
         data = request.json
         # Check if the data is valid JSON
-        if check_keys(data, 'parent _id', 'pin_code'):
-            return {'Error': 'missing data'}, 400
+        error =check_keys(data, 'parent_id', 'pin_code')
+        if error is not False:
+            return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
         parent = ParentDAO.get_by_id(data['parent_id'])
-        if parent.pin_code == data['parent_id']:
+        print(f'parent is -> {parent}  --- {data["parent_id"]} <> {parent.pin_code} ')
+        if parent is None:
+            return make_response('parent not found', 404)
+        if str(parent.pin_code) == str(data['pin_code']):
             return {'message': 'success'}
         else:
             response = make_response('pin don\'t match', 409)

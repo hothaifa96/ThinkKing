@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 
@@ -75,6 +76,9 @@ class Kid:
             "created_at": self.created_at
         }
 
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__,
+                          sort_keys=True, indent=4)
     @classmethod
     def from_dict(cls, data):
         return cls(
@@ -92,6 +96,8 @@ class Kid:
             data["available_screen_time"]
         )
 
+    def _default(self, o):
+        return o.__dict__
 
 class Parent:
     def __init__(self, parent_id, email, first_name, last_name, pin_code, avatar_id, created_at, password, gender_id):
