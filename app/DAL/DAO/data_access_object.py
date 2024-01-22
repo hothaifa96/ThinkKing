@@ -220,7 +220,7 @@ class KidDAO:
         cursor.execute(query)
         results = cursor.fetchall()
         print(results)
-        return [Kid(*result).to_dict() for result in results] if isinstance(results,list) else []
+        return [Kid(*result).to_dict() for result in results] if isinstance(results, list) else []
 
     @staticmethod
     def get_by_parent_id_and_name(parent_id, firstname):
@@ -268,12 +268,12 @@ class KidDAO:
         try:
             cursor.execute(query)
             result = cursor.fetchone()
-            kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns, time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at,learning_speed = result
+            kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns, time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at, learning_speed = result
             # Convert the created_at timestamp to a datetime object
             kid = Kid(
                 kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns,
                 time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time,
-                created_at,learning_speed
+                created_at, learning_speed
             )
 
             return kid
@@ -424,6 +424,25 @@ class KidDAO:
     def add_school(kid_id, school_id):
         connection = get_db_connection()
         query = f"UPDATE kids SET school_id = {school_id} WHERE kid_id = {kid_id};"
+        print(query)
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            rows_updated = cursor.rowcount
+            print(f"Number of rows updated: {rows_updated}")
+            connection.commit()
+
+            if rows_updated > 0:
+                return None
+            else:
+                raise Exception('nothing updated')
+        except Exception as e:
+            return {'error': str(e)}
+
+    @staticmethod
+    def add_class(kid_id, class_id):
+        connection = get_db_connection()
+        query = f"UPDATE kids SET class_id = {class_id} WHERE kid_id = {kid_id};"
         print(query)
         cursor = connection.cursor()
         try:
@@ -600,6 +619,7 @@ class ParentDAO:
             # Make sure to close the cursor and connection in a finally block
             cursor.close()
             connection.close()
+
     @staticmethod
     def get_jwt(parent):
         # User found, generate a JWT token
@@ -1156,8 +1176,9 @@ class ClassNameDAO:
     @staticmethod
     def get_all():
         connection = get_db_connection()
-        query = "SELECT * from class_names"
+        query = "SELECT * FROM class_names"
         cursor = connection.cursor()
+        print('here')
         try:
             cursor.execute(query)
             result = cursor.fetchall()
@@ -1169,12 +1190,6 @@ class ClassNameDAO:
         finally:
             cursor.close()
             connection.close()
-
-    @staticmethod
-    def get_all():
-        # Database interaction logic here (select all from the 'class_names' table)
-        connection = get_db_connection()
-        connection.close()
 
     @staticmethod
     def get_by_id(class_name_id):

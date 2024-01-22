@@ -42,7 +42,8 @@ class Avatar:
 
 class Kid:
     def __init__(self, kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns,
-                 time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time,created_at,learning_speed):
+                 time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at,
+                 learning_speed, class_id):
         self.kid_id = kid_id
         self.parent_id = parent_id
         self.first_name = first_name
@@ -57,47 +58,16 @@ class Kid:
         self.available_screen_time = available_screen_time
         self.created_at = time_per_correct_answer  # Assuming you want to set created_at to time_per_correct_answer
         self.created_at = created_at
-        self.learning_speed=learning_speed
+        self.learning_speed = learning_speed
+        self.class_id = class_id
 
     def to_dict(self):
-        return {
-            "kid_id": self.kid_id,
-            "parent_id": self.parent_id,
-            "first_name": self.first_name,
-            "gender_id": self.gender_id,
-            "school_id": self.school_id,
-            "c_grade_id": self.c_grade_id,
-            "crowns": self.crowns,
-            "time_per_correct_answer": self.time_per_correct_answer,
-            "current_correct_seq": self.current_correct_seq,
-            "avatar_id": self.avatar_id,
-            "unlock": self.unlock,
-            "available_screen_time": self.available_screen_time,
-            "created_at": self.created_at
-        }
+        return self.__dict__
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__,
                           sort_keys=True, indent=4)
-    @classmethod
-    def from_dict(cls, data):
-        return cls(
-            data.get("kid_id"),
-            data["parent_id"],
-            data["first_name"],
-            data["gender_id"],
-            data["school_id"],
-            data["c_grade_id"],
-            data["crowns"],
-            data["time_per_correct_answer"],
-            data["current_correct_seq"],
-            data["avatar_id"],
-            data["unlock"],
-            data["available_screen_time"]
-        )
 
-    def _default(self, o):
-        return o.__dict__
 
 class Parent:
     def __init__(self, parent_id, email, first_name, last_name, pin_code, avatar_id, created_at, password, gender_id):
