@@ -366,7 +366,7 @@ class ClassesName(Resource):
         if error is not False:
             return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
 
-        res = KidDAO.add_school(kid_grade['kid_id'], kid_grade['class_id'])
+        res = KidDAO.add_class(kid_grade['kid_id'], kid_grade['class_id'])
         if res is None:
             return {'message': 'success'}
         else:
