@@ -562,6 +562,7 @@ class ParentDAO:
         try:
             cursor.execute(query)
             result = cursor.fetchone()
+            print(result)
             if result:
                 p = Parent(
                     parent_id=result[0],
@@ -573,6 +574,7 @@ class ParentDAO:
                     created_at=result[6],
                     password=result[7],
                     gender_id=result[8])
+                print(p)
                 return p
 
         except psycopg2.Error as e:
