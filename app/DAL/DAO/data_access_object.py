@@ -577,7 +577,7 @@ class ParentDAO:
 
         except psycopg2.Error as e:
             print("Error fetching parent by ID:", e)
-            return False
+            return None
 
         finally:
             cursor.close()
