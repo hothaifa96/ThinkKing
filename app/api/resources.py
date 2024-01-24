@@ -514,7 +514,6 @@ class PinCode(Resource):
         if error is not False:
             return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
         parent = ParentDAO.get_by_id(data['parent_id'])
-        print(f'parent is -> {parent}  --- {data["parent_id"]} <> {parent.pin_code} ')
         if parent is None:
             return make_response('parent not found', 404)
         if str(parent.pin_code) == str(data['pin_code']):
