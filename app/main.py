@@ -23,10 +23,7 @@ api.add_resource(ParentPasswrod, '/parent/update')
 api.add_resource(ChangeProfile, '/change/profile')
 api.add_resource(KidMain, '/main/kid/<string:id>')
 api.add_resource(Questions, '/question/<string:id>')
-api.add_resource(Excel,'/excel')
-
-
-
+api.add_resource(Excel, '/excel')
 
 api.add_resource(Hello, '/hello')
 api.add_resource(ParentRegister, '/parent')
@@ -49,4 +46,4 @@ api.add_resource(Answer, '/answer')
 
 
 if __name__ == '__main__':
-    app.run( use_reloader=True,debug=True, host='0.0.0.0', port=5000)
+    app.run(use_reloader=True, debug=True, host='0.0.0.0', port=5000)

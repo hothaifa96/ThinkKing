@@ -327,21 +327,11 @@ class Classes(Resource):
             return make_response(jsonify(results), 400)
 
     def post(self):
-        """
-        Handles the POST request and adds a new kid's school information.
-
-        Returns:
-        dict: A dictionary with a success message.
-        {'message': 'success'}
-
-        Raises:
-        - KeyError: If the required keys 'kid_id' and 'school_id' are missing in the request data.
-        """
         kid_grade = request.json
         error = check_keys(kid_grade, 'kid_id', 'grade_id')
         if error is not False:
             return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
-        res = KidDAO.add_grade(kid_grade['kid_id'], kid_grade['c_grade_id'])
+        res = KidDAO.add_grade(kid_grade['kid_id'], kid_grade['grade_id'])
         if res is None:
             return {'message': 'success'}
         else:
