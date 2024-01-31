@@ -41,12 +41,12 @@ class GenderDAO:
     def get_by_id(gender_id):
         # Database interaction logic here (select from the 'genders' table by ID)
         connection = get_db_connection()
-        query = "SELECT * FROM genders WHERE gender_id = ?;", (gender_id,)
+        query = f"SELECT * FROM genders WHERE gender_id = {gender_id}"
 
         cursor = connection.cursor()
         try:
             cursor.execute(query)
-            result = cursor.fetchall()
+            result = cursor.fetchone()
             if result:
                 return Gender(*result)
             return None
@@ -99,11 +99,12 @@ class AvatarDAO:
     def get_by_id(avatar_id):
         # Database interaction logic here (select from the 'avatars' table by ID)
         connection = get_db_connection()
-        query = "SELECT * FROM avatars WHERE avatar_id = ?;", (avatar_id,)
+        query = f"SELECT * FROM avatars WHERE avatar_id = {avatar_id}"
         cursor = connection.cursor()
         try:
             cursor.execute(query)
-            result = cursor.fetchall()
+            result = cursor.fetchone()
+            print(*result)
             return Avatar(*result)
 
         except psycopg2.Error as e:
@@ -176,7 +177,7 @@ class KidDAO:
             cursor.execute(query)
             connection.commit()
             kid = KidDAO.get_all_by_parent_and_name(parent_id, first_name)
-            print(kid,'heressss')
+            print(kid, 'heressss')
 
             if kid:
                 return kid
@@ -221,7 +222,24 @@ class KidDAO:
         cursor.execute(query)
         results = cursor.fetchall()
         print(results)
-        return [Kid(*result).to_dict() for result in results] if isinstance(results, list) else []
+        res = []
+        if isinstance(results, list):
+            for result in results:
+                kid = Kid(*result).to_dict()
+                school = SchoolDAO.get_by_id(kid['school_id']) if kid['school_id'] is not None else None
+                c_grade = CGradeDAO.get_by_id(kid['c_grade_id']).class_letter if kid['c_grade_id'] is not None else None
+                gender = GenderDAO.get_by_id(kid['gender_id']).gender if kid['gender_id'] is not None else None
+                avatar = AvatarDAO.get_by_id(kid['avatar_id']).avatar if kid['avatar_id'] is not None else None
+                del kid['school_id']
+                kid['school'] = school
+                del kid['c_grade_id']
+                kid['c_grade'] = c_grade
+                del kid['gender_id']
+                kid['gender'] = gender
+                del kid['avatar_id']
+                kid['avatar'] = avatar
+                res.append(kid)
+        return res
 
     @staticmethod
     def get_by_parent_id_and_name(parent_id, firstname):
@@ -441,6 +459,25 @@ class KidDAO:
             return {'error': str(e)}
 
     @staticmethod
+    def add_subject(kid_id, school_id):
+        connection = get_db_connection()
+        query = f"UPDATE kids SET subject = {school_id} WHERE kid_id = {kid_id};"
+        print(query)
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            rows_updated = cursor.rowcount
+            print(f"Number of rows updated: {rows_updated}")
+            connection.commit()
+
+            if rows_updated > 0:
+                return None
+            else:
+                raise Exception('nothing updated')
+        except Exception as e:
+            return {'error': str(e)}
+
+    @staticmethod
     def add_class(kid_id, class_id):
         connection = get_db_connection()
         query = f"UPDATE kids SET class_id = {class_id} WHERE kid_id = {kid_id};"
@@ -574,7 +611,6 @@ class ParentDAO:
                     created_at=result[6],
                     password=result[7],
                     gender_id=result[8])
-                print(p)
                 return p
 
         except psycopg2.Error as e:
@@ -584,8 +620,6 @@ class ParentDAO:
         finally:
             cursor.close()
             connection.close()
-
-    from hashlib import sha256
 
     @staticmethod
     def change_password(parent_id, current_password, new_password):
@@ -628,10 +662,22 @@ class ParentDAO:
 
     # TODO: upload parent
     @staticmethod
-    def update(parent):
-        # Database interaction logic here (update the 'parents' table)
+    def update_pin(parent_id,pin):
         connection = get_db_connection()
-        connection.close()
+        cursor = connection.cursor()
+        try:
+            update_query = f"UPDATE parents SET pin_code = '{pin}' WHERE parent_id = {parent_id};"
+            cursor.execute(update_query)
+            connection.commit()
+            return {'success': True, 'message': 'pin code set successfully'}
+
+        except Exception as e:
+            return {'success': False, 'message': str(e)}
+
+        finally:
+            # Make sure to close the cursor and connection in a finally block
+            cursor.close()
+            connection.close()
 
     # TODO: delete parent
     @staticmethod
@@ -863,13 +909,13 @@ class AnswerOptionDAO:
             cursor.close()
             connection.close()
         for row in result:
-            question_id, _, _, _, _, interesting_fact, _, question_text, answer_option_id, _, answer_text, correct_answer = row
+            question_id, _, _, _, _, question_text, explanation, interesting_fact, answer_option_id, _, answer_text, correct_answer = row
 
             question = next((q for q in questions_list if q["question_id"] == question_id), None)
-            print(question_id[0])
             if question is None:
                 question = {"question_id": question_id, "question_text": question_text,
-                            "explanation": interesting_fact,
+                            "explanation": explanation,
+                            "intersting_fact": interesting_fact ,# add the explanation
                             "subject": "math" if question_id[0] == '1' else "common knowledge", "answers": []}
                 questions_list.append(question)
 
@@ -943,21 +989,25 @@ class SchoolDAO:
     @staticmethod
     def get_by_id(school_id):
         # Database interaction logic here (select from the 'schools' table by ID)
-        connection = get_db_connection()
-        query = "SELECT * FROM schools WHERE school_id = ?;", (school_id,)
-        cursor = connection.cursor()
-        try:
-            cursor.execute(query)
-            result = cursor.fetchall()
-            return result
+        if school_id is None:
+            connection = get_db_connection()
+            query = f"SELECT * FROM schools WHERE school_id = {school_id}"
+            cursor = connection.cursor()
+            try:
+                cursor.execute(query)
+                result = cursor.fetchone()
+                print('$$$$$$', result)
+                return School(*result)
 
-        except psycopg2.Error as e:
-            print("Error fetching school by ID:", e)
-            return None
+            except psycopg2.Error as e:
+                print("Error fetching school by ID:", e)
+                return None
 
-        finally:
-            cursor.close()
-            connection.close()
+            finally:
+                cursor.close()
+                connection.close()
+        else:
+            return
 
     # @staticmethod
     # def update(school):
@@ -1123,9 +1173,20 @@ class CGradeDAO:
 
     @staticmethod
     def get_by_id(c_grade_id):
-        # Database interaction logic here (select from the 'c_grades' table by ID)
         connection = get_db_connection()
-        connection.close()
+        query = f"SELECT * from c_grades where c_grade_id = {c_grade_id}"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchone()
+            return CGrade(*result)
+
+        except psycopg2.Error as e:
+            return {'error', "Error fetching topic by ID:", e}
+
+        finally:
+            cursor.close()
+            connection.close()
 
     @staticmethod
     def update(c_grade):

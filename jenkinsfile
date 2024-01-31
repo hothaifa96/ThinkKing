@@ -1,15 +1,11 @@
 pipeline {
-    // Define environment variables
     environment {
-            //https://$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
         SERVER_IMAGE = 'red_proj_server:v1'
         AWS_DEFAULT_REGION= 'eu-central-1'
         AWS_ACCOUNT_ID ='155295801505'
         ECR_REPO_NAME='demothinking'
         DOCKER_IMAGE_TAG = "${ECR_REPO_NAME}:${env.BUILD_NUMBER}"
-        // AWS credentials for Terraform
-        // AWS_ACCESS_KEY_ID = credentials('aws_access_key_id')
-        // AWS_SECRET_ACCESS_KEY = credentials('aws_secret_access_key')
+
     }
     agent any
     stages {
@@ -18,7 +14,7 @@ pipeline {
                 // Build steps for the server
                 script{
                     echo 'Building Docker Image...'
-                    sh "sudo docker build -t ${DOCKER_IMAGE_TAG} ."
+                    sh "sudo     docker build -t ${DOCKER_IMAGE_TAG} ."
                 }
             }
         }
