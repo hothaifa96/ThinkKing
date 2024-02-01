@@ -177,8 +177,6 @@ class KidDAO:
             cursor.execute(query)
             connection.commit()
             kid = KidDAO.get_all_by_parent_and_name(parent_id, first_name)
-            print(kid, 'heressss')
-
             if kid:
                 return kid
 
@@ -221,7 +219,6 @@ class KidDAO:
         cursor = connection.cursor()
         cursor.execute(query)
         results = cursor.fetchall()
-        print(results)
         res = []
         if isinstance(results, list):
             for result in results:
@@ -230,6 +227,7 @@ class KidDAO:
                 c_grade = CGradeDAO.get_by_id(kid['c_grade_id']).class_letter if kid['c_grade_id'] is not None else None
                 gender = GenderDAO.get_by_id(kid['gender_id']).gender if kid['gender_id'] is not None else None
                 avatar = AvatarDAO.get_by_id(kid['avatar_id']).avatar if kid['avatar_id'] is not None else None
+                classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid['class_id'] is not None else None
                 del kid['school_id']
                 kid['school'] = school
                 del kid['c_grade_id']
@@ -238,6 +236,8 @@ class KidDAO:
                 kid['gender'] = gender
                 del kid['avatar_id']
                 kid['avatar'] = avatar
+                del kid['class_id']
+                kid['class'] = classs
                 res.append(kid)
         return res
 
@@ -299,8 +299,7 @@ class KidDAO:
 
 
         except psycopg2.Error as e:
-            print("Error fetching kid by ID:", e)
-            return None
+            return ("Error fetching kid by ID:", e)
 
         finally:
             cursor.close()
@@ -364,7 +363,6 @@ class KidDAO:
         # Database interaction logic here (update the 'kids' table by ID)
         connection = get_db_connection()
         query = f"UPDATE kids SET first_name = '{new_first_name}' WHERE kid_id = {kid_id};"
-
         cursor = connection.cursor()
         try:
             cursor.execute(query)
@@ -443,12 +441,10 @@ class KidDAO:
     def add_school(kid_id, school_id):
         connection = get_db_connection()
         query = f"UPDATE kids SET school_id = {school_id} WHERE kid_id = {kid_id};"
-        print(query)
         cursor = connection.cursor()
         try:
             cursor.execute(query)
             rows_updated = cursor.rowcount
-            print(f"Number of rows updated: {rows_updated}")
             connection.commit()
 
             if rows_updated > 0:
@@ -462,12 +458,10 @@ class KidDAO:
     def add_subject(kid_id, school_id):
         connection = get_db_connection()
         query = f"UPDATE kids SET subject = {school_id} WHERE kid_id = {kid_id};"
-        print(query)
         cursor = connection.cursor()
         try:
             cursor.execute(query)
             rows_updated = cursor.rowcount
-            print(f"Number of rows updated: {rows_updated}")
             connection.commit()
 
             if rows_updated > 0:
@@ -481,12 +475,10 @@ class KidDAO:
     def add_class(kid_id, class_id):
         connection = get_db_connection()
         query = f"UPDATE kids SET class_id = {class_id} WHERE kid_id = {kid_id};"
-        print(query)
         cursor = connection.cursor()
         try:
             cursor.execute(query)
             rows_updated = cursor.rowcount
-            print(f"Number of rows updated: {rows_updated}")
             connection.commit()
 
             if rows_updated > 0:
@@ -599,7 +591,6 @@ class ParentDAO:
         try:
             cursor.execute(query)
             result = cursor.fetchone()
-            print(result)
             if result:
                 p = Parent(
                     parent_id=result[0],
@@ -1129,9 +1120,25 @@ class ClassDAO:
 
     @staticmethod
     def get_by_id(class_id):
-        # Database interaction logic here (select from the 'classes' table by ID)
+        # Database interaction logic here (select from the 'avatars' table by ID)
         connection = get_db_connection()
-        connection.close()
+        query = f"SELECT * FROM classes WHERE class_id = {class_id}"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchone()
+            if class_id is not None:
+                return Class(*result)
+            else:
+                return None
+
+        except psycopg2.Error as e:
+            print("Error fetching avatar by ID:", e)
+            return None
+
+        finally:
+            cursor.close()
+            connection.close()
 
     @staticmethod
     def update(class_obj):
@@ -1202,11 +1209,6 @@ class CGradeDAO:
 
 
 class SubjectDAO:
-    @staticmethod
-    def create():
-        # Database interaction logic here (insert into the 'c_grades' table)
-        connection = get_db_connection()
-        connection.close()
 
     @staticmethod
     def get_all():
@@ -1216,21 +1218,62 @@ class SubjectDAO:
         cursor = connection.cursor()
         try:
             cursor.execute(query)
-            result = cursor.fetchall()
-            return result
+            results = cursor.fetchall()
+            subjects =[]
+            if len(results)>0:
+                for result in results:
+                    subject=Subject(*result)
+                    subjects.append(subject.to_dict())
+            return subjects
 
         except psycopg2.Error as e:
-            return {'error', "Error fetching topic by ID:", e}
+            return {'error', "Error fetching:", e}
 
         finally:
             cursor.close()
             connection.close()
 
+class KidSubjectsDAO:
+
     @staticmethod
-    def get_by_id(subject_id):
-        # Database interaction logic here (select from the 'c_grades' table by ID)
+    def get_all():
+        # Database interaction logic here (select all from the 'c_grades' table)
         connection = get_db_connection()
-        connection.close()
+        query = "SELECT * from kid_subjects"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            results = cursor.fetchall()
+            kid_subjects =[]
+            if len(results)>0:
+                for result in results:
+                    kid_subject=KidSubjects(*result)
+                    kid_subjects.append(kid_subject.to_dict())
+            return kid_subjects
+
+        except psycopg2.Error as e:
+            return {'error', "Error fetching :", e}
+
+        finally:
+            cursor.close()
+            connection.close()
+    @staticmethod
+    def create(kid_id,subject_id):
+        # Database interaction logic here (select all from the 'c_grades' table)
+        connection = get_db_connection()
+        query = f"INSERT INTO kid_subjects VALUES ({kid_id},{subject_id})"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            connection.commit()
+            return {'message' : 'DONE'}
+
+        except psycopg2.Error as e:
+            return {'error', "Error fetching :", e}
+
+        finally:
+            cursor.close()
+            connection.close()
 
 
 class ClassNameDAO:

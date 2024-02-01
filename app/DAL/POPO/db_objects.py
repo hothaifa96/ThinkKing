@@ -289,6 +289,32 @@ class CGrade:
         )
 
 
+class Subject:
+    def __init__(self, subject_id, name, enabled=False):
+        self.subject_id = subject_id
+        self.name = name
+        self.enabled = enabled
+
+    def to_dict(self):
+        return self.__dict__
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            data.get("c_grade_id"),
+            data["class_letter"]
+        )
+
+
+class KidSubjects:
+    def __init__(self, kid_id, subject_id):
+        self.subject_id = subject_id
+        self.kid_id = kid_id
+
+    def to_dict(self):
+        return self.__dict__
+
+
 class Language:
     def __init__(self, language_id, language):
         self.language_id = language_id

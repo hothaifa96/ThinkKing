@@ -95,7 +95,6 @@ class RegisterParent(Resource):
         # Attempt to register the new parent
         p = ParentDAO.create(parent)
         parent = ParentDAO.get_by_email(parent.email)
-        print(parent.parent_id)
         if p is True:
             response_data = {
                 'first_name': parent.first_name,
@@ -152,7 +151,6 @@ class LoginParent(Resource):
                 'parent_id': parent.parent_id,
                 'status': 'success'
             }
-            print(response_data)
             return response_data
         else:
             return {'status': 'error', 'message': 'Invalid password credentials'}, 401
@@ -170,7 +168,6 @@ class LoginParent(Resource):
                 response.headers['Content-Type'] = 'application/json'
                 return response
         except Exception as e:
-            print('error message ', e)
             response = make_response('error', 500)
             response.headers['Content-Type'] = 'application/json'
             return response
@@ -189,7 +186,6 @@ class ParentRegister(Resource):
 
         parent = Parent.from_dict(parent)
         if ParentDAO.create(parent):
-            print('from resource', parent)
             try:
                 parent = ParentDAO.get_by_email(parent.email)
                 response = make_response(parent.to_dict(), 200)
@@ -213,7 +209,6 @@ class ParentRegister(Resource):
                 response.headers['Content-Type'] = 'application/json'
                 return response
         except Exception as e:
-            print('error message ', e)
             response = make_response('error', 500)
             response.headers['Content-Type'] = 'application/json'
             return response
@@ -283,7 +278,6 @@ class Schools(Resource):
         schools_list = []
         results = SchoolDAO.get_all()
         for row in results:
-            print('row    w w w w w w w ', row)
             school_id, school_name = row
             school_result_json = {
                 'school_id': school_id,
@@ -314,7 +308,6 @@ class Classes(Resource):
         if not isinstance(results, dict):
 
             for row in results:
-                print('row')
                 c_grade_id, grade_name = row
                 school_result_json = {
                     'c_grade_id': c_grade_id,
@@ -322,7 +315,6 @@ class Classes(Resource):
                 }
                 class_list.append(school_result_json)
             json_result = json.dumps(class_list, indent=2)
-            print(json_result)
             # Return JSON response
             return jsonify(json.loads(json_result))
         else:
@@ -345,8 +337,6 @@ class ClassesName(Resource):
     def get(self):
         class_list = []
         results = ClassNameDAO.get_all()
-        print(results is not None)
-        print(results)
         if not isinstance(results, dict) and results is not None:
             for row in results:
                 class_name_id, class_name = row
@@ -377,29 +367,21 @@ class ClassesName(Resource):
 
 class Subjects(Resource):
     def get(self):
-        subject_list = []
         results = SubjectDAO.get_all()
-        if not isinstance(results, dict):
-            for row in results:
-                print('row')
-                subject_id, subject_name = row
-                subject_result_json = {
-                    'subject_id': subject_id,
-                    'subject_name': subject_name,
-                }
-                subject_list.append(subject_result_json)
-            json_result = json.dumps(subject_list, indent=2)
+        json_result = json.dumps(results, indent=2)
+        if isinstance(results, list):
             return jsonify(json.loads(json_result))
         else:
-            return make_response(jsonify(results), 400)
+            return make_response(results, 400)
 
     def post(self):
-
-        kid_grade = request.json
-        if check_keys(kid_grade, 'kid_id', 'subjects'):
+        kid_sub = request.json
+        if check_keys(kid_sub, 'kid_id', 'subjects'):
             return {'Error': 'missing data'}, 400
-        res = KidDAO.add_school(kid_grade['kid_id'], kid_grade['grade_id'])
-        if res is None:
+        if len(kid_sub['subjects']):
+            for sub in kid_sub['subjects']:
+                res = KidSubjectsDAO.create(kid_sub['kid_id'], sub)
+        if isinstance(res,dict):
             return {'message': 'success'}
         else:
             return make_response(jsonify(res), 400)
@@ -496,7 +478,7 @@ class PinCode(Resource):
         if str(parent.pin_code) == str(data['pin_code']):
             return {'message': 'success'}
         else:
-            response = make_response('pin don\'t match', 409)
+            response = make_response({'status': 'Error', 'message': 'pin don\'t match'}, 409)
             response.headers['Content-Type'] = 'application/json'
             return response
 
@@ -519,24 +501,23 @@ class Kids(Resource):
     def get(self, id):
         kids_list = KidDAO.get_by_parent_id(id)
         if len(kids_list) > 0:
-            print(kids_list)
-            return make_response(kids_list, 200)
-        else:
-            return 'no kids found', 400
-    def delete(self, id):
-        kids_list = KidDAO.delete_kid(id)
-        if len(kids_list) > 0:
-            print(kids_list)
             return make_response(kids_list, 200)
         else:
             return 'no kids found', 400
 
+    def delete(self, id):
+        kids_list = KidDAO.delete_kid(id)
+        if len(kids_list) > 0:
+            return make_response(kids_list, 200)
+        else:
+            return 'no kids found', 400
 
 
 class KidLearing(Resource):
     def get(self, id):
         response = KidDAO.get_learning_speed(id)
         return make_response(response, 200)
+
 
 class KidLearings(Resource):
 
@@ -569,13 +550,13 @@ class ParentPasswrod(Resource):
         response = ParentDAO.change_password(parent['parent_id'], parent['current_password'], parent['new_password'])
 
         return make_response(response, 200)
+
+
 class ParentPasswrods(Resource):
 
-    def delete(self,id):
+    def delete(self, id):
         response = ParentDAO.delete(id)
         return make_response(response, 200)
-
-
 
 
 class Password(Resource):
@@ -724,13 +705,15 @@ class Excel(Resource):
 
         except Exception as e:
             return jsonify({'success': False, 'message': str(e)})
+
+
 class Contact(Resource):
 
     def post(self):
         data = request.json
-        if check_keys(data, 'parent_id', 'email','text'):
+        if check_keys(data, 'parent_id', 'email', 'text'):
             return {'Error': 'missing data'}, 400
-        return {"status":"Done"}
+        return {"status": "Done"}
 
 
 class GetQuestions(Resource):
@@ -748,15 +731,11 @@ class ChangeProfile(Resource):
         if check_keys(parent, 'parent_id'):
             return {'Error': 'missing data'}, 400
         parent_dict = ParentDAO.get_by_id(parent['parent_id'])
-        print(parent_dict.to_dict())
         if isinstance(parent_dict, Parent):
             kids_list = KidDAO.get_by_parent_id(parent['parent_id'])
-            print(kids_list)
             if len(kids_list) >= 0:
-                print(kids_list)
                 p = parent_dict.to_dict()
                 p['kids'] = [kid.to_dict() for kid in kids_list]
-                print(p)
                 return make_response(p, 200)
         else:
             return {"message": 'no parent found'}, 400
@@ -766,7 +745,6 @@ class KidMain(Resource):
 
     def get(self, id):
         kid_dict = KidDAO.get_by_id(id)
-        print(kid_dict)
         if kid_dict is not None:
             return make_response(kid_dict.to_dict(), 200)
         else:
