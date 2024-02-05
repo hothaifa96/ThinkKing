@@ -1,5 +1,4 @@
-import json
-from datetime import datetime, timedelta, timezone
+
 import jwt
 import psycopg2
 
@@ -9,17 +8,9 @@ import datetime
 
 
 class GenderDAO:
-    # @staticmethod
-    # def create(gender):
-    #     # Database interaction logic here (insert into the 'genders' table)
-    #     connection = get_db_connection()
-    #     query = "INSERT INTO genders (gender) VALUES (?);", (gender.gender,)
-    #
-    #     connection.close()
 
     @staticmethod
     def get_all():
-        # Database interaction logic here (select all from the 'genders' table)
         connection = get_db_connection()
         query = "SELECT * FROM genders "
         cursor = connection.cursor()
@@ -39,7 +30,6 @@ class GenderDAO:
 
     @staticmethod
     def get_by_id(gender_id):
-        # Database interaction logic here (select from the 'genders' table by ID)
         connection = get_db_connection()
         query = f"SELECT * FROM genders WHERE gender_id = {gender_id}"
 
@@ -61,24 +51,15 @@ class GenderDAO:
 
     @staticmethod
     def delete(gender_id):
-        # Database interaction logic here (delete from the 'genders' table by ID)
         connection = get_db_connection()
         query = 'DELETE FROM genders WHERE gender_id =?;', (gender_id,)
         connection.close()
 
 
 class AvatarDAO:
-    # @staticmethod
-    # def create(avatar):
-    #     # Database interaction logic here (insert into the 'avatars' table)
-    #     connection = get_db_connection()
-    #     query = "INSERT INTO avatars (avatar) VALUES (?);", (avatar.avatar,)
-    #
-    #     connection.close()
 
     @staticmethod
     def get_all():
-        # Database interaction logic here (select all from the 'avatars' table)
         connection = get_db_connection()
         query = "SELECT * FROM avatars"
         cursor = connection.cursor()
@@ -97,7 +78,6 @@ class AvatarDAO:
 
     @staticmethod
     def get_by_id(avatar_id):
-        # Database interaction logic here (select from the 'avatars' table by ID)
         connection = get_db_connection()
         query = f"SELECT * FROM avatars WHERE avatar_id = {avatar_id}"
         cursor = connection.cursor()
@@ -114,18 +94,6 @@ class AvatarDAO:
         finally:
             cursor.close()
             connection.close()
-
-    # @staticmethod
-    # def update(avatar):
-    #     # Database interaction logic here (update the 'avatars' table)
-    #     connection = get_db_connection()
-    #     connection.close()
-
-    # @staticmethod
-    # def delete(avatar_id):
-    #     # Database interaction logic here (delete from the 'avatars' table by ID)
-    #     connection = get_db_connection()
-    #     connection.close()
 
 
 class KidDAO:
@@ -166,7 +134,6 @@ class KidDAO:
 
     @staticmethod
     def create_first(first_name, parent_id, gender_id):
-        # Database interaction logic here (insert into the 'kids' table)
         connection = get_db_connection()
         query = f"""
             INSERT INTO kids (first_name,parent_id, gender_id) VALUES ('{first_name}', {parent_id}, {gender_id}); """
@@ -193,7 +160,6 @@ class KidDAO:
 
     @staticmethod
     def get_all_by_parent_and_name(parent_id, firstname):
-        # Database interaction logic here (select all from the 'kids' table)
         connection = get_db_connection()
         query = f"SELECT * FROM kids where parent_id ={parent_id} and first_name= '{firstname}'"
         cursor = connection.cursor()
@@ -253,34 +219,28 @@ class KidDAO:
 
     @staticmethod
     def delete_kid(kid_id):
-        # Database interaction logic here (delete from the 'kids' table by ID)
         connection = get_db_connection()
         query = f"DELETE FROM kids WHERE kid_id = {kid_id};"
 
         cursor = connection.cursor()
         try:
-            # Use a tuple (kid_id,) in execute() to provide the parameter
             cursor.execute(query)
             connection.commit()
 
-            # Check if any rows were affected
             if cursor.rowcount > 0:
                 return {'success': True, 'message': 'Kid deleted successfully'}
             else:
                 return {'success': False, 'message': 'Kid not found'}
 
         except Exception as e:
-            # Handle any exceptions that may occur during the delete
             return {'success': False, 'message': str(e)}
 
         finally:
-            # Make sure to close the cursor and connection in a finally block
             cursor.close()
             connection.close()
 
     @staticmethod
     def get_by_id(kid_id):
-        # Database interaction logic here (select from the 'kids' table by ID)
         connection = get_db_connection()
         query = f"SELECT * FROM kids WHERE kid_id = {kid_id};"
         cursor = connection.cursor()
@@ -307,7 +267,6 @@ class KidDAO:
 
     @staticmethod
     def get_learning_speed(kid_id):
-        # Database interaction logic here (select from the 'kids' table by ID)
         connection = get_db_connection()
         query = f"SELECT learning_speed FROM kids WHERE kid_id = {kid_id};"
         cursor = connection.cursor()
@@ -316,11 +275,9 @@ class KidDAO:
             result = cursor.fetchone()
 
             if result:
-                # Return the learning_speed value as a dictionary
                 response = {'learning_speed': result[0]}
                 return json.dumps(response)
             else:
-                # Handle the case where no result is found for the given kid_id
                 return json.dumps({'error': 'Kid not found'})
 
         except psycopg2.Error as e:
@@ -333,34 +290,28 @@ class KidDAO:
 
     @staticmethod
     def update_learning_speed(kid_id, learning_speed):
-        # Database interaction logic here (update the 'kids' table by ID)
         connection = get_db_connection()
         query = f"UPDATE kids SET learning_speed = {learning_speed} WHERE kid_id = {kid_id};"
 
         cursor = connection.cursor()
         try:
-            # Use a tuple (learning_speed, kid_id) in execute() to provide the parameters
             cursor.execute(query)
             connection.commit()
 
-            # Check if any rows were affected
             if cursor.rowcount > 0:
                 return {'success': True, 'message': 'Learning speed updated successfully'}
             else:
                 return {'success': False, 'message': 'Kid not found'}
 
         except Exception as e:
-            # Handle any exceptions that may occur during the update
             return {'success': False, 'message': str(e)}
 
         finally:
-            # Make sure to close the cursor and connection in a finally block
             cursor.close()
             connection.close()
 
     @staticmethod
     def update_kid_first_name(kid_id, new_first_name):
-        # Database interaction logic here (update the 'kids' table by ID)
         connection = get_db_connection()
         query = f"UPDATE kids SET first_name = '{new_first_name}' WHERE kid_id = {kid_id};"
         cursor = connection.cursor()
@@ -368,7 +319,6 @@ class KidDAO:
             cursor.execute(query)
             connection.commit()
 
-            # Check if any rows were affected
             if cursor.rowcount > 0:
                 return {'success': True, 'message': 'First name updated successfully'}
             else:
@@ -379,13 +329,11 @@ class KidDAO:
             return {'success': False, 'message': str(e)}
 
         finally:
-            # Make sure to close the cursor and connection in a finally block
             cursor.close()
             connection.close()
 
     @staticmethod
     def get_by_name_and_parent_id(parent_id, name):
-        # Database interaction logic here (select from the 'kids' table by ID)
         connection = get_db_connection()
         query = "SELECT * FROM kids WHERE parent_id = ? and first_name=?;", (parent_id, name)
         cursor = connection.cursor()
@@ -396,8 +344,6 @@ class KidDAO:
             for result in results:
                 kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns, \
                     time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at = result
-
-                # Convert the created_at timestamp to a datetime object
                 created_at_datetime = datetime.datetime.utcfromtimestamp(created_at)
 
                 kid = Kid(
@@ -421,7 +367,6 @@ class KidDAO:
     # TODO: update kid profile
     @staticmethod
     def update(kid):
-        # Database interaction logic here (update the 'kids' table)
         connection = get_db_connection()
         connection.close()
         query = """
@@ -430,10 +375,8 @@ class KidDAO:
         WHERE kid_id = %s
         """
 
-    # TODO: delete kid profile
     @staticmethod
     def delete(kid_id):
-        # Database interaction logic here (delete from the 'kids' table by ID)
         connection = get_db_connection()
         connection.close()
 
@@ -603,10 +546,11 @@ class ParentDAO:
                     password=result[7],
                     gender_id=result[8])
                 return p
+            else:
+                raise Exception('parent id doesnt exist')
 
         except psycopg2.Error as e:
-            print("Error fetching parent by ID:", e)
-            return None
+            return e
 
         finally:
             cursor.close()
@@ -863,7 +807,7 @@ class AnswerOptionDAO:
             cursor.close()
             connection.close()
         for row in result:
-            question_id, _, _, _, _, question_text, _, interesting_fact, answer_option_id, _, answer_text, correct_answer = row
+            question_id, _, _, _, _, question_text, _, interesting_fact, answer_option_id, _, correct_answer,answer_text = row
 
             question = next((q for q in questions_list if q["question_id"] == question_id), None)
 
@@ -900,7 +844,7 @@ class AnswerOptionDAO:
             cursor.close()
             connection.close()
         for row in result:
-            question_id, _, _, _, _, question_text, explanation, interesting_fact, answer_option_id, _, answer_text, correct_answer = row
+            question_id, _, _, _, _, question_text, explanation, interesting_fact, answer_option_id, _, correct_answer, answer_text = row
 
             question = next((q for q in questions_list if q["question_id"] == question_id), None)
             if question is None:
@@ -1261,7 +1205,7 @@ class KidSubjectsDAO:
     def create(kid_id,subject_id):
         # Database interaction logic here (select all from the 'c_grades' table)
         connection = get_db_connection()
-        query = f"INSERT INTO kid_subjects VALUES ({kid_id},{subject_id})"
+        query = f"INSERT INTO kid_subjects VALUES ({kid_id}, {subject_id}) ON CONFLICT (kid_id, subject_id) DO NOTHING;"
         cursor = connection.cursor()
         try:
             cursor.execute(query)
@@ -1269,7 +1213,25 @@ class KidSubjectsDAO:
             return {'message' : 'DONE'}
 
         except psycopg2.Error as e:
-            return {'error', "Error fetching :", e}
+            return e
+
+        finally:
+            cursor.close()
+            connection.close()
+
+    @staticmethod
+    def delete(kid_id, subject_id):
+        # Database interaction logic here (select all from the 'c_grades' table)
+        connection = get_db_connection()
+        query = f"DELETE FROM kid_subjects WHERE kid_id = {kid_id} AND subject_id = {subject_id};"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            connection.commit()
+            return {'message': 'DONE'}
+
+        except psycopg2.Error as e:
+            return e
 
         finally:
             cursor.close()

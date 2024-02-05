@@ -379,12 +379,31 @@ class Subjects(Resource):
         if check_keys(kid_sub, 'kid_id', 'subjects'):
             return {'Error': 'missing data'}, 400
         if len(kid_sub['subjects']):
-            for sub in kid_sub['subjects']:
-                res = KidSubjectsDAO.create(kid_sub['kid_id'], sub)
-        if isinstance(res,dict):
+            try:
+                for sub in kid_sub['subjects']:
+                    res = KidSubjectsDAO.create(kid_sub['kid_id'], sub)
+                    if not isinstance(res, dict):
+                        raise res
+            except:
+                return {"status": 'error', 'message': str(res)}, 400
+
+        if isinstance(res, dict):
             return {'message': 'success'}
-        else:
-            return make_response(jsonify(res), 400)
+
+    def delete(self):
+        kid_sub = request.json
+        if check_keys(kid_sub, 'kid_id', 'subjects'):
+            return {'Error': 'missing data'}, 400
+        if len(kid_sub['subjects']):
+            try:
+                for sub in kid_sub['subjects']:
+                    res = KidSubjectsDAO.delete(kid_sub['kid_id'], sub)
+                    if not isinstance(res, dict):
+                        raise res
+            except:
+                return {"status": 'error', 'message': str(res)}, 400
+        if isinstance(res, dict):
+            return {'message': 'success'}
 
 
 class School(Resource):
@@ -599,12 +618,22 @@ class BlockApps(Resource):
 
 class Avatar(Resource):
 
-    def put(self):
+    def get(self, gender: str):
         data = request.json
         # check if the data is valid and return a 400 error message
-        if check_keys(data, 'kid _id', 'avatar_id '):
-            return {'Error': 'missing data'}, 400
-        return {'message': 'success'}
+        try:
+            avatars = AvatarDAO.get_all()
+
+            if gender.lower() not in ['male','female']:
+                raise 'select email of female'
+            if gender.lower() == 'male':
+                gender_avatars = [avatar.to_dict() for avatar in avatars if avatar.avatar_id < 200]
+            elif gender.lower() == 'female':
+                gender_avatars = [avatar.to_dict() for avatar in avatars if avatar.avatar_id > 200]
+
+            return {'message': 'success',gender:gender_avatars}
+        except Exception as e:
+            return {'error':e}
 
 
 class KidScreen(Resource):
@@ -711,9 +740,16 @@ class Contact(Resource):
 
     def post(self):
         data = request.json
-        if check_keys(data, 'parent_id', 'email', 'text'):
+        if check_keys(data, 'parent_id', 'title', 'text'):
             return {'Error': 'missing data'}, 400
-        return {"status": "Done"}
+        try:
+            email = ParentDAO.get_by_id(data['parent_id'])
+            if isinstance(email, Parent):
+                return {"status": "Done"}
+            else:
+                raise email
+        except:
+            return email, 400
 
 
 class GetQuestions(Resource):
