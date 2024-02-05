@@ -1316,15 +1316,20 @@ class SessionDAO:
     def create(session):
         # Database interaction logic here (insert into the 'sessions' table)
         connection = get_db_connection()
-        query = """
-            INSERT INTO sessions (
-                question_id, kid_id, start_time, completion_time,
-                first_try_end_at, second_try_start_at, second_try_end_at, score
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
-        """, (
-            session.question_id, session.kid_id, session.start_time, session.completion_time,
-            session.first_try_end_at, session.second_try_start_at, session.second_try_end_at, session.score
-        )
+        query = f"INSERT INTO sessions (question_id, kid_id, start_time, completion_time, first_try_end_at, second_try_start_at, second_try_end_at, score) VALUES ('{session.question_id}', {session.kid_id}, '{session.start_time}', '{session.completion_time}', '{session.first_try_end_at}', '{session.second_try_start_at}', '{session.second_try_end_at}', {session.score});"
+        cursor = connection.cursor()
+
+        try:
+            cursor.execute(query)
+            rows_updated = cursor.rowcount
+            connection.commit()
+
+            if rows_updated > 0:
+                return True
+            else:
+                raise Exception('nothing updated')
+        except Exception as e:
+            return {'error': str(e)}
         connection.close()
 
     @staticmethod

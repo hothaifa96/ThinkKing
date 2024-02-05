@@ -788,6 +788,24 @@ class Contact(Resource):
             return email, 400
 
 
+class Answers(Resource):
+
+    def post(self):
+        data = request.json
+        if check_keys(data, 'kid_id', 'question_id', 'attempt', 'start_time', 'completion_time','first_try_end_at'):
+            return {'Error': 'missing data'}, 400
+        try:
+            session = Session(None,data['question_id'],data['kid_id'],data['start_time'],data['completion_time'],data['first_try_end_at'],None if data['attempt'] ==1 else data['first_try_end_at'] ,None if data['attempt'] ==1 else data['completion_time'],1 if data['attempt'] ==1 else 2)
+            result = SessionDAO.create(session)
+            print(result)
+            if result == True:
+                return  {'status':'success','message':'Done'}
+            else :
+                raise Exception(result)
+        except:
+            return result, 400
+
+
 class GetQuestions(Resource):
 
     def get(self, id='303001100'):
