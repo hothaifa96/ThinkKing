@@ -516,6 +516,27 @@ class PinCode(Resource):
         return {'message': 'sent to the email'}
 
 
+class Code(Resource):
+
+    def post(self):
+        data = request.json
+        # Check if the data is valid JSON
+        error = check_keys(data, 'parent_id', 'pin_code')
+        if error is not False:
+            return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
+        parent = ParentDAO.get_by_id(data['parent_id'])
+        if parent is None:
+            return make_response('parent not found', 404)
+        if parent.email == '':
+            return {'status': 'error', "message": "this parent email isn't updated "}
+        if str(parent.pin_code) == str(data['pin_code']) and parent.email != '':
+            return {'status': 'success', "message": f"email sent to {parent.email}"}
+        else:
+            response = make_response({'status': 'Error', 'message': 'pin don\'t match'}, 409)
+            response.headers['Content-Type'] = 'application/json'
+            return response
+
+
 class Kids(Resource):
     def get(self, id):
         kids_list = KidDAO.get_by_parent_id(id)
@@ -583,9 +604,25 @@ class Password(Resource):
     def put(self):
         data = request.json
         # check if the data is valid and return a 400 error message
-        if check_keys(data, 'parent _id', 'current_password', 'new_password '):
+        if check_keys(data, 'parent_id', 'current_password', 'new_password '):
             return {'Error': 'missing data'}, 400
         return {'message': 'success'}
+
+    def post(self):
+        data = request.json
+        # check if the data is valid and return a 400 error message
+        if check_keys(data, 'email'):
+            return {'Error': 'missing data'}, 400
+        try:
+            parents = ParentDAO.get_all()
+            if isinstance(parents, list):
+                for parent in parents:
+                    if parent.email == data['email']:
+                        return {'status': 'success', 'message': 'email sent'}
+                else:
+                    raise BaseException('email not found')
+        except BaseException as e:
+            return {'error': str(e)}
 
 
 class Apps(Resource):
@@ -623,16 +660,16 @@ class Avatar(Resource):
         try:
             avatars = AvatarDAO.get_all()
 
-            if gender.lower() not in ['male','female']:
+            if gender.lower() not in ['male', 'female']:
                 raise 'select email of female'
             if gender.lower() == 'male':
                 gender_avatars = [avatar.to_dict() for avatar in avatars if avatar.avatar_id < 200]
             elif gender.lower() == 'female':
                 gender_avatars = [avatar.to_dict() for avatar in avatars if avatar.avatar_id >= 200]
 
-            return {'message': 'success',gender:gender_avatars}
+            return {'message': 'success', gender: gender_avatars}
         except Exception as e:
-            return {'error':e}
+            return {'error': e}
 
 
 class KidScreen(Resource):

@@ -482,12 +482,15 @@ class ParentDAO:
         cursor = connection.cursor()
         try:
             cursor.execute(query)
-            result = cursor.fetchall()
-            return result
+            results = cursor.fetchall()
+            if results:
+                return [Parent(*result) for result in results]
+            else:
+                raise 'the parents table is empty'
 
         except psycopg2.Error as e:
             print("Error fetching parents:", e)
-            return None
+            return {"error":e}
 
         finally:
             cursor.close()

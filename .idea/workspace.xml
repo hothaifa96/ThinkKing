@@ -480,7 +480,31 @@
       <option name="project" value="LOCAL" />
       <updated>1706747079662</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="add(DAO):add excel support7">
+      <option name="closed" value="true" />
+      <created>1707122336221</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1707122336221</updated>
+    </task>
+    <task id="LOCAL-00039" summary="add(DAO):add excel support7">
+      <option name="closed" value="true" />
+      <created>1707122525031</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1707122525031</updated>
+    </task>
+    <task id="LOCAL-00040" summary="add(DAO):add excel support7">
+      <option name="closed" value="true" />
+      <created>1707122567106</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1707122567106</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
