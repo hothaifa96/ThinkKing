@@ -628,7 +628,7 @@ class Avatar(Resource):
             if gender.lower() == 'male':
                 gender_avatars = [avatar.to_dict() for avatar in avatars if avatar.avatar_id < 200]
             elif gender.lower() == 'female':
-                gender_avatars = [avatar.to_dict() for avatar in avatars if avatar.avatar_id > 200]
+                gender_avatars = [avatar.to_dict() for avatar in avatars if avatar.avatar_id >= 200]
 
             return {'message': 'success',gender:gender_avatars}
         except Exception as e:
