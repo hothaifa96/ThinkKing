@@ -619,7 +619,6 @@ class BlockApps(Resource):
 class Avatar(Resource):
 
     def get(self, gender: str):
-        data = request.json
         # check if the data is valid and return a 400 error message
         try:
             avatars = AvatarDAO.get_all()
