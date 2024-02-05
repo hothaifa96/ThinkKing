@@ -536,9 +536,10 @@ class Code(Resource):
             response.headers['Content-Type'] = 'application/json'
             return response
 
+
 class Statistics(Resource):
 
-    def get(self,id):
+    def get(self, id):
         result = SessionDAO.get_all_by_id(id)
         return result
 
@@ -677,6 +678,18 @@ class Avatar(Resource):
         except Exception as e:
             return {'error': e}
 
+    def post(self):
+        data = request.json
+        if check_keys(data, 'kid_id', 'avatar_id') and check_keys(data, 'parent_id', 'avatar_id'):
+            return {'Error': 'missing data'}, 400
+
+        if data['kid_id']:
+            results = KidDAO.update_avatar(data['kid_id'], data['avatar_id'])
+            return results
+        else:
+            results = ParentDAO.update_avatar(data['parent_id'], data['avatar_id'])
+            return results
+
 
 class KidScreen(Resource):
 
@@ -798,15 +811,18 @@ class Answers(Resource):
 
     def post(self):
         data = request.json
-        if check_keys(data, 'kid_id', 'question_id', 'attempt', 'start_time', 'completion_time','first_try_end_at'):
+        if check_keys(data, 'kid_id', 'question_id', 'attempt', 'start_time', 'completion_time', 'first_try_end_at'):
             return {'Error': 'missing data'}, 400
         try:
-            session = Session(None,data['question_id'],data['kid_id'],data['start_time'],data['completion_time'],data['first_try_end_at'],None if data['attempt'] ==1 else data['first_try_end_at'] ,None if data['attempt'] ==1 else data['completion_time'],1 if data['attempt'] ==1 else 2)
+            session = Session(None, data['question_id'], data['kid_id'], data['start_time'], data['completion_time'],
+                              data['first_try_end_at'], None if data['attempt'] == 1 else data['first_try_end_at'],
+                              None if data['attempt'] == 1 else data['completion_time'],
+                              1 if data['attempt'] == 1 else 2)
             result = SessionDAO.create(session)
             print(result)
             if result == True:
-                return  {'status':'success','message':'Done'}
-            else :
+                return {'status': 'success', 'message': 'Done'}
+            else:
                 raise Exception(result)
         except:
             return result, 400

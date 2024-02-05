@@ -192,8 +192,7 @@ class KidDAO:
                 c_grade = CGradeDAO.get_by_id(kid['c_grade_id']).class_letter if kid['c_grade_id'] is not None else None
                 gender = GenderDAO.get_by_id(kid['gender_id']).gender if kid['gender_id'] is not None else None
                 avatar = AvatarDAO.get_by_id(kid['avatar_id']).avatar if kid['avatar_id'] is not None else None
-                classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid[
-                                                                                               'class_id'] is not None else None
+                classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid['class_id'] is not None else None
                 sessions = SessionDAO.get_all_by_id(kid['kid_id'])
                 answers_count = set([session.question_id for session in sessions])
                 answers_count = len(answers_count)
@@ -321,6 +320,26 @@ class KidDAO:
 
             if cursor.rowcount > 0:
                 return {'success': True, 'message': 'Learning speed updated successfully'}
+            else:
+                return {'success': False, 'message': 'Kid not found'}
+
+        except Exception as e:
+            return {'success': False, 'message': str(e)}
+
+        finally:
+            cursor.close()
+            connection.close()
+    @staticmethod
+    def update_avatar(kid_id, avatar_id):
+        connection = get_db_connection()
+        query = f"UPDATE kids SET avatar_id = {avatar_id} WHERE kid_id = {kid_id};"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            connection.commit()
+
+            if cursor.rowcount > 0:
+                return {'success': True, 'message': 'avatar updated successfully'}
             else:
                 return {'success': False, 'message': 'Kid not found'}
 
@@ -619,7 +638,7 @@ class ParentDAO:
         token = jwt.encode({"parent_id": f"{parent.parent_id}"}, "thinking_application", algorithm="HS256")
         return token
 
-    # TODO: upload parent
+
     @staticmethod
     def update_pin(parent_id, pin):
         connection = get_db_connection()
@@ -635,6 +654,23 @@ class ParentDAO:
 
         finally:
             # Make sure to close the cursor and connection in a finally block
+            cursor.close()
+            connection.close()
+
+    @staticmethod
+    def update_avatar(parent_id, avatar_id):
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        try:
+            update_query = f"UPDATE parents SET avatar_id = '{avatar_id}' WHERE parent_id = {parent_id};"
+            cursor.execute(update_query)
+            connection.commit()
+            return {'success': True, 'message': 'pin code set successfully'}
+
+        except Exception as e:
+            return {'success': False, 'message': str(e)}
+
+        finally:
             cursor.close()
             connection.close()
 
