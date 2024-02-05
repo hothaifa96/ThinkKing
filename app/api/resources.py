@@ -536,6 +536,12 @@ class Code(Resource):
             response.headers['Content-Type'] = 'application/json'
             return response
 
+class Statistics(Resource):
+
+    def get(self,id):
+        result = SessionDAO.get_all_by_id(id)
+        return result
+
 
 class Kids(Resource):
     def get(self, id):
@@ -836,7 +842,7 @@ class KidMain(Resource):
     def get(self, id):
         kid_dict = KidDAO.get_by_id(id)
         if kid_dict is not None:
-            return make_response(kid_dict.to_dict(), 200)
+            return make_response(kid_dict, 200)
         else:
             return {"message": 'no kid found'}, 400
 

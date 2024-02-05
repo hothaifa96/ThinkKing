@@ -1,4 +1,3 @@
-
 import jwt
 import psycopg2
 
@@ -193,7 +192,20 @@ class KidDAO:
                 c_grade = CGradeDAO.get_by_id(kid['c_grade_id']).class_letter if kid['c_grade_id'] is not None else None
                 gender = GenderDAO.get_by_id(kid['gender_id']).gender if kid['gender_id'] is not None else None
                 avatar = AvatarDAO.get_by_id(kid['avatar_id']).avatar if kid['avatar_id'] is not None else None
-                classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid['class_id'] is not None else None
+                classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid[
+                                                                                               'class_id'] is not None else None
+                sessions = SessionDAO.get_all_by_id(kid['kid_id'])
+                answers_count = set([session.question_id for session in sessions])
+                answers_count = len(answers_count)
+                correct_answers_count = 0
+
+                for session in sessions:
+                    if session.score > 0:
+                        correct_answers_count += 1
+                percentage = float(correct_answers_count) / answers_count
+                kid['answers_count'] = answers_count
+                kid['correct_answers_count'] = correct_answers_count
+                kid['correct_answers_percentage'] = percentage
                 del kid['school_id']
                 kid['school'] = school
                 del kid['c_grade_id']
@@ -247,14 +259,23 @@ class KidDAO:
         try:
             cursor.execute(query)
             result = cursor.fetchone()
-            kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns, time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at, learning_speed = result
-            # Convert the created_at timestamp to a datetime object
+            kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns, time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at, learning_speed, class_id = result
             kid = Kid(
                 kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns,
                 time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time,
-                created_at, learning_speed
+                created_at, learning_speed, class_id
             )
-
+            kid = kid.to_dict()
+            sessions = SessionDAO.get_all_by_id(kid['kid_id'])
+            answers_count = set([session['question_id'] for session in sessions])
+            answers_count = len(answers_count)
+            correct_answers_count = 0
+            percentage = 0
+            kid['answers_count'] = answers_count
+            kid['correct_answers_count'] = correct_answers_count
+            kid['correct_answers_percentage'] = percentage
+            kid['avatar_id'] = AvatarDAO.get_by_id(kid['avatar_id']).avatar
+            print(kid)
             return kid
 
 
@@ -490,7 +511,7 @@ class ParentDAO:
 
         except psycopg2.Error as e:
             print("Error fetching parents:", e)
-            return {"error":e}
+            return {"error": e}
 
         finally:
             cursor.close()
@@ -600,7 +621,7 @@ class ParentDAO:
 
     # TODO: upload parent
     @staticmethod
-    def update_pin(parent_id,pin):
+    def update_pin(parent_id, pin):
         connection = get_db_connection()
         cursor = connection.cursor()
         try:
@@ -810,7 +831,7 @@ class AnswerOptionDAO:
             cursor.close()
             connection.close()
         for row in result:
-            question_id, _, _, _, _, question_text, _, interesting_fact, answer_option_id, _, correct_answer,answer_text = row
+            question_id, _, _, _, _, question_text, _, interesting_fact, answer_option_id, _, correct_answer, answer_text = row
 
             question = next((q for q in questions_list if q["question_id"] == question_id), None)
 
@@ -853,7 +874,7 @@ class AnswerOptionDAO:
             if question is None:
                 question = {"question_id": question_id, "question_text": question_text,
                             "explanation": explanation,
-                            "intersting_fact": interesting_fact ,# add the explanation
+                            "intersting_fact": interesting_fact,  # add the explanation
                             "subject": "math" if question_id[0] == '1' else "common knowledge", "answers": []}
                 questions_list.append(question)
 
@@ -1166,10 +1187,10 @@ class SubjectDAO:
         try:
             cursor.execute(query)
             results = cursor.fetchall()
-            subjects =[]
-            if len(results)>0:
+            subjects = []
+            if len(results) > 0:
                 for result in results:
-                    subject=Subject(*result)
+                    subject = Subject(*result)
                     subjects.append(subject.to_dict())
             return subjects
 
@@ -1179,6 +1200,7 @@ class SubjectDAO:
         finally:
             cursor.close()
             connection.close()
+
 
 class KidSubjectsDAO:
 
@@ -1191,10 +1213,10 @@ class KidSubjectsDAO:
         try:
             cursor.execute(query)
             results = cursor.fetchall()
-            kid_subjects =[]
-            if len(results)>0:
+            kid_subjects = []
+            if len(results) > 0:
                 for result in results:
-                    kid_subject=KidSubjects(*result)
+                    kid_subject = KidSubjects(*result)
                     kid_subjects.append(kid_subject.to_dict())
             return kid_subjects
 
@@ -1204,8 +1226,9 @@ class KidSubjectsDAO:
         finally:
             cursor.close()
             connection.close()
+
     @staticmethod
-    def create(kid_id,subject_id):
+    def create(kid_id, subject_id):
         # Database interaction logic here (select all from the 'c_grades' table)
         connection = get_db_connection()
         query = f"INSERT INTO kid_subjects VALUES ({kid_id}, {subject_id}) ON CONFLICT (kid_id, subject_id) DO NOTHING;"
@@ -1213,7 +1236,7 @@ class KidSubjectsDAO:
         try:
             cursor.execute(query)
             connection.commit()
-            return {'message' : 'DONE'}
+            return {'message': 'DONE'}
 
         except psycopg2.Error as e:
             return e
@@ -1337,3 +1360,18 @@ class SessionDAO:
         # Database interaction logic here (select all from the
         connection = get_db_connection()
         connection.close()
+
+    @staticmethod
+    def get_all_by_id(id):
+        connection = get_db_connection()
+        query = f"SELECT * FROM sessions WHERE kid_id = {id}"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            results = cursor.fetchall()
+            sessions = [Session(*result).to_dict() for result in results]
+            return sessions
+
+        except psycopg2.Error as e:
+            print("Error fetching gender by ID:", e)
+            return None

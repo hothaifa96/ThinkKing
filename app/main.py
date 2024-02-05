@@ -25,12 +25,13 @@ api.add_resource(ParentPasswrod, '/parent/update')
 api.add_resource(ParentPasswrods, '/parent/update/<string:id>')
 api.add_resource(ChangeProfile, '/change/profile')
 api.add_resource(KidMain, '/main/kid/<string:id>')
-api.add_resource(Questions, '/question/<string:id>')
+# api.add_resource(Questions, '/question/<string:id>')
 api.add_resource(Excel, '/excel')
 api.add_resource(Contact, '/contactus')
 api.add_resource(Avatar, '/avatar/<string:gender>')
 api.add_resource(Password, '/email/password')
 api.add_resource(Code, '/email/code')
+api.add_resource(Statistics, '/statistics/<string:id>')
 
 
 
@@ -46,8 +47,8 @@ api.add_resource(BlockApps, '/block')
 api.add_resource(KidScreen, '/kid_screen')
 api.add_resource(KidProfile, '/change_kid')
 api.add_resource(QuestionsStatus, '/stat/question')
-api.add_resource(AllQuestions, '/questions')
-api.add_resource(Answer, '/answer')
+# api.add_resource(AllQuestions, '/questions')
+# api.add_resource(Answer, '/answer')
 # react app hosting
 
 
