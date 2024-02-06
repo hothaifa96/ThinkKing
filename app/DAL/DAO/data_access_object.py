@@ -194,14 +194,17 @@ class KidDAO:
                 avatar = AvatarDAO.get_by_id(kid['avatar_id']).avatar if kid['avatar_id'] is not None else None
                 classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid['class_id'] is not None else None
                 sessions = SessionDAO.get_all_by_id(kid['kid_id'])
-                answers_count = set([session.question_id for session in sessions])
+                answers_count = set([session['question_id'] for session in sessions])
                 answers_count = len(answers_count)
                 correct_answers_count = 0
 
                 for session in sessions:
-                    if session.score > 0:
+                    if session['score'] > 0:
                         correct_answers_count += 1
-                percentage = float(correct_answers_count) / answers_count
+                if answers_count != 0:
+                    percentage = float(correct_answers_count) / answers_count
+                else:
+                    percentage=0
                 kid['answers_count'] = answers_count
                 kid['correct_answers_count'] = correct_answers_count
                 kid['correct_answers_percentage'] = percentage
@@ -269,7 +272,13 @@ class KidDAO:
             answers_count = set([session['question_id'] for session in sessions])
             answers_count = len(answers_count)
             correct_answers_count = 0
-            percentage = 0
+            for session in sessions:
+                if session.score > 0:
+                    correct_answers_count += 1
+            if answers_count != 0:
+                percentage = float(correct_answers_count) / answers_count
+            else:
+                percentage = 0
             kid['answers_count'] = answers_count
             kid['correct_answers_count'] = correct_answers_count
             kid['correct_answers_percentage'] = percentage
