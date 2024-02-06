@@ -261,30 +261,36 @@ class KidDAO:
         try:
             cursor.execute(query)
             result = cursor.fetchone()
-            kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns, time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at, learning_speed, class_id = result
-            kid = Kid(
-                kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns,
-                time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time,
-                created_at, learning_speed, class_id
-            )
-            kid = kid.to_dict()
-            sessions = SessionDAO.get_all_by_id(kid['kid_id'])
-            answers_count = set([session['question_id'] for session in sessions])
-            answers_count = len(answers_count)
-            correct_answers_count = 0
-            for session in sessions:
-                if session.score > 0:
-                    correct_answers_count += 1
-            if answers_count != 0:
-                percentage = float(correct_answers_count) / answers_count
+            if result :
+                kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns, time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at, learning_speed, class_id = result
+                kid = Kid(
+                    kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns,
+                    time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time,
+                    created_at, learning_speed, class_id
+                )
+                kid = kid.to_dict()
+                sessions = SessionDAO.get_all_by_id(kid['kid_id'])
+                answers_count = set([session['question_id'] for session in sessions])
+                answers_count = len(answers_count)
+                correct_answers_count = 0
+                for session in sessions:
+                    if session['score'] > 0:
+                        correct_answers_count += 1
+                if answers_count != 0:
+                    percentage = float(correct_answers_count) / answers_count
+                else:
+                    percentage = 0
+                kid['answers_count'] = answers_count
+                kid['correct_answers_count'] = correct_answers_count
+                kid['correct_answers_percentage'] = percentage
+                av = AvatarDAO.get_by_id(kid['avatar_id'])
+                if isinstance(av,Avatar):
+                    kid['avatar'] = AvatarDAO.get_by_id(kid['avatar_id']).avatar
+                else:
+                    kid['avatar']=None
+                return kid
             else:
-                percentage = 0
-            kid['answers_count'] = answers_count
-            kid['correct_answers_count'] = correct_answers_count
-            kid['correct_answers_percentage'] = percentage
-            kid['avatar_id'] = AvatarDAO.get_by_id(kid['avatar_id']).avatar
-            print(kid)
-            return kid
+                return {'status':'error','message':"kid_id doesnt exist"}
 
 
         except psycopg2.Error as e:
