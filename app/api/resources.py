@@ -6,6 +6,7 @@ from flask import make_response, jsonify
 from flask import request
 from app.DAL.DAO.data_access_object import *
 from app.DAL.POPO.db_objects import *
+from app.sending.sendEmail import EmailSender
 
 
 def check_keys(data, *args):
@@ -530,6 +531,10 @@ class Code(Resource):
         if parent.email == '':
             return {'status': 'error', "message": "this parent email isn't updated "}
         if str(parent.pin_code) == str(data['pin_code']) and parent.email != '':
+            receiver_email = parent.email
+            subject = 'Test Email'
+            body = 'This is a test email sent using Python.'
+            r = EmailSender.send_email(receiver_email, subject, body)
             return {'status': 'success', "message": f"email sent to {parent.email}"}
         else:
             response = make_response({'status': 'Error', 'message': 'pin don\'t match'}, 409)
@@ -550,7 +555,7 @@ class Kids(Resource):
         if len(kids_list) > 0:
             return make_response(kids_list, 200)
         else:
-            return 'no kids found', 400
+            return {"message": 'no kids found'}, 400
 
     def delete(self, id):
         kids_list = KidDAO.delete_kid(id)
@@ -613,7 +618,15 @@ class Password(Resource):
         # check if the data is valid and return a 400 error message
         if check_keys(data, 'parent_id', 'current_password', 'new_password '):
             return {'Error': 'missing data'}, 400
-        return {'message': 'success'}
+        email = ParentDAO.get_by_id(data['parent_id'])
+        print(email)
+        if isinstance(email, Parent):
+            receiver_email = email.email
+            subject = 'Test Email'
+            body = 'This is a test email sent using Python.'
+            r = EmailSender.send_email(receiver_email, subject, body)
+            return {"status": "Done"}
+        return {'message': 'error'}
 
     def post(self):
         data = request.json
@@ -799,25 +812,30 @@ class Contact(Resource):
             return {'Error': 'missing data'}, 400
         try:
             email = ParentDAO.get_by_id(data['parent_id'])
+            print(email)
             if isinstance(email, Parent):
+                receiver_email = email.email
+                subject = 'Test Email'
+                body = 'This is a test email sent using Python.'
+                r=EmailSender.send_email(receiver_email, subject, body)
                 return {"status": "Done"}
+
             else:
-                raise email
-        except:
-            return email, 400
+                raise Exception(email)
+        except Exception as e:
+            return str(e), 400
 
 
 class Answers(Resource):
 
     def post(self):
         data = request.json
-        if check_keys(data, 'kid_id', 'question_id', 'attempt', 'start_time', 'completion_time', 'first_try_end_at'):
+        if check_keys(data, 'kid_id', 'question_id', 'attempt', 'start_time', 'completion_time', 'is_correct'):
             return {'Error': 'missing data'}, 400
         try:
             session = Session(None, data['question_id'], data['kid_id'], data['start_time'], data['completion_time'],
-                              data['first_try_end_at'], None if data['attempt'] == 1 else data['first_try_end_at'],
-                              None if data['attempt'] == 1 else data['completion_time'],
-                              1 if data['attempt'] == 1 else 2)
+                              data['attempt'] if data['is_correct'] else 0, data['is_correct'], data['attempt'])
+            print(session)
             result = SessionDAO.create(session)
             print(result)
             if result == True:
@@ -861,6 +879,19 @@ class KidMain(Resource):
             return make_response(kid_dict, 200)
         else:
             return {"message": 'no kid found'}, 400
+
+    def post(self):
+        data = request.json
+        if check_keys(data, 'kid_id', 'unlock'):
+            return {'Error': 'missing data'}, 400
+        try:
+            result = KidDAO.update_unlock(data['kid_id'], data['unlock'])
+            if result is None:
+                return {'status': 'success', 'message': 'Done'}
+            else:
+                raise Exception(result)
+        except:
+            return result, 400
 
 
 class Answer(Resource):

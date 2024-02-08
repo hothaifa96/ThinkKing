@@ -218,6 +218,8 @@ class KidDAO:
                 kid['avatar'] = avatar
                 del kid['class_id']
                 kid['class'] = classs
+                l_q=SessionDAO.get_max_date(kid['kid_id'])
+                kid['last_time_question'] = l_q
                 res.append(kid)
         return res
 
@@ -452,10 +454,28 @@ class KidDAO:
         except Exception as e:
             return {'error': str(e)}
 
+
     @staticmethod
-    def add_subject(kid_id, school_id):
+    def add_school(kid_id, school_id):
         connection = get_db_connection()
-        query = f"UPDATE kids SET subject = {school_id} WHERE kid_id = {kid_id};"
+        query = f"UPDATE kids SET school_id = {school_id} WHERE kid_id = {kid_id};"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            rows_updated = cursor.rowcount
+            connection.commit()
+
+            if rows_updated > 0:
+                return None
+            else:
+                raise Exception('nothing updated')
+        except Exception as e:
+            return {'error': str(e)}
+
+    @staticmethod
+    def update_unlock(kid_id, unlock):
+        connection = get_db_connection()
+        query = f"UPDATE kids SET unlock = {unlock} WHERE kid_id = {kid_id};"
         cursor = connection.cursor()
         try:
             cursor.execute(query)
@@ -608,7 +628,7 @@ class ParentDAO:
                 raise Exception('parent id doesnt exist')
 
         except psycopg2.Error as e:
-            return e
+            return {'error':str(e)}
 
         finally:
             cursor.close()
@@ -1390,9 +1410,9 @@ class SessionDAO:
     def create(session):
         # Database interaction logic here (insert into the 'sessions' table)
         connection = get_db_connection()
-        query = f"INSERT INTO sessions (question_id, kid_id, start_time, completion_time, first_try_end_at, second_try_start_at, second_try_end_at, score) VALUES ('{session.question_id}', {session.kid_id}, '{session.start_time}', '{session.completion_time}', '{session.first_try_end_at}', '{session.second_try_start_at}', '{session.second_try_end_at}', {session.score});"
+        query = f"INSERT INTO sessions (question_id, kid_id, start_time, completion_time,score ,correct, try) VALUES" \
+                f" ('{session.question_id}', {session.kid_id}, '{session.start_time}', '{session.completion_time}', {session.score}, {session.correct},{session.attempt});"
         cursor = connection.cursor()
-
         try:
             cursor.execute(query)
             rows_updated = cursor.rowcount
@@ -1404,7 +1424,25 @@ class SessionDAO:
                 raise Exception('nothing updated')
         except Exception as e:
             return {'error': str(e)}
-        connection.close()
+        finally:
+            connection.close()
+
+    @staticmethod
+    def get_max_date(id):
+        # Database interaction logic here (insert into the 'sessions' table)
+        connection = get_db_connection()
+        query = f"SELECT completion_time FROM sessions WHERE kid_id = {id} AND completion_time = ( SELECT MAX(completion_time) FROM sessions WHERE kid_id = {id} );"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchone()
+            return result[0]
+        except Exception as e:
+            return None
+        finally:
+            connection.close()
+
+
 
     @staticmethod
     def get_all():

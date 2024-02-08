@@ -335,44 +335,19 @@ class Language:
 
 
 class Session:
-    def __init__(self, session_id, question_id, kid_id, start_time, completion_time,
-                 first_try_end_at, second_try_start_at, second_try_end_at, score):
+    def __init__(self, session_id, question_id, kid_id, start_time, completion_time,score, correct, attempt):
         self.session_id = session_id
         self.question_id = question_id
         self.kid_id = kid_id
         self.start_time = start_time
         self.completion_time = completion_time
-        self.first_try_end_at = first_try_end_at
-        self.second_try_start_at = second_try_start_at
-        self.second_try_end_at = second_try_end_at
         self.score = score
+        self.correct = correct
+        self.attempt = attempt
 
     def to_dict(self):
-        return {
-            "session_id": self.session_id,
-            "question_id": self.question_id,
-            "kid_id": self.kid_id,
-            "start_time": self.start_time,
-            "completion_time": self.completion_time,
-            "first_try_end_at": self.first_try_end_at,
-            "second_try_start_at": self.second_try_start_at,
-            "second_try_end_at": self.second_try_end_at,
-            "score": self.score
-        }
+        return self.__dict__
 
-    @classmethod
-    def from_dict(cls, data):
-        return cls(
-            data.get("session_id"),
-            data["question_id"],
-            data["kid_id"],
-            data["start_time"],
-            data["completion_time"],
-            data["first_try_end_at"],
-            data["second_try_start_at"],
-            data["second_try_end_at"],
-            data["score"]
-        )
 
 
 class Log:
