@@ -218,7 +218,7 @@ class KidDAO:
                 kid['avatar'] = avatar
                 del kid['class_id']
                 kid['class'] = classs
-                l_q=SessionDAO.get_max_date(kid['kid_id'])
+                l_q=str(SessionDAO.get_max_date(kid['kid_id']))
                 kid['last_time_question'] = l_q
                 res.append(kid)
         return res
