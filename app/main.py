@@ -1,10 +1,8 @@
 from flask import Flask
 from flask_restful import Api
 from app.api.resources import *
-import logging
 
 app = Flask('Thinking')
-logging.basicConfig(filename='flask_app.log', level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s')
 api = Api(app, prefix='/api')
 
 api.add_resource(LoginParent, '/parent/login')
@@ -51,14 +49,16 @@ api.add_resource(QuestionsStatus, '/stat/question')
 # api.add_resource(Answer, '/answer')
 # react app hosting
 
-def log_request_info():
-    app.logger.info('Request Headers: %s', request.headers)
-    app.logger.info('Request Body: %s', request.get_data())
-
 # Add a after_request function to log outgoing responses
 @app.after_request
 def log_response_info(response):
-    app.logger.info('Response Status Code: %s', response.status_code)
+    r = f'Request Body:{request.get_data()}\n'
+    re= 'Response Status Code:', response.status_code
+    if response.status_code != 200:
+        receiver_email = 'thinkigsuppportfsafasc@gmail.com'
+        subject = 'error on the api'
+        body = f'{r} -> {re}'
+        r = EmailSender.send_email(receiver_email, subject, body)
     return response
 
 if __name__ == '__main__':
