@@ -4,7 +4,7 @@ from app.api.resources import *
 import logging
 
 app = Flask('Thinking')
-logging.basicConfig(filename='/logs/flask_app.log', level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s')
+logging.basicConfig(filename='./logs/flask_app.log', level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s')
 api = Api(app, prefix='/api')
 
 api.add_resource(LoginParent, '/parent/login')
