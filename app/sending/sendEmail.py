@@ -7,10 +7,11 @@ class EmailSender:
 
     @staticmethod
     def send_email(receiver_email, subject, body):
+        print('hhhhh')
         smtp_server = 'smtp.gmail.com'
         smtp_port = 465
         sender_email = 'thinkigsuppportfsafasc@gmail.com'
-        sender_password = 'ThinkingPassword'
+        sender_password = 'biyq dowe wbbz ipkt'
         message = MIMEMultipart()
         message["From"] = sender_email
         message["To"] = receiver_email
@@ -22,9 +23,12 @@ class EmailSender:
             server = smtplib.SMTP_SSL(smtp_server, smtp_port)
             server.login(sender_email, sender_password)
             server.sendmail(sender_email, receiver_email, message.as_string())
-            print("Email sent successfully")
+            print('done',receiver_email)
+            return "Email sent successfully"
+
         except Exception as e:
-            print(f"Failed to send email: {e}")
+            print(e)
+            return {"status":"error","message":str(e)}
         finally:
             server.quit()
 

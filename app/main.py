@@ -11,7 +11,7 @@ api.add_resource(RegisterParent, '/parent/register')
 api.add_resource(AddKidResource, '/add/name/gender')
 api.add_resource(GettAllQuestions, '/get/questions')
 api.add_resource(GetQuestions, '/get/questions/<string:id>')
-api.add_resource(Answers,'/answer')
+api.add_resource(Answers, '/answer')
 api.add_resource(Schools, '/schools')
 api.add_resource(Classes, '/grades')
 api.add_resource(ClassesName, '/classes')
@@ -28,12 +28,11 @@ api.add_resource(KidMain, '/main/kid/<string:id>')
 # api.add_resource(Questions, '/question/<string:id>')
 api.add_resource(Excel, '/excel')
 api.add_resource(Contact, '/contactus')
-api.add_resource(Avatar, '/avatar/<string:gender>','/avatar')
+api.add_resource(Avatar, '/avatar/<string:gender>', '/avatar')
 api.add_resource(Password, '/email/password')
 api.add_resource(Code, '/email/code')
 api.add_resource(Statistics, '/statistics/<string:id>')
-
-
+api.add_resource(Crowns, '/crowns')
 
 api.add_resource(Hello, '/hello')
 api.add_resource(ParentLogin, '/login/parent')  # deprecated

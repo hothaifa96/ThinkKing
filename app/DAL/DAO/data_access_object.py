@@ -368,6 +368,48 @@ class KidDAO:
             connection.close()
 
     @staticmethod
+    def update_screen_time(kid_id, screen_time):
+        connection = get_db_connection()
+        query = f"UPDATE kids SET available_screen_time = COALESCE(available_screen_time, 0) + {screen_time} WHERE kid_id = {kid_id};"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            connection.commit()
+
+            if cursor.rowcount > 0:
+                return {'success': True, 'message': 'screen_time updated successfully'}
+            else:
+                return {'success': False, 'message': 'Kid not found'}
+
+        except Exception as e:
+            return {'success': False, 'message': str(e)}
+
+        finally:
+            cursor.close()
+            connection.close()
+
+    @staticmethod
+    def update_crowns(kid_id, crowns):
+        connection = get_db_connection()
+        query = f"UPDATE kids SET crowns = COALESCE(crowns, 0) + {crowns} WHERE kid_id = {kid_id};"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            connection.commit()
+
+            if cursor.rowcount > 0:
+                return {'success': True, 'message': 'crowns updated successfully'}
+            else:
+                return {'success': False, 'message': 'Kid not found'}
+
+        except Exception as e:
+            return {'success': False, 'message': str(e)}
+
+        finally:
+            cursor.close()
+            connection.close()
+
+    @staticmethod
     def update_kid_first_name(kid_id, new_first_name):
         connection = get_db_connection()
         query = f"UPDATE kids SET first_name = '{new_first_name}' WHERE kid_id = {kid_id};"
@@ -641,11 +683,15 @@ class ParentDAO:
         cursor = connection.cursor()
 
         try:
-            # Check if the current password is correct
+            if current_password is None:
+                update_query = f"UPDATE parents SET password = '{new_password}' WHERE parent_id = {parent_id};"
+                cursor.execute(update_query)
+                connection.commit()
+                return {'success': True, 'message': 'Password changed successfully'}
+
             check_query = f"SELECT password FROM parents WHERE parent_id = {parent_id};"
             cursor.execute(check_query)
             result = cursor.fetchone()
-
             if result:
                 if current_password == result[0]:
                     # Update the password with the new one

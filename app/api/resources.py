@@ -7,6 +7,8 @@ from flask import request
 from app.DAL.DAO.data_access_object import *
 from app.DAL.POPO.db_objects import *
 from app.sending.sendEmail import EmailSender
+import random
+import string
 
 
 def check_keys(data, *args):
@@ -522,7 +524,7 @@ class Code(Resource):
     def post(self):
         data = request.json
         # Check if the data is valid JSON
-        error = check_keys(data, 'parent_id', 'pin_code')
+        error = check_keys(data, 'parent_id')
         if error is not False:
             return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
         parent = ParentDAO.get_by_id(data['parent_id'])
@@ -530,16 +532,16 @@ class Code(Resource):
             return make_response('parent not found', 404)
         if parent.email == '':
             return {'status': 'error', "message": "this parent email isn't updated "}
-        if str(parent.pin_code) == str(data['pin_code']) and parent.email != '':
-            receiver_email = parent.email
-            subject = 'Test Email'
-            body = 'This is a test email sent using Python.'
-            r = EmailSender.send_email(receiver_email, subject, body)
-            return {'status': 'success', "message": f"email sent to {parent.email}"}
-        else:
-            response = make_response({'status': 'Error', 'message': 'pin don\'t match'}, 409)
-            response.headers['Content-Type'] = 'application/json'
-            return response
+
+        pin = '{:04d}'.format(random.randint(0, 9999))
+        ParentDAO.update_pin(parent.parent_id, pin)
+        receiver_email = parent.email
+        subject = 'Password Email'
+        body = f'your new pin is {pin}'
+        r = EmailSender.send_email(receiver_email, subject, body)
+        if isinstance(r, dict):
+            return r
+        return {'status': 'Done', 'message': 'email sent'}
 
 
 class Statistics(Resource):
@@ -593,6 +595,17 @@ class KidName(Resource):
         return make_response(response, 200)
 
 
+class Crowns(Resource):
+
+    def post(self):
+        kid = request.json
+        if check_keys(kid, 'kid_id', 'crowns'):
+            return {'Error': 'missing data'}, 400
+        response = KidDAO.update_crowns(kid['kid_id'], kid['first_name'])
+
+        return make_response(response, 200)
+
+
 class ParentPasswrod(Resource):
 
     def post(self):
@@ -638,7 +651,17 @@ class Password(Resource):
             if isinstance(parents, list):
                 for parent in parents:
                     if parent.email == data['email']:
-                        return {'status': 'success', 'message': 'email sent'}
+                        length = random.randint(6, 10)
+                        characters = string.ascii_letters + string.digits
+                        password = ''.join(random.choice(characters) for _ in range(length))
+                        ParentDAO.change_password(parent.parent_id, None, new_password=password)
+                        receiver_email = data['email']
+                        subject = 'Password Email'
+                        body = f'your new password is {password}'
+                        r = EmailSender.send_email(receiver_email, subject, body)
+                        if isinstance(r, dict):
+                            return r
+                        return {'status': 'Done', 'message': 'email sent'}
                 else:
                     raise BaseException('email not found')
         except BaseException as e:
@@ -817,8 +840,10 @@ class Contact(Resource):
                 receiver_email = email.email
                 subject = 'Test Email'
                 body = 'This is a test email sent using Python.'
-                r=EmailSender.send_email(receiver_email, subject, body)
-                return {"status": "Done"}
+                r = EmailSender.send_email(receiver_email, subject, body)
+                if isinstance(r, dict):
+                    return r
+                return {"status": "Email sent"}
 
             else:
                 raise Exception(email)
@@ -835,10 +860,9 @@ class Answers(Resource):
         try:
             session = Session(None, data['question_id'], data['kid_id'], data['start_time'], data['completion_time'],
                               data['attempt'] if data['is_correct'] else 0, data['is_correct'], data['attempt'])
-            print(session)
+            KidDAO.update_screen_time(data.get('kid_id'), data.get('screen_time'))
             result = SessionDAO.create(session)
-            print(result)
-            if result == True:
+            if result:
                 return {'status': 'success', 'message': 'Done'}
             else:
                 raise Exception(result)
