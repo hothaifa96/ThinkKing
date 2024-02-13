@@ -45,9 +45,6 @@ api.add_resource(BlockApps, '/block')
 api.add_resource(KidScreen, '/kid_screen')
 api.add_resource(KidProfile, '/change_kid')
 api.add_resource(QuestionsStatus, '/stat/question')
-# api.add_resource(AllQuestions, '/questions')
-# api.add_resource(Answer, '/answer')
-# react app hosting
 
 # Add a after_request function to log outgoing responses
 @app.after_request
