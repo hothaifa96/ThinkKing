@@ -43,7 +43,7 @@ api.add_resource(SubClass, '/subclasses')
 api.add_resource(Topics, '/topics')
 api.add_resource(BlockApps, '/block')
 
-api.add_resource(KidScreen, '/kid_screen')
+# api.add_resource(KidScreen, '/kid_screen')
 api.add_resource(KidProfile, '/change_kid')
 api.add_resource(QuestionsStatus, '/stat/question')
 
