@@ -601,7 +601,7 @@ class Crowns(Resource):
         kid = request.json
         if check_keys(kid, 'kid_id', 'crowns'):
             return {'Error': 'missing data'}, 400
-        response = KidDAO.update_crowns(kid['kid_id'], kid['first_name'])
+        response = KidDAO.update_crowns(kid['kid_id'], kid['crowns'])
 
         return make_response(response, 200)
 
