@@ -32,6 +32,7 @@ api.add_resource(Password, '/email/password')
 api.add_resource(Code, '/email/code')
 api.add_resource(Statistics, '/statistics/<string:id>')
 api.add_resource(Crowns, '/crowns')
+api.add_resource(KidScreen, '/screen_time')
 
 api.add_resource(Hello, '/hello')
 api.add_resource(ParentLogin, '/login/parent')  # deprecated

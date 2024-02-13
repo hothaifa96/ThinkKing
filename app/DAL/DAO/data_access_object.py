@@ -347,6 +347,27 @@ class KidDAO:
             cursor.close()
             connection.close()
     @staticmethod
+    def update_screen_time(kid_id, screen_time):
+        connection = get_db_connection()
+        query = f"UPDATE kids SET available_screen_time = {screen_time} WHERE kid_id = {kid_id};"
+
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            connection.commit()
+
+            if cursor.rowcount > 0:
+                return {'success': True, 'message': 'available_screen_time speed updated successfully'}
+            else:
+                return {'success': False, 'message': 'Kid not found'}
+
+        except Exception as e:
+            return {'success': False, 'message': str(e)}
+
+        finally:
+            cursor.close()
+            connection.close()
+    @staticmethod
     def update_avatar(kid_id, avatar_id):
         connection = get_db_connection()
         query = f"UPDATE kids SET avatar_id = {avatar_id} WHERE kid_id = {kid_id};"

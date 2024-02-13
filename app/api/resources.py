@@ -736,6 +736,17 @@ class KidScreen(Resource):
             return {'Error': 'missing data'}, 400
         return {'message': 'kid'}
 
+    def post(self):
+        kid = request.json
+        error = check_keys(kid, 'kid_id', 'available_screen_time')
+        if error is not False:
+            return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
+        res = KidDAO.update_screen_time(kid['kid_id'], kid['available_screen_time'])
+        if res is None:
+            return {'message': 'success'}
+        else:
+            return make_response(jsonify(res), 400)
+
 
 class KidProfile(Resource):
 
