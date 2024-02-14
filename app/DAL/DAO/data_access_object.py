@@ -389,7 +389,7 @@ class KidDAO:
             connection.close()
 
     @staticmethod
-    def update_screen_time(kid_id, screen_time):
+    def uupdate_screen_time(kid_id, screen_time):
         connection = get_db_connection()
         query = f"UPDATE kids SET available_screen_time = COALESCE(available_screen_time, 0) + {screen_time} WHERE kid_id = {kid_id};"
         cursor = connection.cursor()
