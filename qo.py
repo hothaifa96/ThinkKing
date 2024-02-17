@@ -38,4 +38,7 @@ result_dict = {row[0]: row[1] for row in rows}
 result_json = json.dumps(result_dict, indent=4)
 
 # Print the JSON
-print(result_json)
+print(result_dict)
+for k,v in result_dict.items():
+    if v != 4 and v != 2 and v != 3:
+        print(f'{k}:{v}')
