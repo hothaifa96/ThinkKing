@@ -53,12 +53,13 @@ for url in files:
 
             q_top = 2 if topic_id == 3 else 3
             question_text = str(row.iloc[q_top]).replace("'", "`")
-            if topic_id == 1:
-                explanation = str(row.iloc[8]).replace("'", "`")
-                interesting_fact = ''
-            else:
-                explanation = ""
+            if topic_id == 3:
+                explanation = ''
                 interesting_fact = str(row.iloc[7]).replace("'", "`")
+            else:
+                interesting_fact = ""
+                explanation = row.iloc[8].replace("'", "`") if isinstance(row.iloc[8], str) else row.iloc[
+                8]
 
             insert_data_file.write(f"""
 INSERT INTO questions (question_id, language_id, topic_id, c_grade_id, level, question_text, explanation, interesting_fact)
@@ -85,5 +86,12 @@ VALUES ('{question_id}', TRUE, '{correct_answer}') ;
 INSERT INTO answer_options (question_id, correct_answer, answer_text)
 VALUES ('{question_id}', FALSE, '{answer}');
 """)
+    
+    insert_data_file.write("""DELETE FROM answer_options
+WHERE answer_option_id::text NOT IN (
+    SELECT MIN(answer_option_id)::text
+    FROM answer_options
+    GROUP BY question_id, answer_text
+);""")
 
     print("INSERT commands SQL file generated successfully.")
