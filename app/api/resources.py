@@ -893,6 +893,11 @@ class GetQuestions(Resource):
         question_and_answers = AnswerOptionDAO.new_fetch_question_and_answers(id)
         return question_and_answers
 
+
+class GQuestions(Resource):
+
+
+
     def post(self):
         data = request.json  # 'kid_id', 'topic' , 'last_question_id'
         error = check_keys(data, 'kid_id', 'topic', 'last_question_id')
