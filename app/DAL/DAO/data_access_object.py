@@ -855,7 +855,7 @@ class QuestionDAO:
                 questionee = {"question_id": question.question_id, "question_text": question.question_text,
                               "explanation": question.explanation,
                               "intersting_fact": question.interesting_fact,  # add the explanation
-                              "subject": 'math' if question.topic_id == '1' else "common knowledge", "answers": []}
+                              "subject": 'math' if question.topic_id == 1 else "common knowledge", "answers": []}
                 questions.append(questionee)
             print('heeheheh', questions)
             return questions
