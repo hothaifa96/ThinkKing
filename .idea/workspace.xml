@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="3036a416-803d-45b4-adb4-0458ae4e63a4" name="Changes" comment="add(DAO):add excel support7">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/qo.py" beforeDir="false" afterPath="$PROJECT_DIR$/qo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/DAL/DAO/data_access_object.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/DAL/DAO/data_access_object.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/resources.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/resources.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +52,7 @@
       <recent name="$PROJECT_DIR$/app/api" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.qo">
+  <component name="RunManager" selected="Python.main">
     <configuration name="app2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ThinkKing" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -166,8 +168,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.qo" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.qo" />
         <item itemvalue="Python.resources" />
         <item itemvalue="Python.data_access_object" />
         <item itemvalue="Python.app2" />

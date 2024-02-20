@@ -83,7 +83,6 @@ class AvatarDAO:
         try:
             cursor.execute(query)
             result = cursor.fetchone()
-            print(*result)
             return Avatar(*result)
 
         except psycopg2.Error as e:
@@ -192,7 +191,8 @@ class KidDAO:
                 c_grade = CGradeDAO.get_by_id(kid['c_grade_id']).class_letter if kid['c_grade_id'] is not None else None
                 gender = GenderDAO.get_by_id(kid['gender_id']).gender if kid['gender_id'] is not None else None
                 avatar = AvatarDAO.get_by_id(kid['avatar_id']).avatar if kid['avatar_id'] is not None else None
-                classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid['class_id'] is not None else None
+                classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid[
+                                                                                               'class_id'] is not None else None
                 sessions = SessionDAO.get_all_by_id(kid['kid_id'])
                 answers_count = set([session['question_id'] for session in sessions])
                 answers_count = len(answers_count)
@@ -204,7 +204,7 @@ class KidDAO:
                 if answers_count != 0:
                     percentage = float(correct_answers_count) / answers_count
                 else:
-                    percentage=0
+                    percentage = 0
                 kid['answers_count'] = answers_count
                 kid['correct_answers_count'] = correct_answers_count
                 kid['correct_answers_percentage'] = percentage
@@ -218,7 +218,7 @@ class KidDAO:
                 kid['avatar'] = avatar
                 del kid['class_id']
                 kid['class'] = classs
-                l_q=str(SessionDAO.get_max_date(kid['kid_id']))
+                l_q = str(SessionDAO.get_max_date(kid['kid_id']))
                 kid['last_time_question'] = l_q
                 res.append(kid)
         return res
@@ -263,7 +263,7 @@ class KidDAO:
         try:
             cursor.execute(query)
             result = cursor.fetchone()
-            if result :
+            if result:
                 kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns, time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at, learning_speed, class_id = result
                 kid = Kid(
                     kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns,
@@ -286,13 +286,13 @@ class KidDAO:
                 kid['correct_answers_count'] = correct_answers_count
                 kid['correct_answers_percentage'] = percentage
                 av = AvatarDAO.get_by_id(kid['avatar_id'])
-                if isinstance(av,Avatar):
+                if isinstance(av, Avatar):
                     kid['avatar'] = AvatarDAO.get_by_id(kid['avatar_id']).avatar
                 else:
-                    kid['avatar']=None
+                    kid['avatar'] = None
                 return kid
             else:
-                return {'status':'error','message':"kid_id doesnt exist"}
+                return {'status': 'error', 'message': "kid_id doesnt exist"}
 
 
         except psycopg2.Error as e:
@@ -346,6 +346,7 @@ class KidDAO:
         finally:
             cursor.close()
             connection.close()
+
     @staticmethod
     def update_screen_time(kid_id, screen_time):
         connection = get_db_connection()
@@ -367,6 +368,7 @@ class KidDAO:
         finally:
             cursor.close()
             connection.close()
+
     @staticmethod
     def update_avatar(kid_id, avatar_id):
         connection = get_db_connection()
@@ -516,7 +518,6 @@ class KidDAO:
                 raise Exception('nothing updated')
         except Exception as e:
             return {'error': str(e)}
-
 
     @staticmethod
     def add_school(kid_id, school_id):
@@ -691,7 +692,7 @@ class ParentDAO:
                 raise Exception('parent id doesnt exist')
 
         except psycopg2.Error as e:
-            return {'error':str(e)}
+            return {'error': str(e)}
 
         finally:
             cursor.close()
@@ -739,7 +740,6 @@ class ParentDAO:
         # User found, generate a JWT token
         token = jwt.encode({"parent_id": f"{parent.parent_id}"}, "thinking_application", algorithm="HS256")
         return token
-
 
     @staticmethod
     def update_pin(parent_id, pin):
@@ -832,113 +832,60 @@ class QuestionDAO:
             connection.close()
 
     @staticmethod
-    def get_5(question_id):
-        print('connecting to the data base')
+    def get_by_kid(topic_id, c_grade_id, last_question_id):
         connection = get_db_connection()
         cursor = connection.cursor()
         # Fetch the next 5 questions without their answer options based on the given question_id
-        query = """
-        SELECT *
-        FROM questions
-        WHERE question_id > %s
-        ORDER BY question_id
-        LIMIT 5;
-        """
-        cursor.execute(query, (question_id,))
-        result = cursor.fetchall()
-
-        questions = []
-        for row in result:
-            question = Question(*row[:7])
-            questions.append(question)
-
-        return questions
-        # Fetch the next 5 questions with their answer options based on the given question_id
-        # query = """
-        # SELECT q.*, ao.*
-        #     FROM questions q
-        #     JOIN answer_options ao ON q.question_id = ao.question_id
-        #     WHERE q.question_id > '30'
-        #     ORDER BY q.question_id
-        #     LIMIT 20;
-        # """
-        # try:
-        #     cursor.execute(query, (question_id,))
-        #     result = cursor.fetchall()
-        #     print(result)
-        #
-        # except psycopg2.Error as e:
-        #     print("Error fetching questions :", e)
-        #     return None
-        #
-        # finally:
-        #     cursor.close()
-        #     connection.close()
-        #
-        # questions_and_answers = []
-        # for row in result:
-        #     question_id, question_text, answer_option_id, correct_answer, answer_text, topic_id = row[0], row[5], row[
-        #         7], row[8], row[9], row[2]
-        #
-        #     question = {
-        #         "question_id": question_id,
-        #         "question_text": question_text,
-        #         "topic_id": topic_id,  # Add topic_id to the dictionary
-        #         "interesting_fact": row[6],
-        #         "answers": []  # List to store answer dictionaries
-        #     }
-        #
-        #     answer_option = {
-        #         "correct_answer": correct_answer,
-        #         "answer_text": answer_text
-        #     }
-        #
-        #     question["answers"].append(answer_option)
-        #     questions_and_answers.append(question)
-        #
-        # return questions_and_answers
-
-    # @staticmethod
-    # def update(question):
-    #     # Database interaction logic here (update the 'questions' table)
-    #     connection = get_db_connection()
-    #     connection.close()
-
-    # @staticmethod
-    # def delete(question_id):
-    #     # Database interaction logic here (delete from the 'questions' table by ID)
-    #     connection = get_db_connection()
-    #     connection.close()
+        try:
+            query = f"""
+            SELECT *
+            FROM questions
+            WHERE question_id > '{last_question_id}'
+            and topic_id = {topic_id}
+            and c_grade_id = {c_grade_id}
+            ORDER BY question_id
+            LIMIT 5;
+            """
+            cursor.execute(query)
+            result = cursor.fetchall()
+            print(query)
+            questions = []
+            for row in result:
+                question = Question(*row)
+                questionee = {"question_id": question.question_id, "question_text": question.question_text,
+                              "explanation": question.explanation,
+                              "intersting_fact": question.interesting_fact,  # add the explanation
+                              "subject": 'math' if question.topic_id == '1' else "common knowledge", "answers": []}
+                questions.append(questionee)
+            print('heeheheh', questions)
+            return questions
+        except Exception as e:
+            return {'error': str(e)}
 
 
 class AnswerOptionDAO:
-    # @staticmethod
-    # def create(answer_option):
-    #     # Database interaction logic here (insert into the 'answer_options' table)
-    #     connection = get_db_connection()
-    #     connection.close()
-
-    # @staticmethod
-    # def get_all():
-    #     # Database interaction logic here (select all from the 'answer_options' table)
-    #     connection = get_db_connection()
-    #
-    #     connection.close()
 
     @staticmethod
-    def get_by_question_id(question_option_id):
+    def get_by_question_id(question_id):
         # Database interaction logic here (select from the 'answer_options' table by ID)
         connection = get_db_connection()
-        query = "SELECT * FROM answer_options WHERE answer_option_id = '?';", (question_option_id,)
+        query = f"SELECT * FROM answer_options WHERE question_id = '{question_id}';"
         cursor = connection.cursor()
         try:
             cursor.execute(query)
             result = cursor.fetchall()
-            return result
 
-        except psycopg2.Error as e:
+            answers = []
+            for row in result:
+                answer = AnswerOption(*row)
+                answer = {"correct_answer": answer.correct_answer, "answer_text": answer.answer_text}
+                answers.append(answer)
+
+            return answers
+
+        except Exception as e:
             print("Error fetching answers by ID:", e)
-            return None
+            return {'error': str(e)}
 
         finally:
             cursor.close()
@@ -1509,7 +1456,71 @@ class SessionDAO:
         finally:
             connection.close()
 
+    @staticmethod
+    def get_all():
+        # Database interaction logic here (select all from the
+        connection = get_db_connection()
+        connection.close()
 
+    @staticmethod
+    def get_all_by_id(id):
+        connection = get_db_connection()
+        query = f"SELECT * FROM sessions WHERE kid_id = {id}"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            results = cursor.fetchall()
+            sessions = [Session(*result).to_dict() for result in results]
+            return sessions
+
+        except psycopg2.Error as e:
+            print("Error fetching gender by ID:", e)
+            return None
+
+
+class KidQuestionDAO:
+    @staticmethod
+    def update(kid_id, math_q=None, ck_q=None):
+        # Database interaction logic here (insert into the 'sessions' table)
+        connection = get_db_connection()
+        query = f"INSERT INTO kid_question (kid_id) ({kid_id}) ON CONFLICT (kid_id) DO NOTHING ; "
+        if math_q is None and ck_q is None:
+            return {'status':"error",'message':'missing question_id'}
+        if math_q is None:
+            query += f"update kid_question set last_question_ck = '{ck_q}' where kid_id = {kid_id} ;"
+        if ck_q is None:
+            query = f"update kid_question set last_question_math = '{math_q}' where kid_id = {kid_id} ;"
+        else:
+            query = f"INSERT INTO kid_question (kid_id,last_question_math,last_question_ck) VALUES ({kid_id},'{math_q}','{ck_q}') ;"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            rows_updated = cursor.rowcount
+            connection.commit()
+
+            if rows_updated > 0:
+                return True
+            else:
+                raise Exception('nothing updated')
+        except Exception as e:
+            return {'error': str(e)}
+        finally:
+            connection.close()
+
+    @staticmethod
+    def get_max_date(id):
+        # Database interaction logic here (insert into the 'sessions' table)
+        connection = get_db_connection()
+        query = f"SELECT completion_time FROM sessions WHERE kid_id = {id} AND completion_time = ( SELECT MAX(completion_time) FROM sessions WHERE kid_id = {id} );"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchone()
+            return result[0]
+        except Exception as e:
+            return None
+        finally:
+            connection.close()
 
     @staticmethod
     def get_all():

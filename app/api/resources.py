@@ -872,6 +872,11 @@ class Answers(Resource):
             session = Session(None, data['question_id'], data['kid_id'], data['start_time'], data['completion_time'],
                               data['attempt'] if data['is_correct'] else 0, data['is_correct'], data['attempt'])
             KidDAO.update_screen_time(data.get('kid_id'), data.get('screen_time'))
+            if data['question_id'][0] == '3':
+                KidQuestionDAO.update(data['kid_id'],ck_q=data['question_id'])
+            else:
+                KidQuestionDAO.update(data['kid_id'],math_q=data['question_id'])
+
             result = SessionDAO.create(session)
             if result:
                 return {'status': 'success', 'message': 'Done'}
@@ -887,6 +892,33 @@ class GetQuestions(Resource):
         # id'303001100',
         question_and_answers = AnswerOptionDAO.new_fetch_question_and_answers(id)
         return question_and_answers
+
+    def post(self):
+        data = request.json  # 'kid_id', 'topic' , 'last_question_id'
+        error = check_keys(data, 'kid_id', 'topic', 'last_question_id')
+        if error is not False:
+            return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
+        try:
+            kid = KidDAO.get_by_id(data.get('kid_id'))
+            question_id = data.get('last_question_id')
+            if question_id != '' and data.get('topic') != '':
+                topic = 1 if data.get('topic') == 'math' else 3
+            else:
+                topic = question_id[0]
+            if not isinstance(question_id, str):
+                questions_list = QuestionDAO.get_by_kid(topic, kid['c_grade_id'], '10')
+            else:
+                questions_list = QuestionDAO.get_by_kid(topic, kid['c_grade_id'], question_id)
+
+            if isinstance(questions_list, dict):
+                raise Exception(questions_list)
+
+            for question in questions_list:
+                question['answers'] = AnswerOptionDAO.get_by_question_id(question['question_id'])
+
+            return questions_list
+        except Exception as e:
+            return str(e)
 
 
 class ChangeProfile(Resource):
