@@ -906,7 +906,7 @@ class GQuestions(Resource):
         try:
             kid = KidDAO.get_by_id(data.get('kid_id'))
             question_id = data.get('last_question_id')
-            if question_id != '' and data.get('topic') != '':
+            if question_id == '' and data.get('topic') != '':
                 topic = 1 if data.get('topic') == 'math' else 3
             else:
                 topic = question_id[0]
@@ -923,7 +923,7 @@ class GQuestions(Resource):
 
             return questions_list
         except Exception as e:
-            return str(e)
+            return {'status':'error',"message":str(e)}
 
 
 class ChangeProfile(Resource):
