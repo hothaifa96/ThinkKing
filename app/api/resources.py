@@ -873,9 +873,9 @@ class Answers(Resource):
                               data['attempt'] if data['is_correct'] else 0, data['is_correct'], data['attempt'])
             KidDAO.update_screen_time(data.get('kid_id'), data.get('screen_time'))
             if data['question_id'][0] == '3':
-                KidQuestionDAO.update(data['kid_id'],ck_q=data['question_id'])
+                KidQuestionDAO.update(data['kid_id'], ck_q=data['question_id'])
             else:
-                KidQuestionDAO.update(data['kid_id'],math_q=data['question_id'])
+                KidQuestionDAO.update(data['kid_id'], math_q=data['question_id'])
 
             result = SessionDAO.create(session)
             if result:
@@ -895,8 +895,6 @@ class GetQuestions(Resource):
 
 
 class GQuestions(Resource):
-
-
 
     def post(self):
         data = request.json  # 'kid_id', 'topic' , 'last_question_id'
@@ -921,9 +919,15 @@ class GQuestions(Resource):
             for question in questions_list:
                 question['answers'] = AnswerOptionDAO.get_by_question_id(question['question_id'])
 
+            print('yahoooooo', data['kid_id'], topic, kid['c_grade_id'])
+            questions_list.append(
+                {'rate': {'all questions': QuestionDAO.get_rate(data['kid_id'], topic, kid['c_grade_id']),
+                          'kid progress': QuestionDAO.get_rate_kid(data['kid_id'], topic)}
+                 })
+
             return questions_list
         except Exception as e:
-            return {'status':'error',"message":str(e)}
+            return {'status': 'error', "message": str(e)}
 
 
 class ChangeProfile(Resource):

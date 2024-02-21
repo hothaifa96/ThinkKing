@@ -862,6 +862,40 @@ class QuestionDAO:
         except Exception as e:
             return {'error': str(e)}
 
+    @staticmethod
+    def get_rate(kid_id, topic_id, c_grade_id):
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        # Fetch the next 5 questions without their answer options based on the given question_id
+        try:
+            query = f"select count(*) from questions where topic_id = {topic_id} and c_grade_id={c_grade_id} ;"
+            cursor.execute(query)
+            result = cursor.fetchall()
+            res = result[0]
+            print(res[0])
+            return res[0]
+        except Exception as e:
+            print(str(e))
+            return {'error': str(e)}
+
+    @staticmethod
+    def get_rate_kid(kid_id, topic_id):
+        # Database interaction logic here (insert into the 'sessions' table)
+        connection = get_db_connection()
+        query = f"""SELECT count(question_id) 
+FROM sessions 
+WHERE kid_id = {kid_id} 
+AND question_id LIKE '{topic_id}%';"""
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchone()
+            return result[0]
+        except Exception as e:
+            return {'error':str(e)}
+        finally:
+            connection.close()
+
 
 class AnswerOptionDAO:
 
@@ -1485,7 +1519,7 @@ class KidQuestionDAO:
         connection = get_db_connection()
         query = f"INSERT INTO kid_question (kid_id) ({kid_id}) ON CONFLICT (kid_id) DO NOTHING ; "
         if math_q is None and ck_q is None:
-            return {'status':"error",'message':'missing question_id'}
+            return {'status': "error", 'message': 'missing question_id'}
         if math_q is None:
             query += f"update kid_question set last_question_ck = '{ck_q}' where kid_id = {kid_id} ;"
         if ck_q is None:
