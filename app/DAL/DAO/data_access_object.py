@@ -280,6 +280,7 @@ class KidDAO:
         try:
             cursor.execute(query)
             result = cursor.fetchone()
+            print('gegege',result)
             if result:
                 kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns, time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at, learning_speed, class_id = result
                 kid = Kid(
@@ -307,6 +308,14 @@ class KidDAO:
                     kid['avatar'] = AvatarDAO.get_by_id(kid['avatar_id']).avatar
                 else:
                     kid['avatar'] = None
+                ids = kid['kid_id']
+                topic = [1, 2]
+                rates = []
+                for t in topic:
+                    rates.append({'math' if t == 1 else 'common knowledge': {
+                        'all questions': QuestionDAO.get_rate(ids, t, c_grade_id),
+                        'kid progress': QuestionDAO.get_rate_kid(ids, t)}})
+                kid['subject_cover'] = rates
                 return kid
             else:
                 return {'status': 'error', 'message': "kid_id doesnt exist"}
