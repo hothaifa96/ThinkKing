@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6c337f2a-749c-4426-823a-092c5d0c6da0" name="Changes" comment="">
+    <list default="true" id="6c337f2a-749c-4426-823a-092c5d0c6da0" name="Changes" comment="add(DAO):add excel support7">
       <change beforePath="$PROJECT_DIR$/convertor.py" beforeDir="false" afterPath="$PROJECT_DIR$/convertor.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
