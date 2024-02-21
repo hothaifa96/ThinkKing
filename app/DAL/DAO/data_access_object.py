@@ -183,45 +183,61 @@ class KidDAO:
         cursor = connection.cursor()
         cursor.execute(query)
         results = cursor.fetchall()
-        res = []
-        if isinstance(results, list):
-            for result in results:
-                kid = Kid(*result).to_dict()
-                school = SchoolDAO.get_by_id(kid['school_id']) if kid['school_id'] is not None else None
-                c_grade = CGradeDAO.get_by_id(kid['c_grade_id']).class_letter if kid['c_grade_id'] is not None else None
-                gender = GenderDAO.get_by_id(kid['gender_id']).gender if kid['gender_id'] is not None else None
-                avatar = AvatarDAO.get_by_id(kid['avatar_id']).avatar if kid['avatar_id'] is not None else None
-                classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid[
-                                                                                               'class_id'] is not None else None
-                sessions = SessionDAO.get_all_by_id(kid['kid_id'])
-                answers_count = set([session['question_id'] for session in sessions])
-                answers_count = len(answers_count)
-                correct_answers_count = 0
+        try:
+            res = []
+            if isinstance(results, list):
+                for result in results:
+                    kid = Kid(*result).to_dict()
+                    school = SchoolDAO.get_by_id(kid['school_id']) if kid['school_id'] is not None else None
+                    c_grade = CGradeDAO.get_by_id(kid['c_grade_id']).class_letter if kid['c_grade_id'] is not None else None
+                    gender = GenderDAO.get_by_id(kid['gender_id']).gender if kid['gender_id'] is not None else None
+                    avatar = AvatarDAO.get_by_id(kid['avatar_id']).avatar if kid['avatar_id'] is not None else None
+                    classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid[
+                                                                                                   'class_id'] is not None else None
+                    sessions = SessionDAO.get_all_by_id(kid['kid_id'])
+                    answers_count = set([session['question_id'] for session in sessions])
+                    answers_count = len(answers_count)
+                    correct_answers_count = 0
 
-                for session in sessions:
-                    if session['score'] > 0:
-                        correct_answers_count += 1
-                if answers_count != 0:
-                    percentage = float(correct_answers_count) / answers_count
-                else:
-                    percentage = 0
-                kid['answers_count'] = answers_count
-                kid['correct_answers_count'] = correct_answers_count
-                kid['correct_answers_percentage'] = percentage
-                del kid['school_id']
-                kid['school'] = school
-                del kid['c_grade_id']
-                kid['c_grade'] = c_grade
-                del kid['gender_id']
-                kid['gender'] = gender
-                del kid['avatar_id']
-                kid['avatar'] = avatar
-                del kid['class_id']
-                kid['class'] = classs
-                l_q = str(SessionDAO.get_max_date(kid['kid_id']))
-                kid['last_time_question'] = l_q
-                res.append(kid)
-        return res
+                    for session in sessions:
+                        if session['score'] > 0:
+                            correct_answers_count += 1
+                    if answers_count != 0:
+                        percentage = float(correct_answers_count) / answers_count
+                    else:
+                        percentage = 0
+                    kid['answers_count'] = answers_count
+                    kid['correct_answers_count'] = correct_answers_count
+                    kid['correct_answers_percentage'] = percentage
+                    del kid['school_id']
+                    kid['school'] = school
+                    c_grade_id = kid['c_grade_id']
+                    del kid['c_grade_id']
+                    kid['c_grade'] = c_grade
+                    del kid['gender_id']
+                    kid['gender'] = gender
+                    del kid['avatar_id']
+                    kid['avatar'] = avatar
+                    del kid['class_id']
+                    kid['class'] = classs
+                    l_q = str(SessionDAO.get_max_date(kid['kid_id']))
+                    qss= KidQuestionDAO.get(kid['kid_id'])
+                    kid['last_time_question'] = l_q
+                    ids = kid['kid_id']
+                    topic = [1, 2]
+
+                    rates = []
+                    for t in topic:
+                        rates.append({'math' if t == 1 else 'common knowledge': {
+                            'all questions': QuestionDAO.get_rate(ids, t, c_grade_id),
+                            'kid progress': QuestionDAO.get_rate_kid(ids, t)}})
+                    kid['subject_cover'] = rates
+                    kid['last_questions'] = qss
+                    res.append(kid)
+            return res
+        except Exception as e:
+            print(e)
+            return {'error':str(e)}
 
     @staticmethod
     def get_by_parent_id_and_name(parent_id, firstname):
@@ -892,7 +908,7 @@ AND question_id LIKE '{topic_id}%';"""
             result = cursor.fetchone()
             return result[0]
         except Exception as e:
-            return {'error':str(e)}
+            return {'error': str(e)}
         finally:
             connection.close()
 
@@ -994,7 +1010,9 @@ class AnswerOptionDAO:
                 question = {"question_id": question_id, "question_text": question_text,
                             "explanation": explanation,
                             "intersting_fact": interesting_fact,  # add the explanation
-                            "subject": "math" if question_id[0] == '1' else "common knowledge", "answers": []}
+                            "subject": "math" if question_id[0] == '1' else "common knowledge" if question_id[
+                                                                                                      0] == '3' else 'english',
+                            "answers": []}
                 questions_list.append(question)
 
             question["answers"].append({"correct_answer": correct_answer, "answer_text": answer_text})
@@ -1484,7 +1502,9 @@ class SessionDAO:
         try:
             cursor.execute(query)
             result = cursor.fetchone()
+            print(result,'here')
             return result[0]
+
         except Exception as e:
             return None
         finally:
@@ -1542,15 +1562,16 @@ class KidQuestionDAO:
             connection.close()
 
     @staticmethod
-    def get_max_date(id):
+    def get(id):
         # Database interaction logic here (insert into the 'sessions' table)
         connection = get_db_connection()
-        query = f"SELECT completion_time FROM sessions WHERE kid_id = {id} AND completion_time = ( SELECT MAX(completion_time) FROM sessions WHERE kid_id = {id} );"
+        query = f"SELECT * from kid_question where kid_id = {id}"
         cursor = connection.cursor()
         try:
             cursor.execute(query)
-            result = cursor.fetchone()
-            return result[0]
+            result = list(cursor.fetchone())
+            result = { 'math' :result[1] , 'common knowledge' :result[2] }
+            return result
         except Exception as e:
             return None
         finally:
