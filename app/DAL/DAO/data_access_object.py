@@ -189,7 +189,8 @@ class KidDAO:
                 for result in results:
                     kid = Kid(*result).to_dict()
                     school = SchoolDAO.get_by_id(kid['school_id']) if kid['school_id'] is not None else None
-                    c_grade = CGradeDAO.get_by_id(kid['c_grade_id']).class_letter if kid['c_grade_id'] is not None else None
+                    c_grade = CGradeDAO.get_by_id(kid['c_grade_id']).class_letter if kid[
+                                                                                         'c_grade_id'] is not None else None
                     gender = GenderDAO.get_by_id(kid['gender_id']).gender if kid['gender_id'] is not None else None
                     avatar = AvatarDAO.get_by_id(kid['avatar_id']).avatar if kid['avatar_id'] is not None else None
                     classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid[
@@ -221,7 +222,7 @@ class KidDAO:
                     del kid['class_id']
                     kid['class'] = classs
                     l_q = str(SessionDAO.get_max_date(kid['kid_id']))
-                    qss= KidQuestionDAO.get(kid['kid_id'])
+                    qss = KidQuestionDAO.get(kid['kid_id'])
                     kid['last_time_question'] = l_q
                     ids = kid['kid_id']
                     topic = [1, 2]
@@ -237,7 +238,7 @@ class KidDAO:
             return res
         except Exception as e:
             print(e)
-            return {'error':str(e)}
+            return {'error': str(e)}
 
     @staticmethod
     def get_by_parent_id_and_name(parent_id, firstname):
@@ -1502,7 +1503,7 @@ class SessionDAO:
         try:
             cursor.execute(query)
             result = cursor.fetchone()
-            print(result,'here')
+            print(result, 'here')
             return result[0]
 
         except Exception as e:
@@ -1570,7 +1571,7 @@ class KidQuestionDAO:
         try:
             cursor.execute(query)
             result = list(cursor.fetchone())
-            result = { 'math' :result[1] , 'common knowledge' :result[2] }
+            result = {'math': result[1], 'common knowledge': result[2]}
             return result
         except Exception as e:
             return None
