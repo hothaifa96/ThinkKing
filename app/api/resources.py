@@ -905,7 +905,7 @@ class GQuestions(Resource):
             kid = KidDAO.get_by_id(data.get('kid_id'))
             question_id = data.get('last_question_id')
             if question_id == '' and data.get('topic') != '':
-                topic = 1 if data.get('topic') == 'math' else 3
+                topic = 1 if data.get('topic') == 'math' else 4 if data.get('topic') == 'english' else 3
             else:
                 topic = question_id[0]
             if not isinstance(question_id, str):
