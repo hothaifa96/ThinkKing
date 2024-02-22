@@ -185,6 +185,7 @@ class KidDAO:
         results = cursor.fetchall()
         try:
             res = []
+            print(results)
             if isinstance(results, list):
                 for result in results:
                     kid = Kid(*result).to_dict()
@@ -310,13 +311,16 @@ class KidDAO:
                 else:
                     kid['avatar'] = None
                 ids = kid['kid_id']
-                topic = [1, 2]
-                rates = []
+                topic = [1, 3]
+
                 for t in topic:
-                    rates.append({'math' if t == 1 else 'common knowledge': {
-                        'all questions': QuestionDAO.get_rate(ids, t, c_grade_id),
-                        'kid progress': QuestionDAO.get_rate_kid(ids, t)}})
-                kid['subject_cover'] = rates
+                    if t == 1:
+                        kid['math_rate'] = {
+                            QuestionDAO.get_rate_kid(ids, t): QuestionDAO.get_rate(ids, t, c_grade_id)}
+                    elif t == 3:
+                        kid['common_knowledge_rate'] = {
+                            QuestionDAO.get_rate_kid(ids, t): QuestionDAO.get_rate(ids, t, c_grade_id)}
+
                 return kid
             else:
                 return {'status': 'error', 'message': "kid_id doesnt exist"}
