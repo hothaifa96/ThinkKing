@@ -42,7 +42,7 @@ for url in files:
 
             q_top = 2 if topic_id == 3 or topic_id == 4 else 3
             question_text = str(row.iloc[q_top]).replace("'", "`")
-            if topic_id == 3 or topic_id:
+            if topic_id == 3 or topic_id == 4:
                 explanation = ''
                 interesting_fact = str(row.iloc[7]).replace("'", "`")
             else:
