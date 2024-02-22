@@ -225,14 +225,15 @@ class KidDAO:
                     qss = KidQuestionDAO.get(kid['kid_id'])
                     kid['last_time_question'] = l_q
                     ids = kid['kid_id']
-                    topic = [1, 2]
+                    topic = [1, 3]
 
                     rates = []
                     for t in topic:
-                        rates.append({'math' if t == 1 else 'common knowledge': {
-                            'all questions': QuestionDAO.get_rate(ids, t, c_grade_id),
-                            'kid progress': QuestionDAO.get_rate_kid(ids, t)}})
-                    kid['subject_cover'] = rates
+                        if t == 1:
+                            kid['math_rate'] = {QuestionDAO.get_rate_kid(ids, t):QuestionDAO.get_rate(ids, t, c_grade_id)}
+                        elif t == 3:
+                            kid['common_knowledge_rate'] = {QuestionDAO.get_rate_kid(ids, t):QuestionDAO.get_rate(ids, t, c_grade_id)}
+
                     kid['last_questions'] = qss
                     res.append(kid)
             return res
@@ -280,7 +281,7 @@ class KidDAO:
         try:
             cursor.execute(query)
             result = cursor.fetchone()
-            print('gegege',result)
+            print('gegege', result)
             if result:
                 kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns, time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at, learning_speed, class_id = result
                 kid = Kid(
