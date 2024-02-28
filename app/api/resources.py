@@ -560,11 +560,12 @@ class Kids(Resource):
             return {"message": 'no kids found'}, 400
 
     def delete(self, id):
-        kids_list = KidDAO.delete_kid(id)
-        if len(kids_list) > 0:
-            return make_response(kids_list, 200)
+        res = KidDAO.delete_kid(id)
+        print(res)
+        if res['success'] :
+            return make_response(res, 200)
         else:
-            return 'no kids found', 400
+            return res, 400
 
 
 class KidLearing(Resource):

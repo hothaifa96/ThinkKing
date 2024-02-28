@@ -185,7 +185,6 @@ class KidDAO:
         results = cursor.fetchall()
         try:
             res = []
-            print(results)
             if isinstance(results, list):
                 for result in results:
                     kid = Kid(*result).to_dict()
@@ -255,17 +254,51 @@ class KidDAO:
     @staticmethod
     def delete_kid(kid_id):
         connection = get_db_connection()
-        query = f"DELETE FROM kids WHERE kid_id = {kid_id};"
+        query = f"""BEGIN;
+DO $$ 
+BEGIN
+    DELETE FROM sessions
+    WHERE kid_id = {kid_id};
+EXCEPTION
+    WHEN others THEN
+        RAISE NOTICE 'Error occurred while deleting from sessions: %', SQLERRM;
+END $$;
+
+DO $$ 
+BEGIN
+    DELETE FROM kid_question
+    WHERE kid_id = {kid_id};
+EXCEPTION
+    WHEN others THEN
+        RAISE NOTICE 'Error occurred while deleting from kid_question: %', SQLERRM;
+END $$;
+
+DO $$ 
+BEGIN
+    DELETE FROM kid_subjects
+    WHERE kid_id = {kid_id};
+EXCEPTION
+    WHEN others THEN
+        RAISE NOTICE 'Error occurred while deleting from kid_subjects: %', SQLERRM;
+END $$;
+
+DO $$ 
+BEGIN
+    DELETE FROM kids
+    WHERE kid_id = {kid_id};
+EXCEPTION
+    WHEN others THEN
+        RAISE NOTICE 'Error occurred while deleting from kids: %', SQLERRM;
+END $$;
+
+COMMIT;"""
 
         cursor = connection.cursor()
         try:
             cursor.execute(query)
             connection.commit()
 
-            if cursor.rowcount > 0:
-                return {'success': True, 'message': 'Kid deleted successfully'}
-            else:
-                return {'success': False, 'message': 'Kid not found'}
+            return {'success': True, 'message': 'Kid deleted successfully'}
 
         except Exception as e:
             return {'success': False, 'message': str(e)}
