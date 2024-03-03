@@ -163,9 +163,10 @@ class KidDAO:
         cursor = connection.cursor()
         try:
             cursor.execute(query)
-            result = cursor.fetchone()
-            print(result, f'parent_id = {parent_id} first_name= {firstname} ')
-            kid = Kid(*result)
+            result = cursor.fetchall()
+            print(result[-1], f'parent_id = {parent_id} first_name= {firstname} ')
+
+            kid = Kid(*result[-1])
             return kid
 
         except psycopg2.Error as e:
