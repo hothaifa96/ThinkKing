@@ -947,7 +947,7 @@ class QuestionDAO:
     def get_rate_kid(kid_id, topic_id):
         # Database interaction logic here (insert into the 'sessions' table)
         connection = get_db_connection()
-        query = f"""SELECT count(question_id) 
+        query = f"""SELECT count(distinct(question_id))
 FROM sessions 
 WHERE kid_id = {kid_id} 
 AND question_id LIKE '{topic_id}%';"""
@@ -1045,7 +1045,7 @@ class AnswerOptionDAO:
             cursor.execute(query, (question_id,))
             result = cursor.fetchall()
         except psycopg2.Error as e:
-            print("Error fetching answers by ID:", e)
+            print("Error fetching answers by QuestionID:", e)
             return None
 
         finally:
@@ -1619,7 +1619,7 @@ class KidQuestionDAO:
         try:
             cursor.execute(query)
             result = list(cursor.fetchone())
-            result = {'math': result[1], 'common knowledge': result[2]}
+            result = {'1': result[1], '3': result[2]}
             return result
         except Exception as e:
             return None

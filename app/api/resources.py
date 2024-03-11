@@ -562,7 +562,7 @@ class Kids(Resource):
     def delete(self, id):
         res = KidDAO.delete_kid(id)
         print(res)
-        if res['success'] :
+        if res['success']:
             return make_response(res, 200)
         else:
             return res, 400
@@ -652,9 +652,10 @@ class Password(Resource):
             if isinstance(parents, list):
                 for parent in parents:
                     if parent.email == data['email']:
-                        length = random.randint(6, 10)
+                        length = random.randint(3, 6)
                         characters = string.ascii_letters + string.digits
                         password = ''.join(random.choice(characters) for _ in range(length))
+                        password = 'tkg' + password
                         ParentDAO.change_password(parent.parent_id, None, new_password=password)
                         receiver_email = data['email']
                         subject = 'Password Email'
@@ -905,14 +906,17 @@ class GQuestions(Resource):
         try:
             kid = KidDAO.get_by_id(data.get('kid_id'))
             question_id = data.get('last_question_id')
-            if question_id == '' and data.get('topic') != '':
+            if question_id == '':
+                question_id = KidQuestionDAO.get(data.get('kid_id'))
+
+            if data.get('topic') != '':
                 topic = 1 if data.get('topic') == 'math' else 4 if data.get('topic') == 'english' else 3
             else:
                 topic = question_id[0]
-            if not isinstance(question_id, str):
-                questions_list = QuestionDAO.get_by_kid(topic, kid['c_grade_id'], '10')
-            else:
-                questions_list = QuestionDAO.get_by_kid(topic, kid['c_grade_id'], question_id)
+
+            question_id = question_id[f'{topic}'] if question_id[f'{topic}'] is not None else topic
+            print(f'question id = {question_id}\ntopic={topic}')
+            questions_list = QuestionDAO.get_by_kid(topic, kid['c_grade_id'], question_id)
 
             if isinstance(questions_list, dict):
                 raise Exception(questions_list)
@@ -920,7 +924,6 @@ class GQuestions(Resource):
             for question in questions_list:
                 question['answers'] = AnswerOptionDAO.get_by_question_id(question['question_id'])
 
-            print('yahoooooo', data['kid_id'], topic, kid['c_grade_id'])
             questions_list.append(
                 {'rate': {'all questions': QuestionDAO.get_rate(data['kid_id'], topic, kid['c_grade_id']),
                           'kid progress': QuestionDAO.get_rate_kid(data['kid_id'], topic)}
@@ -929,6 +932,7 @@ class GQuestions(Resource):
             return questions_list
         except Exception as e:
             return {'status': 'error', "message": str(e)}
+        # hothaifa
 
 
 class ChangeProfile(Resource):

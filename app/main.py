@@ -57,7 +57,8 @@ def log_response_info(response):
         receiver_email = 'thinkigsuppportfsafasc@gmail.com'
         subject = 'error on the api'
         body = f'{r} -> {re}'
-        r = EmailSender.send_email(receiver_email, subject, body)
+        #r = EmailSender.send_email(receiver_email, subject, body)
+        print(body+' '+response.url)
     return response
 
 if __name__ == '__main__':
