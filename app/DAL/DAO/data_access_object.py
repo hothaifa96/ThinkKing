@@ -4,6 +4,7 @@ import psycopg2
 from ..POPO.db_objects import *
 from ..db import get_db_connection
 import datetime
+from collections import defaultdict
 
 
 class GenderDAO:
@@ -231,10 +232,13 @@ class KidDAO:
                     rates = []
                     for t in topic:
                         if t == 1:
-                            kid['math_rate'] = {QuestionDAO.get_rate_kid(ids, t):QuestionDAO.get_rate(ids, t, c_grade_id)}
+                            kid['math_rate'] = {
+                                QuestionDAO.get_rate_kid(ids, t): QuestionDAO.get_rate(ids, t, c_grade_id)}
                         elif t == 3:
-                            kid['common_knowledge_rate'] = {QuestionDAO.get_rate_kid(ids, t):QuestionDAO.get_rate(ids, t, c_grade_id)}
+                            kid['common_knowledge_rate'] = {
+                                QuestionDAO.get_rate_kid(ids, t): QuestionDAO.get_rate(ids, t, c_grade_id)}
 
+                    kid['progress'] = SubSubjectDAO.get_kid_all_time_statistics(kid['kid_id'])
                     kid['last_questions'] = qss
                     res.append(kid)
             return res
@@ -354,7 +358,7 @@ COMMIT;"""
                     elif t == 3:
                         kid['common_knowledge_rate'] = {
                             QuestionDAO.get_rate_kid(ids, t): QuestionDAO.get_rate(ids, t, c_grade_id)}
-
+                kid['progress'] = SubSubjectDAO.get_kid_all_time_statistics(kid['kid_id'])
                 return kid
             else:
                 return {'status': 'error', 'message': "kid_id doesnt exist"}
@@ -1646,3 +1650,189 @@ class KidQuestionDAO:
         except psycopg2.Error as e:
             print("Error fetching gender by ID:", e)
             return None
+
+
+class SubSubjectDAO:
+    @staticmethod
+    def get_topic_all_questions_by_question_id(question_id):
+        connection = get_db_connection()
+        query = f"""SELECT
+    sub_subject_id,
+    sub_subject_name,
+    COUNT(*) AS total_questions
+FROM 
+    sub_subjects
+WHERE sub_subject_name = (
+    select sub_subject_name from sub_subjects
+    where question_id = '{question_id}')
+and sub_subject_id = (
+    select sub_subject_id from sub_subjects
+    where question_id = '{question_id}')
+GROUP BY 
+    sub_subject_id,sub_subject_name;
+"""
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchone()
+            print(result)
+            if len(result) != 0:
+                sub_subject = SubSubjects(*result)
+                print(sub_subject)
+                return (sub_subject)
+            else:
+                raise Exception('error - sub-subject')
+        except Exception as e:
+            print({'error': str(e)})
+            return {'error': str(e)}
+
+        finally:
+            connection.close()
+
+    @staticmethod
+    def get_topic_all_questions_by_sub_subject_name(sub_subject_name):
+        connection = get_db_connection()
+        query = f"""SELECT
+    sub_subject_id,
+    sub_subject_name,
+    COUNT(*) AS total_questions
+FROM 
+    sub_subjects
+WHERE 
+    sub_subject_name = (
+        SELECT sub_subject_name 
+        FROM sub_subjects
+        WHERE sub_subject_name = '{sub_subject_name}'
+        LIMIT 1
+    )
+    AND sub_subject_id = (
+        SELECT sub_subject_id 
+        FROM sub_subjects
+        WHERE sub_subject_name = '{sub_subject_name}'
+        LIMIT 1
+    )
+GROUP BY 
+    sub_subject_id, sub_subject_name;
+"""
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchone()
+            print(result)
+            if len(result) != 0:
+                total = result[2]
+                print(result)
+                return total
+            else:
+                raise Exception('error - sub-subject')
+        except Exception as e:
+            return {'error': str(e)}
+
+        finally:
+            connection.close()
+
+    @staticmethod
+    def get_topic_question(question_id):
+        connection = get_db_connection()
+        query = f"""SELECT
+        sub_subject_id,
+        sub_subject_name   
+    FROM 
+        sub_subjects
+    WHERE question_id= '{question_id}';
+    """
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchone()
+            if len(result) != 0:
+                sub_subjects = {'sub_subject_id': result[0], 'sub_subject_name': result[1]}
+                return (sub_subjects)
+            else:
+                raise Exception('error - sub-subject')
+        except Exception as e:
+            return {'error': str(e)}
+
+        finally:
+            connection.close()
+
+    @staticmethod
+    def get_kid_daily_questions(kid_id):
+        # Database interaction logic here (insert into the 'sessions' table)
+        connection = get_db_connection()
+        query = f"""SELECT kid_id, question_id
+FROM sessions
+WHERE DATE(completion_time) = CURRENT_DATE
+AND kid_id = {kid_id}
+GROUP BY kid_id, question_id;"""
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            kid_questions = {}  # dict
+            for row in result:
+                question_id = row[1]
+                kid_questions[question_id] = SubSubjectDAO.get_topic_question(question_id)
+            return kid_questions
+        except Exception as e:
+            return {'message': str(e)}
+        finally:
+            connection.close()
+
+    @staticmethod
+    def get_kid_all_time_questions(kid_id):
+        # Database interaction logic here (insert into the 'sessions' table)
+        connection = get_db_connection()
+        query = f"""SELECT kid_id, question_id
+FROM sessions
+WHERE kid_id = {kid_id}
+GROUP BY kid_id, question_id;"""
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            kid_questions = {}  # dict
+            for row in result:
+                question_id = row[1]
+                kid_questions[question_id] = SubSubjectDAO.get_topic_question(question_id)
+            return kid_questions
+        except Exception as e:
+            return {'message': str(e)}
+        finally:
+            connection.close()
+
+    @staticmethod
+    def get_kid_daily_statistics(kid_id):
+        kid_statistics = dict()  # {"math" : [1 , 20]}
+        answered_questions = SubSubjectDAO.get_kid_daily_questions(kid_id)
+        print(f'answered_questions: {answered_questions}')
+        counts = defaultdict(int)
+        # Iterate through the data and count the occurrences of each sub_subject_name
+        for key, value in answered_questions.items():
+            sub_subject_name = value["sub_subject_name"]
+            counts[sub_subject_name] += 1
+        print(f'counts: {counts}')
+        for sub_subject_name, count in counts.items():
+            print(f'sub_subject_name:{sub_subject_name}')
+            kid_statistics[sub_subject_name] = [count, SubSubjectDAO.get_topic_all_questions_by_sub_subject_name(
+                sub_subject_name)]
+        print(kid_statistics)
+        return kid_statistics
+
+    @staticmethod
+    def get_kid_all_time_statistics(kid_id):
+        kid_statistics = dict()  # {"math" : [1 , 20]}
+        answered_questions = SubSubjectDAO.get_kid_all_time_questions(kid_id)
+        print(f'answered_questions: {answered_questions}')
+        counts = defaultdict(int)
+        # Iterate through the data and count the occurrences of each sub_subject_name
+        for key, value in answered_questions.items():
+            sub_subject_name = value["sub_subject_name"]
+            counts[sub_subject_name] += 1
+        print(f'counts: {counts}')
+        for sub_subject_name, count in counts.items():
+            print(f'sub_subject_name:{sub_subject_name}')
+            kid_statistics[sub_subject_name] = [count, SubSubjectDAO.get_topic_all_questions_by_sub_subject_name(
+                sub_subject_name)]
+        print(kid_statistics)
+        return kid_statistics

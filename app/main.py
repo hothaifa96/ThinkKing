@@ -25,7 +25,6 @@ api.add_resource(ParentPasswrod, '/parent/update')
 api.add_resource(ParentPasswrods, '/parent/update/<string:id>')
 api.add_resource(ChangeProfile, '/change/profile')
 api.add_resource(KidMain, '/main/kid/<string:id>','/main/kid')
-# api.add_resource(Questions, '/question/<string:id>')
 api.add_resource(Excel, '/excel')
 api.add_resource(Contact, '/contactus')
 api.add_resource(Avatar, '/avatar/<string:gender>', '/avatar')
@@ -34,6 +33,8 @@ api.add_resource(Code, '/email/code')
 api.add_resource(Statistics, '/statistics/<string:id>')
 api.add_resource(Crowns, '/crowns')
 api.add_resource(KidScreen, '/screen_time')
+api.add_resource(Daily,'/daily')
+api.add_resource(Stat,'/static')
 
 api.add_resource(Hello, '/hello')
 api.add_resource(ParentLogin, '/login/parent')  # deprecated
@@ -58,7 +59,6 @@ def log_response_info(response):
         subject = 'error on the api'
         body = f'{r} -> {re}'
         #r = EmailSender.send_email(receiver_email, subject, body)
-        print(body+' '+response.url)
     return response
 
 if __name__ == '__main__':

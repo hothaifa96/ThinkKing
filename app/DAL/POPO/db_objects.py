@@ -335,7 +335,7 @@ class Language:
 
 
 class Session:
-    def __init__(self, session_id, question_id, kid_id, start_time, completion_time,score, correct, attempt):
+    def __init__(self, session_id, question_id, kid_id, start_time, completion_time, score, correct, attempt):
         self.session_id = session_id
         self.question_id = question_id
         self.kid_id = kid_id
@@ -348,6 +348,18 @@ class Session:
     def to_dict(self):
         return self.__dict__
 
+
+class SubSubjects:
+    def __init__(self, question_id, sub_subject_name, sub_subject_id):
+        self.question_id = question_id
+        self.sub_subject_name = sub_subject_name
+        self.sub_subject_id = sub_subject_id
+
+    def __str__(self):
+        return f"SubSubject ID: {self.sub_subject_id}, SubSubject Name: {self.sub_subject_name}, Question ID: {self.question_id}"
+
+    def to_dict(self):
+        return self.__dict__
 
 
 class Log:

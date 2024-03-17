@@ -987,3 +987,44 @@ class Answer(Resource):
             return {'message': 'session1 saved'}
         else:
             return {'message': 'session2 saved'}
+
+
+class Daily(Resource):
+
+    def get(self):
+        data = request.json
+        if check_keys(data, 'kid_id'):
+            return {'Error': 'missing data'}, 400
+        sub_subject = SubSubjectDAO.get_kid_daily_statistics(data['kid_id'])
+        return sub_subject
+
+    def post(self):
+        kid = request.json
+        error = check_keys(kid, 'kid_id', 'available_screen_time')
+        if error is not False:
+            return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
+        res = KidDAO.update_screen_time(kid['kid_id'], kid['available_screen_time'])
+        if res is None:
+            return {'message': 'success'}
+        else:
+            return make_response(jsonify(res), 400)
+
+class Stat(Resource):
+
+    def get(self):
+        data = request.json
+        if check_keys(data, 'kid_id'):
+            return {'Error': 'missing data'}, 400
+        sub_subject = SubSubjectDAO.get_kid_all_time_statistics(data['kid_id'])
+        return sub_subject
+
+    def post(self):
+        kid = request.json
+        error = check_keys(kid, 'kid_id', 'available_screen_time')
+        if error is not False:
+            return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
+        res = KidDAO.update_screen_time(kid['kid_id'], kid['available_screen_time'])
+        if res is None:
+            return {'message': 'success'}
+        else:
+            return make_response(jsonify(res), 400)
