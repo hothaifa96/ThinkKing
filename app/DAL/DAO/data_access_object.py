@@ -204,7 +204,7 @@ class KidDAO:
                         if session['score'] > 0:
                             correct_answers_count += 1
                     if answers_count != 0:
-                        percentage = (float(correct_answers_count) / len(sessions)) * 100
+                        percentage = int((float(correct_answers_count) / len(sessions)) * 100)
                     kid['answers_count'] = answers_count
                     kid['correct_answers_count'] = correct_answers_count
                     kid['correct_answers_percentage'] = percentage
@@ -354,7 +354,7 @@ COMMIT;"""
                     elif t == 3:
                         kid['common_knowledge_rate'] = {
                             QuestionDAO.get_rate_kid(ids, t): QuestionDAO.get_rate(ids, t, c_grade_id)}
-                kid['progress'] = SubSubjectDAO.get_kid_all_time_statistics(kid['kid_id'])
+                kid['progress'] = SubSubjectDAO.get_kid_daily_statistics(kid['kid_id'])
                 return kid
             else:
                 return {'status': 'error', 'message': "kid_id doesnt exist"}
@@ -1811,10 +1811,17 @@ GROUP BY kid_id, question_id;"""
             sub_subject_name = value["sub_subject_name"]
             counts[sub_subject_name] += 1
         print(f'counts: {counts}')
+        try:
+            max2 = list(counts.values())
+            max2.sort(reverse=True)
+            max2 = (max2[:2])
+        except:
+            max2 = list(counts.values())
         for sub_subject_name, count in counts.items():
             print(f'sub_subject_name:{sub_subject_name}')
-            kid_statistics[sub_subject_name] = [count, SubSubjectDAO.get_topic_all_questions_by_sub_subject_name(
-                sub_subject_name)]
+            all_questions = SubSubjectDAO.get_topic_all_questions_by_sub_subject_name(sub_subject_name)
+            if count < all_questions and count in max2:
+                kid_statistics[sub_subject_name] = [count, all_questions]
         print(kid_statistics)
         return kid_statistics
 
@@ -1830,8 +1837,7 @@ GROUP BY kid_id, question_id;"""
             counts[sub_subject_name] += 1
         print(f'counts: {counts}')
         for sub_subject_name, count in counts.items():
-            print(f'sub_subject_name:{sub_subject_name}')
-            kid_statistics[sub_subject_name] = [count, SubSubjectDAO.get_topic_all_questions_by_sub_subject_name(
-                sub_subject_name)]
-        print(kid_statistics)
+            all_questions = SubSubjectDAO.get_topic_all_questions_by_sub_subject_name(sub_subject_name)
+            if count < all_questions:
+                kid_statistics[sub_subject_name] = [count, all_questions]
         return kid_statistics
