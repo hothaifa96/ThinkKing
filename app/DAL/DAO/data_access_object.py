@@ -191,24 +191,20 @@ class KidDAO:
                 for result in results:
                     kid = Kid(*result).to_dict()
                     school = SchoolDAO.get_by_id(kid['school_id']) if kid['school_id'] is not None else None
-                    c_grade = CGradeDAO.get_by_id(kid['c_grade_id']).class_letter if kid[
-                                                                                         'c_grade_id'] is not None else None
+                    c_grade = CGradeDAO.get_by_id(kid['c_grade_id']).class_letter if kid['c_grade_id'] is not None else None
                     gender = GenderDAO.get_by_id(kid['gender_id']).gender if kid['gender_id'] is not None else None
                     avatar = AvatarDAO.get_by_id(kid['avatar_id']).avatar if kid['avatar_id'] is not None else None
-                    classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid[
-                                                                                                   'class_id'] is not None else None
+                    classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid['class_id'] is not None else None
                     sessions = SessionDAO.get_all_by_id(kid['kid_id'])
                     answers_count = set([session['question_id'] for session in sessions])
                     answers_count = len(answers_count)
                     correct_answers_count = 0
-
+                    percentage = 0
                     for session in sessions:
                         if session['score'] > 0:
                             correct_answers_count += 1
                     if answers_count != 0:
-                        percentage = float(correct_answers_count) / answers_count
-                    else:
-                        percentage = 0
+                        percentage = (float(correct_answers_count) / len(sessions)) * 100
                     kid['answers_count'] = answers_count
                     kid['correct_answers_count'] = correct_answers_count
                     kid['correct_answers_percentage'] = percentage
@@ -1572,7 +1568,10 @@ class SessionDAO:
     @staticmethod
     def get_all_by_id(id):
         connection = get_db_connection()
-        query = f"SELECT * FROM sessions WHERE kid_id = {id}"
+        query = f"""SELECT * FROM sessions  
+WHERE DATE(completion_time) = CURRENT_DATE 
+AND kid_id = {id}
+"""
         cursor = connection.cursor()
         try:
             cursor.execute(query)
