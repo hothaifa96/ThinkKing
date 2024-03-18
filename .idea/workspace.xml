@@ -5,12 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3036a416-803d-45b4-adb4-0458ae4e63a4" name="Changes" comment="adding the kid['progress']">
-      <change afterPath="$PROJECT_DIR$/app/sending/awsEmail.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/DAL/DAO/data_access_object.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/DAL/DAO/data_access_object.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/api/resources.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/resources.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/sending/sendEmail.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/sending/sendEmail.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/b.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jenkinsfile" beforeDir="false" afterPath="$PROJECT_DIR$/jenkinsfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,14 +187,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1701128271687</updated>
-    </task>
-    <task id="LOCAL-00027" summary="add(DAO):add excel support7">
-      <option name="closed" value="true" />
-      <created>1705933939153</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1705933939153</updated>
     </task>
     <task id="LOCAL-00028" summary="add(DAO):add excel support7">
       <option name="closed" value="true" />
@@ -579,7 +572,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710690585234</updated>
     </task>
-    <option name="localTasksCounter" value="76" />
+    <task id="LOCAL-00076" summary="adding the kid['progress']">
+      <option name="closed" value="true" />
+      <created>1710767272729</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1710767272729</updated>
+    </task>
+    <option name="localTasksCounter" value="77" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

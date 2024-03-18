@@ -697,13 +697,12 @@ class ParentDAO:
             cursor.execute(query)
             connection.commit()
             return True
-            # else:
-            #     return None
 
         except psycopg2.Error as e:
             print("Error fetching paretn by ID:", e)
+            if 'already exists' in str(e):
+                e = 'user already exists in the system !'
             return e
-
         finally:
             cursor.close()
             connection.close()
@@ -1555,6 +1554,7 @@ class SessionDAO:
         connection = get_db_connection()
         query = f"INSERT INTO sessions (question_id, kid_id, start_time, completion_time,score ,correct, try) VALUES" \
                 f" ('{session.question_id}', {session.kid_id}, '{session.start_time}', '{session.completion_time}', {session.score}, {session.correct},{session.attempt});"
+        print(query)
         cursor = connection.cursor()
         try:
             cursor.execute(query)
@@ -1566,6 +1566,7 @@ class SessionDAO:
             else:
                 raise Exception('nothing updated')
         except Exception as e:
+            print({'error': str(e)})
             return {'error': str(e)}
         finally:
             connection.close()

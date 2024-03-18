@@ -877,6 +877,7 @@ class Answers(Resource):
             KidDAO.update_screen_time(data.get('kid_id'), data.get('screen_time'))
             print(f"question {data['question_id']}\nfirst digit= {data['question_id'][0]}")
             if data['question_id'][0] == '3':
+                print('hyhyhyhy'+data['question_id'])
                 KidQuestionDAO.update(data['kid_id'], ck_q=data['question_id'])
             else:
                 KidQuestionDAO.update(data['kid_id'], math_q=data['question_id'])
