@@ -2,7 +2,7 @@ pipeline {
     environment {
         SERVER_IMAGE = 'red_proj_server:v1'
         AWS_DEFAULT_REGION= 'eu-central-1'
-        AWS_ACCOUNT_ID ='155295801505'
+        AWS_ACCOUNT_ID ='339713109533'
         ECR_REPO_NAME='thinking-api'
         DOCKER_IMAGE_TAG = "${ECR_REPO_NAME}:${env.BUILD_NUMBER}"
 
@@ -30,8 +30,9 @@ pipeline {
                         ]]) {
                             sh "echo AWS_ACCESS_KEY_ID ${AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY ${AWS_SECRET_ACCESS_KEY}"
                             sh "echo ${AWS_SECRET_ACCESS_KEY} | aws ecr get-login-password --region ${AWS_DEFAULT_REGION} |  docker login --username AWS --password-stdin 339713109533.dkr.ecr.eu-central-1.amazonaws.com/thinking-api"
+                            sh "docker images"
                             sh "docker tag ${DOCKER_IMAGE_TAG} 339713109533.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:latest"
-                            sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:latest"
+                            sh "docker push 339713109533.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:latest"
                          }
                 }
             }
