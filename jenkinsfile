@@ -14,7 +14,7 @@ pipeline {
                 // Build steps for the server
                 script{
                     echo 'Building Docker Image...'
-                    sh "sudo docker build -t ${DOCKER_IMAGE_TAG} ."
+                    sh "docker build -t ${DOCKER_IMAGE_TAG} ."
                 }
             }
         }
@@ -24,8 +24,8 @@ pipeline {
                         echo 'Pushing Docker Image to ECR...'
                          withCredentials([aws(credentialsId: "ecr-credentials'")]) {
                             sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | sudo docker login --username AWS --password-stdin 339713109533.dkr.ecr.eu-central-1.amazonaws.com/thinking-api"
-                            sh "sudo docker tag ${DOCKER_IMAGE_TAG} 339713109533.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:latest"
-                            sh "sudo docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:latest"
+                            sh "docker tag ${DOCKER_IMAGE_TAG} 339713109533.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:latest"
+                            sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:latest"
                          }
                 }
             }
