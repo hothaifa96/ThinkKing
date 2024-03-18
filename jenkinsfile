@@ -22,7 +22,12 @@ pipeline {
             steps {
                 script {
                         echo 'Pushing Docker Image to ECR...'
-                         withCredentials([aws(credentialsId: "ecr-credentials")]) {
+                         withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: 'ecr-credentials',
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ]]) {
                             sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | sudo docker login --username AWS --password-stdin 339713109533.dkr.ecr.eu-central-1.amazonaws.com/thinking-api"
                             sh "docker tag ${DOCKER_IMAGE_TAG} 339713109533.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:latest"
                             sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:latest"

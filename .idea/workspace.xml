@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3036a416-803d-45b4-adb4-0458ae4e63a4" name="Changes" comment="adding the kid['progress']" />
+    <list default="true" id="3036a416-803d-45b4-adb4-0458ae4e63a4" name="Changes" comment="adding the kid['progress']">
+      <change beforePath="$PROJECT_DIR$/jenkinsfile" beforeDir="false" afterPath="$PROJECT_DIR$/jenkinsfile" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -179,22 +181,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1701128271687</updated>
-    </task>
-    <task id="LOCAL-00030" summary="add(DAO):add excel support7">
-      <option name="closed" value="true" />
-      <created>1706088765777</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1706088765777</updated>
-    </task>
-    <task id="LOCAL-00031" summary="add(DAO):add excel support7">
-      <option name="closed" value="true" />
-      <created>1706089126970</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1706089126970</updated>
     </task>
     <task id="LOCAL-00032" summary="add(DAO):add excel support7">
       <option name="closed" value="true" />
@@ -572,7 +558,23 @@
       <option name="project" value="LOCAL" />
       <updated>1710801166295</updated>
     </task>
-    <option name="localTasksCounter" value="79" />
+    <task id="LOCAL-00079" summary="adding the kid['progress']">
+      <option name="closed" value="true" />
+      <created>1710801485720</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1710801485720</updated>
+    </task>
+    <task id="LOCAL-00080" summary="adding the kid['progress']">
+      <option name="closed" value="true" />
+      <created>1710801574643</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1710801574643</updated>
+    </task>
+    <option name="localTasksCounter" value="81" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
