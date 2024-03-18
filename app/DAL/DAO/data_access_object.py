@@ -367,6 +367,36 @@ COMMIT;"""
             cursor.close()
             connection.close()
 
+
+    @staticmethod
+    def get_by_id_for_question(kid_id):
+        connection = get_db_connection()
+        query = f"SELECT * FROM kids WHERE kid_id = {kid_id};"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchone()
+            print('gegege', result)
+            if result:
+                kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns, time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at, learning_speed, class_id = result
+                kid = Kid(
+                    kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns,
+                    time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time,
+                    created_at, learning_speed, class_id
+                )
+                kid = kid.to_dict()
+                return kid
+            else:
+                return {'status': 'error', 'message': "kid_id doesnt exist"}
+
+
+        except psycopg2.Error as e:
+            return ("Error fetching kid by ID:", e)
+
+        finally:
+            cursor.close()
+            connection.close()
+
     @staticmethod
     def get_learning_speed(kid_id):
         connection = get_db_connection()
@@ -900,6 +930,7 @@ class QuestionDAO:
     def get_by_kid(topic_id, c_grade_id, last_question_id):
         connection = get_db_connection()
         cursor = connection.cursor()
+        print(f'last_question_id: {last_question_id}')
         # Fetch the next 5 questions without their answer options based on the given question_id
         try:
             query = f"""
@@ -913,7 +944,6 @@ class QuestionDAO:
             """
             cursor.execute(query)
             result = cursor.fetchall()
-            print(query)
             questions = []
             for row in result:
                 question = Question(*row)
@@ -922,7 +952,6 @@ class QuestionDAO:
                               "intersting_fact": question.interesting_fact,  # add the explanation
                               "subject": 'math' if question.topic_id == 1 else "common knowledge", "answers": []}
                 questions.append(questionee)
-            print('heeheheh', questions)
             return questions
         except Exception as e:
             return {'error': str(e)}
@@ -937,7 +966,6 @@ class QuestionDAO:
             cursor.execute(query)
             result = cursor.fetchall()
             res = result[0]
-            print(res[0])
             return res[0]
         except Exception as e:
             print(str(e))
@@ -1568,9 +1596,21 @@ class SessionDAO:
     @staticmethod
     def get_all_by_id(id):
         connection = get_db_connection()
-        query = f"""SELECT * FROM sessions  
-WHERE DATE(completion_time) = CURRENT_DATE 
-AND kid_id = {id}
+        query = f"""SELECT 
+    DISTINCT ON (question_id) 
+    session_id,
+    question_id,
+    kid_id,
+    DATE(start_time) AS completion_date,
+    DATE(completion_time) AS completion_date,
+    score,
+    correct,
+    try
+FROM 
+    sessions  
+WHERE 
+    DATE(completion_time) = CURRENT_DATE 
+    AND kid_id = {id};
 """
         cursor = connection.cursor()
         try:
@@ -1589,15 +1629,35 @@ class KidQuestionDAO:
     def update(kid_id, math_q=None, ck_q=None):
         # Database interaction logic here (insert into the 'sessions' table)
         connection = get_db_connection()
-        query = f"INSERT INTO kid_question (kid_id) ({kid_id}) ON CONFLICT (kid_id) DO NOTHING ; "
+        query = f""
         if math_q is None and ck_q is None:
             return {'status': "error", 'message': 'missing question_id'}
         if math_q is None:
             query += f"update kid_question set last_question_ck = '{ck_q}' where kid_id = {kid_id} ;"
         if ck_q is None:
             query = f"update kid_question set last_question_math = '{math_q}' where kid_id = {kid_id} ;"
-        else:
-            query = f"INSERT INTO kid_question (kid_id,last_question_math,last_question_ck) VALUES ({kid_id},'{math_q}','{ck_q}') ;"
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            print(f'query: {query}')
+            rows_updated = cursor.rowcount
+            connection.commit()
+            print(f'rows_updated {rows_updated}')
+            if rows_updated > 0:
+                return True
+            else:
+                raise Exception('nothing updated')
+        except Exception as e:
+            print({'error': str(e)})
+            return {'error': str(e)}
+        finally:
+            connection.close()
+    @staticmethod
+    def create_kq(kid_id):
+        # Database interaction logic here (insert into the 'sessions' table)
+        connection = get_db_connection()
+        query = f"""INSERT INTO kid_question (kid_id, last_question_math, last_question_ck)
+VALUES ({kid_id}, '1', '1') ON CONFLICT (kid_id) DO NOTHING ; """
         cursor = connection.cursor()
         try:
             cursor.execute(query)
@@ -1788,6 +1848,7 @@ WHERE kid_id = {kid_id}
 GROUP BY kid_id, question_id;"""
         cursor = connection.cursor()
         try:
+            # {{tempates.get_kid_all_time_questions}}
             cursor.execute(query)
             result = cursor.fetchall()
             kid_questions = {}  # dict

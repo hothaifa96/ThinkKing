@@ -7,7 +7,6 @@ class EmailSender:
 
     @staticmethod
     def send_email(receiver_email, subject, body):
-        print('hhhhh')
         smtp_server = 'smtp.gmail.com'
         smtp_port = 465
         sender_email = 'thinkigsuppportfsafasc@gmail.com'

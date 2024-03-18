@@ -298,6 +298,7 @@ class Schools(Resource):
         if check_keys(kid_school, 'kid_id', 'school_id'):
             return {'Error': 'missing data'}, 400
         res = KidDAO.add_school(kid_school['kid_id'], kid_school['school_id'])
+        KidQuestionDAO.create_kq(kid_school['kid_id'])
         if res is None:
             return {'message': 'success'}
         else:
@@ -874,6 +875,7 @@ class Answers(Resource):
             session = Session(None, data['question_id'], data['kid_id'], data['start_time'], data['completion_time'],
                               data['attempt'] if data['is_correct'] else 0, data['is_correct'], data['attempt'])
             KidDAO.update_screen_time(data.get('kid_id'), data.get('screen_time'))
+            print(f"question {data['question_id']}\nfirst digit= {data['question_id'][0]}")
             if data['question_id'][0] == '3':
                 KidQuestionDAO.update(data['kid_id'], ck_q=data['question_id'])
             else:
@@ -904,7 +906,7 @@ class GQuestions(Resource):
         if error is not False:
             return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
         try:
-            kid = KidDAO.get_by_id(data.get('kid_id'))
+            kid = KidDAO.get_by_id_for_question(data.get('kid_id'))
             question_id = data.get('last_question_id')
             if question_id == '':
                 question_id = KidQuestionDAO.get(data.get('kid_id'))
@@ -914,7 +916,7 @@ class GQuestions(Resource):
             else:
                 topic = question_id[0]
 
-            question_id = question_id[f'{topic}'] if question_id[f'{topic}'] is not None else topic
+            question_id = question_id[f'{topic}'] if question_id[f'{topic}'] is not None else "1"
             print(f'question id = {question_id}\ntopic={topic}')
             questions_list = QuestionDAO.get_by_kid(topic, kid['c_grade_id'], question_id)
 
@@ -932,7 +934,6 @@ class GQuestions(Resource):
             return questions_list
         except Exception as e:
             return {'status': 'error', "message": str(e)}
-        # hothaifa
 
 
 class ChangeProfile(Resource):
