@@ -1907,14 +1907,14 @@ class WhitelistUsersDAO:
         try:
             cursor.execute(query)
             results = cursor.fetchall()
+            print(results)
             users = []
             if len(results) != 0:
                 for result in results:
                     user = User(*result)
                     users.append(user.to_dict())
-                return users
-            else:
-                raise Exception('error - whitelist_users')
+            return users
+
         except Exception as e:
             print({'error': str(e)})
             return {'error': str(e)}
@@ -1934,7 +1934,7 @@ class WhitelistUsersDAO:
             if len(result) != 0:
                 user = User(*result)
                 print(user)
-                return user
+                return user.to_dict()
             else:
                 raise Exception('user not exists in the white list')
         except Exception as e:
@@ -1951,7 +1951,7 @@ class WhitelistUsersDAO:
             cursor.execute(query)
             user_id = cursor.fetchone()[0]
             connection.commit()
-            return user_id
+            return {'status': 'success', 'user_id': user_id}
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
         finally:
@@ -1959,8 +1959,8 @@ class WhitelistUsersDAO:
 
 
     @staticmethod
-    def delete_user(self, email):
-        query = f"DELETE FROM whitelist_users WHERE email ={email}"
+    def delete_user( email):
+        query = f"DELETE FROM whitelist_users WHERE email ='{email}'"
         connection = get_db_connection()
         cursor = connection.cursor()
         try:

@@ -1052,3 +1052,6 @@ class UserApi(Resource):
         if service is not None:
             user.allowed_service= service
         return WhitelistUsersDAO.add_user(user.email,user.allowed_service)
+    def delete(self,email):
+        print(email)
+        return WhitelistUsersDAO.delete_user(email)
