@@ -70,14 +70,14 @@ CREATE TABLE IF NOT EXISTS subjects (
 
 
 CREATE TABLE IF NOT EXISTS logs (
-    log_id integer NOT NULL,
+    log_id SERIAL NOT NULL,
     "timestamp" timestamp without time zone,
     log_value character varying,
     CONSTRAINT logs_pkey PRIMARY KEY (log_id)
 );
-
+DROP TABLE IF EXISTS parents ;
 CREATE TABLE IF NOT EXISTS parents (
-    parent_id integer NOT NULL,
+    parent_id SERIAL NOT NULL,
     email character varying,
     first_name character varying,
     last_name character varying,
@@ -91,9 +91,9 @@ CREATE TABLE IF NOT EXISTS parents (
     CONSTRAINT fk_parents_avatar FOREIGN KEY (avatar_id) REFERENCES avatars (avatar_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
     CONSTRAINT fk_parents_gender FOREIGN KEY (gender_id) REFERENCES genders (gender_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 );
-
+DROP TABLE IF EXISTS kids ;
 CREATE TABLE IF NOT EXISTS kids (
-    kid_id integer NOT NULL,
+    kid_id SERIAL NOT NULL,
     parent_id integer,
     first_name character varying,
     gender_id integer,
@@ -117,8 +117,10 @@ CREATE TABLE IF NOT EXISTS kids (
     CONSTRAINT fk_kid_class FOREIGN KEY (class_id) REFERENCES class_names (class_name_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
+DROP TABLE IF EXISTS sessions ;
+
 CREATE TABLE IF NOT EXISTS sessions (
-    session_id integer NOT NULL,
+    session_id SERIAL NOT NULL,
     question_id character varying,
     kid_id integer,
     start_time timestamp without time zone,
@@ -168,9 +170,10 @@ CREATE TABLE IF NOT EXISTS user_topics (
 );
 
 
-CREATE TABLE IF NOT EXISTS   kid_question
+Drop  table if exists kid_question ;
+CREATE TABLE IF NOT EXISTS kid_question
 (
-    kid_id integer NOT NULL,
+    kid_id SERIAL NOT NULL,
     last_question_math character varying(50)     DEFAULT 10,
     last_question_ck character varying(50)     DEFAULT 30,
     CONSTRAINT kid_qouestion_pkey PRIMARY KEY (kid_id),

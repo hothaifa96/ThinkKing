@@ -187,6 +187,7 @@ class KidDAO:
         results = cursor.fetchall()
         try:
             res = []
+            print(f'here {results}')
             if isinstance(results, list):
                 for result in results:
                     kid = Kid(*result).to_dict()
@@ -195,6 +196,7 @@ class KidDAO:
                     gender = GenderDAO.get_by_id(kid['gender_id']).gender if kid['gender_id'] is not None else None
                     avatar = AvatarDAO.get_by_id(kid['avatar_id']).avatar if kid['avatar_id'] is not None else None
                     classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid['class_id'] is not None else None
+                    print('classs')
                     sessions = SessionDAO.get_all_by_id(kid['kid_id'])
                     answers_count = set([session['question_id'] for session in sessions])
                     answers_count = len(answers_count)
@@ -1986,7 +1988,7 @@ class WhitelistUsersDAO:
             if len(result) != 0:
                 user = User(*result)
                 if user.allowed_service == 'thinking':
-                    return True
+                    return {'status':'success'}
             else:
                 return False
         except Exception as e:

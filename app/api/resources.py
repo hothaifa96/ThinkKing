@@ -92,7 +92,8 @@ class RegisterParent(Resource):
         if error is not False:
             return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
         allowed = WhitelistUsersDAO.does_user_exist(parent_data['email'])
-        if not allowed:
+        print(f'allowed -> {allowed}')
+        if allowed.get('status') != 'success':
             return {'status': 'error', 'message': f'user not in the white list'}, 403
         # Create a new Parent object
         parent = Parent.from_dict(parent_data)
@@ -911,6 +912,7 @@ class GQuestions(Resource):
         try:
             kid = KidDAO.get_by_id_for_question(data.get('kid_id'))
             question_id = data.get('last_question_id')
+            print(type(question_id))
             if question_id == '':
                 question_id = KidQuestionDAO.get(data.get('kid_id'))
 
@@ -918,8 +920,8 @@ class GQuestions(Resource):
                 topic = 1 if data.get('topic') == 'math' else 4 if data.get('topic') == 'english' else 3
             else:
                 topic = question_id[0]
-
-            question_id = question_id[f'{topic}'] if question_id[f'{topic}'] is not None else "1"
+            if isinstance(question_id,dict) :
+                question_id = question_id[f'{topic}'] if question_id[f'{topic}'] is not None else "1"
             print(f'question id = {question_id}\ntopic={topic}')
             questions_list = QuestionDAO.get_by_kid(topic, kid['c_grade_id'], question_id)
 
