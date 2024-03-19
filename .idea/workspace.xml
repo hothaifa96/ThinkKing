@@ -5,7 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3036a416-803d-45b4-adb4-0458ae4e63a4" name="Changes" comment="adding the kid['progress']">
-      <change beforePath="$PROJECT_DIR$/jenkinsfile" beforeDir="false" afterPath="$PROJECT_DIR$/jenkinsfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/DAL/DAO/data_access_object.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/DAL/DAO/data_access_object.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/DAL/POPO/db_objects.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/DAL/POPO/db_objects.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/DAL/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/DAL/db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/resources.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/resources.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backup.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backup.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,38 +187,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1701128271687</updated>
-    </task>
-    <task id="LOCAL-00034" summary="add(DAO):add excel support7">
-      <option name="closed" value="true" />
-      <created>1706090184829</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1706090184829</updated>
-    </task>
-    <task id="LOCAL-00035" summary="add(DAO):add excel support7">
-      <option name="closed" value="true" />
-      <created>1706090313106</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1706090313106</updated>
-    </task>
-    <task id="LOCAL-00036" summary="add(DAO):add excel support7">
-      <option name="closed" value="true" />
-      <created>1706662364113</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1706662364113</updated>
-    </task>
-    <task id="LOCAL-00037" summary="add(DAO):add excel support7">
-      <option name="closed" value="true" />
-      <created>1706747079662</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1706747079662</updated>
     </task>
     <task id="LOCAL-00038" summary="add(DAO):add excel support7">
       <option name="closed" value="true" />
@@ -574,7 +548,39 @@
       <option name="project" value="LOCAL" />
       <updated>1710802020872</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="adding the kid['progress']">
+      <option name="closed" value="true" />
+      <created>1710802131891</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1710802131891</updated>
+    </task>
+    <task id="LOCAL-00084" summary="adding the kid['progress']">
+      <option name="closed" value="true" />
+      <created>1710802276262</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1710802276262</updated>
+    </task>
+    <task id="LOCAL-00085" summary="adding the kid['progress']">
+      <option name="closed" value="true" />
+      <created>1710802401163</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1710802401163</updated>
+    </task>
+    <task id="LOCAL-00086" summary="adding the kid['progress']">
+      <option name="closed" value="true" />
+      <created>1710802736028</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1710802736028</updated>
+    </task>
+    <option name="localTasksCounter" value="87" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

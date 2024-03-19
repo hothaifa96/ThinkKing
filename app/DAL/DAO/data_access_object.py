@@ -1873,16 +1873,10 @@ GROUP BY kid_id, question_id;"""
             sub_subject_name = value["sub_subject_name"]
             counts[sub_subject_name] += 1
         print(f'counts: {counts}')
-        try:
-            max2 = list(counts.values())
-            max2.sort(reverse=True)
-            max2 = (max2[:2])
-        except:
-            max2 = list(counts.values())
         for sub_subject_name, count in counts.items():
             print(f'sub_subject_name:{sub_subject_name}')
             all_questions = SubSubjectDAO.get_topic_all_questions_by_sub_subject_name(sub_subject_name)
-            if count < all_questions and count in max2:
+            if count < all_questions:
                 kid_statistics[sub_subject_name] = [count, all_questions]
         print(kid_statistics)
         return kid_statistics
@@ -1903,3 +1897,99 @@ GROUP BY kid_id, question_id;"""
             if count < all_questions:
                 kid_statistics[sub_subject_name] = [count, all_questions]
         return kid_statistics
+
+class WhitelistUsersDAO:
+    @staticmethod
+    def get_all_users():
+        connection = get_db_connection()
+        query = f"""SELECT * FROM whitelist_users;"""
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            results = cursor.fetchall()
+            users = []
+            if len(results) != 0:
+                for result in results:
+                    user = User(*result)
+                    users.append(user.to_dict())
+                return users
+            else:
+                raise Exception('error - whitelist_users')
+        except Exception as e:
+            print({'error': str(e)})
+            return {'error': str(e)}
+
+        finally:
+            connection.close()
+
+    @staticmethod
+    def get_user_by_email(email):
+        connection = get_db_connection()
+        query = f"""SELECT * FROM whitelist_users WHERE email ='{email}'
+"""
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchone()
+            if len(result) != 0:
+                user = User(*result)
+                print(user)
+                return user
+            else:
+                raise Exception('user not exists in the white list')
+        except Exception as e:
+            return {'status':'error', 'message': str(e)}
+        finally:
+            connection.close()
+
+    @staticmethod
+    def add_user(email, allowed_service):
+        query = f"INSERT INTO whitelist_users (email, allowed_service) VALUES ('{email}', '{allowed_service}') RETURNING user_id;"
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            user_id = cursor.fetchone()[0]
+            connection.commit()
+            return user_id
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
+        finally:
+            connection.close()
+
+
+    @staticmethod
+    def delete_user(self, email):
+        query = f"DELETE FROM whitelist_users WHERE email ={email}"
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            connection.commit()
+            return {'status':'success', 'message': f"{email} deleted"}
+
+        except Exception as e:
+            return {'status':'error', 'message': str(e)}
+
+        finally:
+            connection.close()
+
+    @staticmethod
+    def does_user_exist(email):
+        connection = get_db_connection()
+        query = f"""SELECT * FROM whitelist_users WHERE email ='{email}'
+"""
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchone()
+            if len(result) != 0:
+                user = User(*result)
+                if user.allowed_service == 'thinking':
+                    return True
+            else:
+                return False
+        except Exception as e:
+            return {'status':'error', 'message': str(e)}
+        finally:
+            connection.close()

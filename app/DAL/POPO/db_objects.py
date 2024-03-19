@@ -362,6 +362,18 @@ class SubSubjects:
         return self.__dict__
 
 
+class User:
+    def __init__(self, user_id=None, email=None, allowed_service='thinking'):
+        self.user_id = user_id
+        self.email = email
+        self.allowed_service = allowed_service
+
+    def __str__(self):
+        return f"SubSubject ID: {self.user_id}, SubSubject Name: {self.email}, Question ID: {self.allowed_service}"
+
+    def to_dict(self):
+        return self.__dict__
+
 class Log:
     def __init__(self, log_id, timestamp, log_value):
         self.log_id = log_id

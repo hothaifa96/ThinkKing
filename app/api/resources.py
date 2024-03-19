@@ -91,7 +91,9 @@ class RegisterParent(Resource):
         error = check_keys(parent_data, 'first_name', 'last_name', 'email', 'gender_id', 'password')
         if error is not False:
             return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
-
+        allowed = WhitelistUsersDAO.does_user_exist(parent_data['email'])
+        if not allowed:
+            return {'status': 'error', 'message': f'user not in the white list'}, 403
         # Create a new Parent object
         parent = Parent.from_dict(parent_data)
 
@@ -877,7 +879,7 @@ class Answers(Resource):
             KidDAO.update_screen_time(data.get('kid_id'), data.get('screen_time'))
             print(f"question {data['question_id']}\nfirst digit= {data['question_id'][0]}")
             if data['question_id'][0] == '3':
-                print('hyhyhyhy'+data['question_id'])
+                print('hyhyhyhy' + data['question_id'])
                 KidQuestionDAO.update(data['kid_id'], ck_q=data['question_id'])
             else:
                 KidQuestionDAO.update(data['kid_id'], math_q=data['question_id'])
@@ -1011,6 +1013,17 @@ class Daily(Resource):
         else:
             return make_response(jsonify(res), 400)
 
+
+class Daily(Resource):
+
+    def get(self):
+        data = request.json
+        if check_keys(data, 'kid_id'):
+            return {'Error': 'missing data'}, 400
+        sub_subject = SubSubjectDAO.get_kid_all_time_statistics(data['kid_id'])
+        return sub_subject
+
+
 class Stat(Resource):
 
     def get(self):
@@ -1020,13 +1033,22 @@ class Stat(Resource):
         sub_subject = SubSubjectDAO.get_kid_all_time_statistics(data['kid_id'])
         return sub_subject
 
+
+class UsersApi(Resource):
+
+    def get(self):
+        sub_subject = WhitelistUsersDAO.get_all_users()
+        return sub_subject
+
+
+class UserApi(Resource):
+    def get(self, email):
+        sub_subject = WhitelistUsersDAO.get_user_by_email(email)
+        return sub_subject
     def post(self):
-        kid = request.json
-        error = check_keys(kid, 'kid_id', 'available_screen_time')
-        if error is not False:
-            return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
-        res = KidDAO.update_screen_time(kid['kid_id'], kid['available_screen_time'])
-        if res is None:
-            return {'message': 'success'}
-        else:
-            return make_response(jsonify(res), 400)
+        data = request.json
+        service = data.get('service')
+        user = User(email=data['email'])
+        if service is not None:
+            user.allowed_service= service
+        return WhitelistUsersDAO.add_user(user.email,user.allowed_service)

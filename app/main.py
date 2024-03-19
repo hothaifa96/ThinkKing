@@ -35,6 +35,9 @@ api.add_resource(Crowns, '/crowns')
 api.add_resource(KidScreen, '/screen_time')
 api.add_resource(Daily,'/daily')
 api.add_resource(Stat,'/static')
+api.add_resource(UsersApi,'/users')
+api.add_resource(UserApi,'/user/<string:email>','/user')
+
 
 api.add_resource(Hello, '/hello')
 api.add_resource(ParentLogin, '/login/parent')  # deprecated
