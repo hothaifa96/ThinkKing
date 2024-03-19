@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3036a416-803d-45b4-adb4-0458ae4e63a4" name="Changes" comment="adding the kid['progress']">
-      <change beforePath="$PROJECT_DIR$/app/DAL/DAO/data_access_object.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/DAL/DAO/data_access_object.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/resources.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/resources.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jenkinsfile" beforeDir="false" afterPath="$PROJECT_DIR$/jenkinsfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -182,14 +181,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1701128271687</updated>
-    </task>
-    <task id="LOCAL-00039" summary="add(DAO):add excel support7">
-      <option name="closed" value="true" />
-      <created>1707122525031</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1707122525031</updated>
     </task>
     <task id="LOCAL-00040" summary="add(DAO):add excel support7">
       <option name="closed" value="true" />
@@ -575,7 +566,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710818430065</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="adding the kid['progress']">
+      <option name="closed" value="true" />
+      <created>1710818841517</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1710818841518</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
