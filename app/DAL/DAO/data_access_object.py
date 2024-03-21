@@ -902,7 +902,7 @@ DELETE FROM kid_subjects
 DELETE FROM kids
     WHERE kid_id = {kidd.kid_id};
 
-DELETE FROM kids WHERE kid_id={kid.kid_id};"""
+DELETE FROM kids WHERE kid_id={kidd.kid_id};"""
 
             # Check if the parent exists
             check_query = f"SELECT * FROM parents WHERE parent_id = {parent_id};"
