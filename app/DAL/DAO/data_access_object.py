@@ -887,7 +887,8 @@ class ParentDAO:
 
             if result:
                 # Parent exists, proceed with deletion
-                delete_query = f"DELETE FROM parents WHERE parent_id = {parent_id};"
+                delete_query = f""" DELETE * FROM kids WHERE parent_id ={parent_id};
+                DELETE FROM parents WHERE parent_id = {parent_id};"""
                 cursor.execute(delete_query)
                 connection.commit()
                 return {'success': True, 'message': 'Parent deleted successfully'}
