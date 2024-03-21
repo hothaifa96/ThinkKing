@@ -903,7 +903,7 @@ DELETE FROM kids
     WHERE kid_id = {kidd.kid_id};
 
 DELETE FROM kids WHERE kid_id={kidd.kid_id};"""
-
+            cursor.execute(query)
             # Check if the parent exists
             check_query = f"SELECT * FROM parents WHERE parent_id = {parent_id};"
             cursor.execute(check_query)
