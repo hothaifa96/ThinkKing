@@ -920,7 +920,7 @@ class GQuestions(Resource):
                 topic = 1 if data.get('topic') == 'math' else 4 if data.get('topic') == 'english' else 3
             else:
                 topic = question_id[0]
-            if isinstance(question_id,dict) :
+            if isinstance(question_id, dict):
                 question_id = question_id[f'{topic}'] if question_id[f'{topic}'] is not None else "1"
             print(f'question id = {question_id}\ntopic={topic}')
             questions_list = QuestionDAO.get_by_kid(topic, kid['c_grade_id'], question_id)
@@ -1047,13 +1047,15 @@ class UserApi(Resource):
     def get(self, email):
         sub_subject = WhitelistUsersDAO.get_user_by_email(email)
         return sub_subject
+
     def post(self):
         data = request.json
         service = data.get('service')
         user = User(email=data['email'])
         if service is not None:
-            user.allowed_service= service
-        return WhitelistUsersDAO.add_user(user.email,user.allowed_service)
-    def delete(self,email):
+            user.allowed_service = service
+        return WhitelistUsersDAO.add_user(user.email, user.allowed_service)
+
+    def delete(self, email):
         print(email)
         return WhitelistUsersDAO.delete_user(email)

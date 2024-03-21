@@ -1878,7 +1878,7 @@ GROUP BY kid_id, question_id;"""
         for sub_subject_name, count in counts.items():
             print(f'sub_subject_name:{sub_subject_name}')
             all_questions = SubSubjectDAO.get_topic_all_questions_by_sub_subject_name(sub_subject_name)
-            if count < all_questions:
+            if count <= all_questions:
                 kid_statistics[sub_subject_name] = [count, all_questions]
         print(kid_statistics)
         return kid_statistics
@@ -1896,7 +1896,7 @@ GROUP BY kid_id, question_id;"""
         print(f'counts: {counts}')
         for sub_subject_name, count in counts.items():
             all_questions = SubSubjectDAO.get_topic_all_questions_by_sub_subject_name(sub_subject_name)
-            if count < all_questions:
+            if count <= all_questions:
                 kid_statistics[sub_subject_name] = [count, all_questions]
         return kid_statistics
 

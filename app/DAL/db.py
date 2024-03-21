@@ -16,7 +16,6 @@ def get_db_connection():
     # Establish a connection to the PostgreSQL database
     try:
         connection = psycopg2.connect(**db_params)
-        print('db connected')
         return connection
     except Exception as e:
         print('error',e)
