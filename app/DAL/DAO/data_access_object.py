@@ -891,18 +891,18 @@ class ParentDAO:
                     res.append(kid)
             for kidd in res:
                 query = f""" DELETE FROM sessions
-    WHERE kid_id = {kidd.id};
+    WHERE kid_id = {kidd.kid_id};
 
 DELETE FROM kid_question
-    WHERE kid_id = {kidd.id};
+    WHERE kid_id = {kidd.kid_id};
 
 DELETE FROM kid_subjects
-    WHERE kid_id = {kidd.id};
+    WHERE kid_id = {kidd.kid_id};
 
 DELETE FROM kids
-    WHERE kid_id = {kidd.id};
+    WHERE kid_id = {kidd.kid_id};
 
-DELETE FROM kids WHERE parent_id = {kidd.id};"""
+DELETE FROM kids WHERE kid_id={kid.kid_id};"""
 
             # Check if the parent exists
             check_query = f"SELECT * FROM parents WHERE parent_id = {parent_id};"
