@@ -278,7 +278,7 @@ END $$;
 
 DO $$ 
 BEGIN
-    DELETE FROM kid_subjects
+    DELETE FROM kid_question
     WHERE kid_id = {kid_id};
 EXCEPTION
     WHEN others THEN
@@ -287,7 +287,7 @@ END $$;
 
 DO $$ 
 BEGIN
-    DELETE FROM kids
+    DELETE FROM kid_question
     WHERE kid_id = {kid_id};
 EXCEPTION
     WHEN others THEN
@@ -880,12 +880,37 @@ class ParentDAO:
         cursor = connection.cursor()
 
         try:
+            query = f"SELECT * FROM kids where parent_id ={parent_id}"
+            cursor = connection.cursor()
+            cursor.execute(query)
+            results = cursor.fetchall()
+            res = []
+            if isinstance(results, list):
+                for result in results:
+                    kid = Kid(*result)
+                    res.append(kid)
+            for kidd in res:
+                query = f""" DELETE FROM sessions
+    WHERE kid_id = {kidd.id};
+
+DELETE FROM kid_question
+    WHERE kid_id = {kidd.id};
+
+DELETE FROM kid_subjects
+    WHERE kid_id = {kidd.id};
+
+DELETE FROM kids
+    WHERE kid_id = {kidd.id};
+
+DELETE FROM kids WHERE parent_id = {kidd.id};"""
+
             # Check if the parent exists
             check_query = f"SELECT * FROM parents WHERE parent_id = {parent_id};"
             cursor.execute(check_query)
             result = cursor.fetchone()
 
             if result:
+                KidDAO.get_by_parent_id(parent_id)
                 # Parent exists, proceed with deletion
                 delete_query = f""" DELETE FROM kids WHERE parent_id ={parent_id};
                 DELETE FROM parents WHERE parent_id = {parent_id};"""
