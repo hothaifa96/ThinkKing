@@ -1,10 +1,9 @@
-from flask import Flask
+from flask import Flask,render_template
 from flask_restful import Api
 from app.api.resources import *
 
 app = Flask('Thinking')
 api = Api(app, prefix='/api')
-
 api.add_resource(LoginParent, '/parent/login')
 api.add_resource(RegisterParent, '/parent/register')
 api.add_resource(AddKidResource, '/add/name/gender')
@@ -37,6 +36,9 @@ api.add_resource(Daily,'/daily')
 api.add_resource(Stat,'/static')
 api.add_resource(UsersApi,'/users')
 api.add_resource(UserApi,'/user/<string:email>','/user')
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 
 api.add_resource(Hello, '/hello')

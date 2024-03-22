@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">User Management</h1>
+
+        <!-- Form to add a new user -->
+        <form class="mt-3" action="/api/user" method="POST">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="allowed_services">Allowed Services:</label>
+                <select class="form-control" id="allowed_services" name="allowed_services">
+                    <option value="thinking">Thinking</option>
+                    <option value="one_time_event">One Time Event</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" onclick="submitForm()">Add User</button>
+        </form>
+
+        <hr>
+
+        <!-- Button to show all users -->
+        <button class="btn btn-primary mt-3" onclick="getUserss()">Show All Users</button><br><br>
+
+        <!-- Form to search users by email -->
+        <form class="form-inline mt-3">
+            <div class="form-group">
+                <label for="search_email">Search by Email:</label>
+                <input type="email" class="form-control mx-2" id="search_email" name="search_email" required>
+                <button type="button" class="btn btn-primary" onclick="searchUser()">Search</button>
+            </div>
+        </form>
+    </div>
+     <h1 class="mt-5">User Management</h1>
+
+        <!-- Table to display users -->
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody">
+                <!-- User data will be inserted here dynamically -->
+            </tbody>
+        </table>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <!-- JavaScript to fetch and display users -->
+        <script>
+            function getUsers() {
+                fetch('http://localhost/api/users')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    displayUsers(data);
+                })
+                .catch(error => console.error('Error:', error));
+            }
+
+            function displayUsers(users) {
+                const userTableBody = document.getElementById('userTableBody');
+                userTableBody.innerHTML = '';
+                users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.email}</td>
+                    `;
+                    userTableBody.appendChild(row);
+                });
+            }
+
+            // Initial call to fetch and display users
+            getUsers();
+
+        function getUserss() {
+                fetch('http://localhost/api/users')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    displayUsers(data);
+                })
+                .catch(error => console.error('Error:', error));
+            }
+
+        function searchUser() {
+            const email = document.getElementById('search_email').value;
+            fetch(`/api/user/${email}`, {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                var userTableBody = document.getElementById('userTableBody');
+                userTableBody.innerHTML = ''
+                const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${data.email}</td>
+                        <td>${data.allowed_service}</td>
+                    `;
+                    userTableBody.appendChild(row);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+    function submitForm() {
+    event.preventDefault();
+    var email = document.getElementById('email').value;
+    var allowed_services = document.getElementById('allowed_services').value;
+
+    var formData = {
+        email: email,
+        allowed_services: allowed_services
+    };
+    console.log(email);
+    fetch(`http://localhost/api/user/${email}`, {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while adding the user.');
+    });
+}
+
+</script>
+</body>
+</html>

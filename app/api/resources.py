@@ -1047,11 +1047,9 @@ class UserApi(Resource):
     def get(self, email):
         sub_subject = WhitelistUsersDAO.get_user_by_email(email)
         return sub_subject
-
-    def post(self):
-        data = request.json
-        service = data.get('service')
-        user = User(email=data['email'])
+    def post(self,email):
+        service = None
+        user = User(email=email)
         if service is not None:
             user.allowed_service = service
         return WhitelistUsersDAO.add_user(user.email, user.allowed_service)
