@@ -59,7 +59,7 @@
         <!-- JavaScript to fetch and display users -->
         <script>
             function getUsers() {
-                fetch('http://localhost/api/users')
+                fetch('http://ecs-lb-1105484532.eu-central-1.elb.amazonaws.com/api/users')
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
@@ -84,7 +84,7 @@
             getUsers();
 
         function getUserss() {
-                fetch('http://localhost/api/users')
+                fetch('http://ecs-lb-1105484532.eu-central-1.elb.amazonaws.com/api/users')
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
@@ -95,7 +95,7 @@
 
         function searchUser() {
             const email = document.getElementById('search_email').value;
-            fetch(`/api/user/${email}`, {
+            fetch(`http://ecs-lb-1105484532.eu-central-1.elb.amazonaws.com/api/user/${email}`, {
                 method: 'GET'
             })
             .then(response => response.json())
