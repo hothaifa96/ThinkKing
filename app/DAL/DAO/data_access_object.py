@@ -257,55 +257,25 @@ class KidDAO:
     @staticmethod
     def delete_kid(kid_id):
         connection = get_db_connection()
-        query = f"""BEGIN;
-DO $$ 
-BEGIN
-    DELETE FROM sessions
-    WHERE kid_id = {kid_id};
-EXCEPTION
-    WHEN others THEN
-        RAISE NOTICE 'Error occurred while deleting from sessions: %', SQLERRM;
-END $$;
-
-DO $$ 
-BEGIN
-    DELETE FROM kid_question
-    WHERE kid_id = {kid_id};
-EXCEPTION
-    WHEN others THEN
-        RAISE NOTICE 'Error occurred while deleting from kid_question: %', SQLERRM;
-END $$;
-
-DO $$ 
-BEGIN
-    DELETE FROM kid_question
-    WHERE kid_id = {kid_id};
-EXCEPTION
-    WHEN others THEN
-        RAISE NOTICE 'Error occurred while deleting from kid_subjects: %', SQLERRM;
-END $$;
-
-DO $$ 
-BEGIN
-    DELETE FROM kid_question
-    WHERE kid_id = {kid_id};
-EXCEPTION
-    WHEN others THEN
-        RAISE NOTICE 'Error occurred while deleting from kids: %', SQLERRM;
-END $$;
-
-COMMIT;"""
-
-        cursor = connection.cursor()
+        cursor=connection.cursor()
         try:
-            cursor.execute(query)
-            connection.commit()
+            delete_queries = [
+                "DELETE FROM kid_question WHERE kid_id = %s;",
+                "DELETE FROM sessions WHERE kid_id = %s;",
+                "DELETE FROM kid_subjects WHERE kid_id = %s;",
+                "DELETE FROM kids WHERE kid_id = %s;"
+            ]
+            for query in delete_queries:
+                cursor.execute(query, (kid_id,))
 
+            delete_kids_query = "DELETE FROM kids WHERE parent_id = %s"
+            cursor.execute(delete_kids_query, (kid_id,))
+            connection.commit()
             return {'success': True, 'message': 'Kid deleted successfully'}
 
         except Exception as e:
+            connection.rollback()
             return {'success': False, 'message': str(e)}
-
         finally:
             cursor.close()
             connection.close()
@@ -875,52 +845,67 @@ class ParentDAO:
     # TODO: delete parent
     @staticmethod
     def delete(parent_id):
-        # Database interaction logic here (delete from the 'parents' table by ID)
         connection = get_db_connection()
         cursor = connection.cursor()
 
         try:
-            query = f"SELECT * FROM kids where parent_id ={parent_id}"
+            kid_query = f"SELECT kid_id FROM kids WHERE parent_id = {parent_id}"
             cursor = connection.cursor()
-            cursor.execute(query)
-            results = cursor.fetchall()
-            res = []
-            if isinstance(results, list):
-                for result in results:
-                    kid = Kid(*result)
-                    res.append(kid)
-            for kidd in res:
-                query = f""" DELETE FROM sessions
-    WHERE kid_id = {kidd.kid_id};
-
-DELETE FROM kid_question
-    WHERE kid_id = {kidd.kid_id};
-
-DELETE FROM kid_subjects
-    WHERE kid_id = {kidd.kid_id};
-
-DELETE FROM kids
-    WHERE kid_id = {kidd.kid_id};
-
-DELETE FROM kids WHERE kid_id={kidd.kid_id};"""
-            cursor.execute(query)
-            # Check if the parent exists
-            check_query = f"SELECT * FROM parents WHERE parent_id = {parent_id};"
-            cursor.execute(check_query)
-            result = cursor.fetchone()
-
-            if result:
-                KidDAO.get_by_parent_id(parent_id)
-                # Parent exists, proceed with deletion
-                delete_query = f""" DELETE FROM kids WHERE parent_id ={parent_id};
-                DELETE FROM parents WHERE parent_id = {parent_id};"""
-                cursor.execute(delete_query)
+            cursor.execute(kid_query)
+            kid_ids = [row[0] for row in cursor.fetchall()]
+            if kid_ids:
+                # Use parameterized queries to avoid SQL injection
+                delete_queries = [
+                    "DELETE FROM kid_question WHERE kid_id = %s;",
+                    "DELETE FROM sessions WHERE kid_id = %s;",
+                    "DELETE FROM kid_subjects WHERE kid_id = %s;",
+                    "DELETE FROM kids WHERE kid_id = %s;"
+                ]
+                for query in delete_queries:
+                    for kid_id in kid_ids:
+                        cursor.execute(query, (kid_id,))
+#             if isinstance(results, list):
+#                 for result in results:
+#                     kid = Kid(*result)
+#                     res.append(kid)
+#             for kidd in res:
+#                 query = f"""
+# DELETE FROM kid_question
+#     WHERE kid_id = {kidd.kid_id};
+#
+# DELETE FROM sessions
+#     WHERE kid_id = {kidd.kid_id};
+# DELETE FROM kid_subjects
+#     WHERE kid_id = {kidd.kid_id};
+#
+# DELETE FROM kids
+#     WHERE kid_id = {kidd.kid_id};
+#
+# DELETE FROM kids WHERE kid_id={kidd.kid_id};"""
+#             cursor.execute(query)
+#             # Check if the parent exists
+#             check_query = f"SELECT * FROM parents WHERE parent_id = {parent_id};"
+#             cursor.execute(check_query)
+#             result = cursor.fetchone()
+#
+#             if result:
+#                 KidDAO.get_by_parent_id(parent_id)
+#                 # Parent exists, proceed with deletion
+#                 delete_query = f""" DELETE FROM kids WHERE parent_id ={parent_id};
+#                 DELETE FROM parents WHERE parent_id = {parent_id};"""
+#                 cursor.execute(delete_query)
+#                 connection.commit()
+                delete_kids_query = "DELETE FROM kids WHERE parent_id = %s"
+                cursor.execute(delete_kids_query, (parent_id,))
+                delete_parent_query = "DELETE FROM parents WHERE parent_id = %s"
+                cursor.execute(delete_parent_query, (parent_id,))
                 connection.commit()
                 return {'success': True, 'message': 'Parent deleted successfully'}
             else:
                 return {'success': False, 'message': 'Parent not found'}
 
         except Exception as e:
+            connection.rollback()
             return {'success': False, 'message': str(e)}
         finally:
             cursor.close()
