@@ -2,7 +2,7 @@ from flask import Flask,render_template
 from flask_restful import Api
 from app.api.resources import *
 
-app = Flask('Thinking',template_folder='templates')
+app = Flask('Thinking',template_folder='./template')
 api = Api(app, prefix='/api')
 api.add_resource(LoginParent, '/parent/login')
 api.add_resource(RegisterParent, '/parent/register')
@@ -59,7 +59,7 @@ api.add_resource(QuestionsStatus, '/stat/question')
 def log_response_info(response):
     r = f'Request Body:{request.get_data()}\n'
     re= 'Response Status Code:', response.status_code
-    if response.status_code != 200:
+    if response.status_code == 500:
         receiver_email = 'thinkigsuppportfsafasc@gmail.com'
         subject = 'error on the api'
         body = f'{r} -> {re}'
