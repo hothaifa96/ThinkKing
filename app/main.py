@@ -99,7 +99,7 @@ def index():
         <!-- JavaScript to fetch and display users -->
         <script>
             function getUsers() {
-                fetch('http://localhost:80/api/users')
+                fetch('http://ecs-lb-1105484532.eu-central-1.elb.amazonaws.com:80/api/users')
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
@@ -124,7 +124,7 @@ def index():
             getUsers();
 
         function getUserss() {
-                fetch('http://localhost:80/api/users')
+                fetch('http://ecs-lb-1105484532.eu-central-1.elb.amazonaws.com/api/users')
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
@@ -135,7 +135,7 @@ def index():
 
         function searchUser() {
             const email = document.getElementById('search_email').value;
-            fetch(`http://localhost:80/api/user/${email}`, {
+            fetch(`http://ecs-lb-1105484532.eu-central-1.elb.amazonaws.com/api/user/${email}`, {
                 method: 'GET'
             })
             .then(response => response.json())
@@ -163,7 +163,7 @@ def index():
         allowed_services: allowed_services
     };
     console.log(email);
-    fetch(`http://localhost/api/user/${email}`, {
+    fetch(`http://ecs-lb-1105484532.eu-central-1.elb.amazonaws.com/api/user/${email}`, {
         method: 'POST'
     })
     .then(response => response.json())
