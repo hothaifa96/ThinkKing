@@ -2,26 +2,22 @@ import pandas as pd
 import math
 
 files = [
-    'ארתמטיקה כתה ד מעודכן.xlsx',
-    'ארתמטיקה כתה ג.xlsx',
-    'ארתמטיקה כתה ד.xlsx',
-    'ידע עולם כתה ו 500 שאלות.xlsx',
-    'ידע עולם כתה ג 500 שאלות.xlsx',
-    'ידע עולם כתה ד 500 שאלות.xlsx',
-    'ידע עולם כתה ה 500 שאלות.xlsx',
-    'ידע עולם כתה ג 100 שאלות.xlsx',
-    'ארתמטיקה כתה ד 500 שאלות.xlsx',
-    'ידע עולם כתה ד 315 שאלות.xlsx',
     'updated_trivia_questions.xlsx',
-    'ידע עולם כתה ג 315 שאלות.xlsx',
-    'ידע עולם כתה ג.xlsx',
-    'c_knowlage.xlsx'   
+    'ארתמטיקה כתה ד מעודכן.xlsx',
+    'ארתמטיקה כתה ו.xlsx',
+    'ידע עולם כתה ד 500 שאלות.xlsx',
+    'ידע עולם כתה ו 500 שאלות.xlsx',
+    'ארתמטיקה כתה ג.xlsx',
+    'ארתמטיקה כתה ה.xlsx',
+    'ידע עולם כתה ג 500 שאלות.xlsx',
+    'ידע עולם כתה ה 500 שאלות.xlsx',
 ]
+
 
 for url in files:
     df = pd.read_excel(f'../s3/{url}')
     print(f'../s3/{url}')
-    with open('/Users/hothaifa/Desktop/ThinkKing/hist/full.sql', 'a+') as insert_data_file:
+    with open(f'/Users/hothaifa/Desktop/ThinkKing/hist/new.sql', 'a+') as insert_data_file:
         insert_data_file.write(f'-- new file here {url[url.rfind("/") + 1:]}--\n')
 
         # Insert data into topics table (avoid duplicates)
@@ -83,7 +79,7 @@ VALUES ('{question_id}', TRUE, '{correct_answer}') ;
             for i, answer in enumerate(wrong_answers):
                 insert_data_file.write(f"""
 INSERT INTO answer_options (question_id, correct_answer, answer_text)
-VALUES ('{question_id}', FALSE, '{answer}');
+VALUES ('{question_id}', FALSE, '{answer}')  ;
 """)
     
 #     insert_data_file.write("""DELETE FROM answer_options
