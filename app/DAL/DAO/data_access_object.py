@@ -936,7 +936,7 @@ class QuestionDAO:
             connection.close()
 
     @staticmethod
-    def get_by_kid(topic_id, c_grade_id, last_question_id):
+    def get_by_kid(topic_id, c_grade_id, last_question_id,sub_subjects):
         connection = get_db_connection()
         cursor = connection.cursor()
         print(f'last_question_id: {last_question_id}')
@@ -948,6 +948,7 @@ class QuestionDAO:
             WHERE question_id > '{last_question_id}'
             and topic_id = {topic_id}
             and c_grade_id = {c_grade_id}
+            and  level = ANY(ARRAY[{sub_subjects[0]%1000},{sub_subjects[1]%1000}]) 
             ORDER BY question_id
             LIMIT 5;
             """

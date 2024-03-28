@@ -923,7 +923,10 @@ class GQuestions(Resource):
             if isinstance(question_id, dict):
                 question_id = question_id[f'{topic}'] if question_id[f'{topic}'] is not None else "1"
             print(f'question id = {question_id}\ntopic={topic}')
-            questions_list = QuestionDAO.get_by_kid(topic, kid['c_grade_id'], question_id)
+            sub_subject = SubSubjectDAO.get_topic_question(question_id)['sub_subject_id']
+            sub_subjects = [sub_subject,sub_subject+1]
+            print(f'sub subject = {sub_subjects}')
+            questions_list = QuestionDAO.get_by_kid(topic, kid['c_grade_id'], question_id , sub_subjects)
 
             if isinstance(questions_list, dict):
                 raise Exception(questions_list)
@@ -935,7 +938,7 @@ class GQuestions(Resource):
                 {'rate': {'all questions': QuestionDAO.get_rate(data['kid_id'], topic, kid['c_grade_id']),
                           'kid progress': QuestionDAO.get_rate_kid(data['kid_id'], topic)}
                  })
-
+            print(questions_list)
             return questions_list
         except Exception as e:
             return {'status': 'error', "message": str(e)}
