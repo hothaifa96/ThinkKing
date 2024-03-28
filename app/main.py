@@ -75,9 +75,9 @@ def index():
         <!-- Form to search users by email -->
         <form class="form-inline mt-3">
             <div class="form-group">
-                <label for="search_email">Search by Email:</label>
+                <label for="search_email">delete by Email:</label>
                 <input type="email" class="form-control mx-2" id="search_email" name="search_email" required>
-                <button type="button" class="btn btn-primary" onclick="searchUser()">Search</button>
+                <button type="button" class="btn btn-primary" onclick="searchUser()">DELETE</button>
             </div>
         </form>
     </div>
@@ -136,19 +136,12 @@ def index():
         function searchUser() {
             const email = document.getElementById('search_email').value;
             fetch(`http://ecs-lb-1105484532.eu-central-1.elb.amazonaws.com/api/user/${email}`, {
-                method: 'GET'
+                method: 'DELETE'
             })
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                var userTableBody = document.getElementById('userTableBody');
-                userTableBody.innerHTML = ''
-                const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${data.email}</td>
-                        <td>${data.allowed_service}</td>
-                    `;
-                    userTableBody.appendChild(row);
+                
             })
             .catch(error => console.error('Error:', error));
         }
