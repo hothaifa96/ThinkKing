@@ -940,6 +940,8 @@ class QuestionDAO:
         connection = get_db_connection()
         cursor = connection.cursor()
         print(f'last_question_id: {last_question_id}')
+        if last_question_id is None:
+            last_question_id = 0
         # Fetch the next 5 questions without their answer options based on the given question_id
         try:
             query = f"""
