@@ -187,7 +187,6 @@ class KidDAO:
         results = cursor.fetchall()
         try:
             res = []
-            print(f'here {results}')
             if isinstance(results, list):
                 for result in results:
                     kid = Kid(*result).to_dict()
@@ -196,7 +195,6 @@ class KidDAO:
                     gender = GenderDAO.get_by_id(kid['gender_id']).gender if kid['gender_id'] is not None else None
                     avatar = AvatarDAO.get_by_id(kid['avatar_id']).avatar if kid['avatar_id'] is not None else None
                     classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid['class_id'] is not None else None
-                    print('classs')
                     sessions = SessionDAO.get_all_by_id(kid['kid_id'])
                     answers_count = set([session['question_id'] for session in sessions])
                     answers_count = len(answers_count)
@@ -1897,7 +1895,10 @@ GROUP BY kid_id, question_id;"""
     @staticmethod
     def get_kid_all_time_statistics(kid_id):
         kid_statistics = dict()  # {"math" : [1 , 20]}
-        answered_questions = SubSubjectDAO.get_kid_all_time_questions(kid_id)
+        try:
+            answered_questions = SubSubjectDAO.get_kid_all_time_questions(kid_id)
+        except:
+            answered_questions=[]
         print(f'answered_questions: {answered_questions}')
         counts = defaultdict(int)
         # Iterate through the data and count the occurrences of each sub_subject_name

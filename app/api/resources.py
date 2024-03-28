@@ -852,11 +852,10 @@ class Contact(Resource):
             return {'Error': 'missing data'}, 400
         try:
             email = ParentDAO.get_by_id(data['parent_id'])
-            print(email)
             if isinstance(email, Parent):
                 receiver_email = email.email
-                subject = 'Test Email'
-                body = 'This is a test email sent using Python.'
+                subject = data['title']
+                body = data['text']
                 r = EmailSender.send_email(receiver_email, subject, body)
                 if isinstance(r, dict):
                     return r
