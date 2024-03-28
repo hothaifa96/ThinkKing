@@ -2,26 +2,21 @@ import pandas as pd
 import math
 
 files = [
-    'ארתמטיקה כתה ד מעודכן.xlsx',
-    'ארתמטיקה כתה ג.xlsx',
-    'ארתמטיקה כתה ד.xlsx',
-    'ידע עולם כתה ו 500 שאלות.xlsx',
-    'ידע עולם כתה ג 500 שאלות.xlsx',
-    'ידע עולם כתה ד 500 שאלות.xlsx',
-    'ידע עולם כתה ה 500 שאלות.xlsx',
-    'ידע עולם כתה ג 100 שאלות.xlsx',
-    'ארתמטיקה כתה ד 500 שאלות.xlsx',
-    'ידע עולם כתה ד 315 שאלות.xlsx',
     'updated_trivia_questions.xlsx',
-    'ידע עולם כתה ג 315 שאלות.xlsx',
-    'ידע עולם כתה ג.xlsx',
-    'c_knowlage.xlsx'   
+    'ארתמטיקה כתה ד מעודכן.xlsx',
+    'ארתמטיקה כתה ו.xlsx',
+    'ידע עולם כתה ד 500 שאלות.xlsx',
+    'ידע עולם כתה ו 500 שאלות.xlsx',
+    'ארתמטיקה כתה ג.xlsx',
+    'ארתמטיקה כתה ה.xlsx',
+    'ידע עולם כתה ג 500 שאלות.xlsx',
+    'ידע עולם כתה ה 500 שאלות.xlsx',
 ]
 
 for url in files:
     df = pd.read_excel(f'../s3/{url}')
     print(f'../s3/{url}')
-    with open('/Users/hothaifa/Desktop/ThinkKing/hist/sub-subjects.sql', 'a+') as insert_data_file:
+    with open('/Users/hothaifa/Desktop/ThinkKing/sub-subjects.sql', 'a+') as insert_data_file:
         insert_data_file.write(f'-- new file here {url[url.rfind("/") + 1:]}--\n')
         subjects = {}
         for index, row in df.iterrows():
