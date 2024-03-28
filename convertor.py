@@ -42,6 +42,8 @@ for url in files:
                 continue
             question_id = str(int(row.iloc[1]))  # Assuming the second column (index 1) is qouestion_id
             language_id = 1
+            sub_subject_id = int(str(row.iloc[1])[3:6])  # Assuming the second column (index 1) is qouestion_id
+            sub_subject_name = str(row.iloc[0])
             topic_id = int(str(row.iloc[1])[0])
             c_grade_id = int(question_id[2])  # Set c_grade_id to the last digit of qouestion_id
             level = int(question_id[-1])
@@ -58,7 +60,7 @@ for url in files:
 
             insert_data_file.write(f"""
 INSERT INTO questions (question_id, language_id, topic_id, c_grade_id, level, question_text, explanation, interesting_fact)
-VALUES ('{question_id}', {language_id}, {topic_id}, {c_grade_id}, {level}, '{question_text}', '{explanation}', '{interesting_fact}') ON CONFLICT (question_id) DO UPDATE SET language_id = {language_id} ,topic_id= {topic_id},c_grade_id ={c_grade_id},level={level},question_text='{question_text}',explanation='{explanation}',interesting_fact='{interesting_fact}';
+VALUES ('{question_id}', {language_id}, {topic_id}, {c_grade_id}, {sub_subject_id}, '{question_text}', '{explanation}', '{interesting_fact}') ON CONFLICT (question_id) DO UPDATE SET language_id = {language_id} ,topic_id= {topic_id},c_grade_id ={c_grade_id},level={level},question_text='{question_text}',explanation='{explanation}',interesting_fact='{interesting_fact}';
 """)
 
             q_id = 3 if topic_id == 3 or topic_id ==4  else 4
