@@ -557,11 +557,14 @@ class Statistics(Resource):
 
 class Kids(Resource):
     def get(self, id):
-        kids_list = KidDAO.get_by_parent_id(id)
-        if len(kids_list) > 0:
-            return make_response(kids_list, 200)
-        else:
-            return {"message": 'no kids found'}, 400
+        try:
+            kids_list = KidDAO.get_by_parent_id(id)
+            if len(kids_list) > 0:
+                return make_response(kids_list, 200)
+            else:
+                return {"message": 'no kids found'}, 400
+        except Exception as e:
+            return {"error": f'{str(e)}'}, 400
 
     def delete(self, id):
         res = KidDAO.delete_kid(id)
@@ -911,10 +914,8 @@ class GQuestions(Resource):
         try:
             kid = KidDAO.get_by_id_for_question(data.get('kid_id'))
             question_id = data.get('last_question_id')
-            print(type(question_id))
             if question_id == '':
                 question_id = KidQuestionDAO.get(data.get('kid_id'))
-
             if data.get('topic') != '':
                 topic = 1 if data.get('topic') == 'math' else 4 if data.get('topic') == 'english' else 3
             else:
@@ -1031,6 +1032,7 @@ class Stat(Resource):
         data = request.json
         if check_keys(data, 'kid_id'):
             return {'Error': 'missing data'}, 400
+
         sub_subject = SubSubjectDAO.get_kid_all_time_statistics(data['kid_id'])
         return sub_subject
 

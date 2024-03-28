@@ -346,7 +346,6 @@ class KidDAO:
         try:
             cursor.execute(query)
             result = cursor.fetchone()
-            print('gegege', result)
             if result:
                 kid_id, parent_id, first_name, gender_id, school_id, c_grade_id, crowns, time_per_correct_answer, current_correct_seq, avatar_id, unlock, available_screen_time, created_at, learning_speed, class_id = result
                 kid = Kid(
@@ -1908,7 +1907,7 @@ GROUP BY kid_id, question_id;"""
         print(f'counts: {counts}')
         for sub_subject_name, count in counts.items():
             all_questions = SubSubjectDAO.get_topic_all_questions_by_sub_subject_name(sub_subject_name)
-            if count <= all_questions:
+            if count < all_questions:
                 kid_statistics[sub_subject_name] = [count, all_questions]
         return kid_statistics
 
