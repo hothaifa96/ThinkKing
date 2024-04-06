@@ -36,6 +36,7 @@ api.add_resource(Daily,'/daily')
 api.add_resource(Stat,'/static')
 api.add_resource(UsersApi,'/users')
 api.add_resource(UserApi,'/user/<string:email>','/user')
+
 @app.route('/')
 def index():
     return """<!DOCTYPE html>
@@ -198,7 +199,7 @@ def log_response_info(response):
         receiver_email = 'thinkigsuppportfsafasc@gmail.com'
         subject = 'error on the api'
         body = f'{r} -> {re}'
-        #r = EmailSender.send_email(receiver_email, subject, body)
+        # r = EmailSender.send_email(receiver_email, subject, body)
     return response
 
 if __name__ == '__main__':
