@@ -2011,9 +2011,9 @@ class WhitelistUsersDAO:
         finally:
             connection.close()
 
-class CheckForEmail:
+class SendEmail:
     @staticmethod
-    def check_Questions(kid_id):
+    def send_email_question_count(kid_id):
         # Database interaction logic here (insert into the 'sessions' table)
         connection = get_db_connection()
         query = f"""SELECT count(distinct question_id)
@@ -2051,6 +2051,48 @@ where kid_id = {kid_id}) and kids.kid_id={kid_id}''')
             elif result == 1500:
                 data['number_of_quesstions']=1500
                 r = send_api_mail_with_template(to_address=data['email'],subject=subject,values=data) 
+            return r
+        
+        except Exception as e:
+            return {'message': str(e)}
+        finally:
+            connection.close()
+    @staticmethod
+    def send_email_5_in_row(kid_id):
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        try:
+            # {{tempates.get_kid_all_time_questions}}
+            subject= '5row'
+            cursor.execute(f''' select distinct email,parents.first_name,kids.first_name from parents
+	parents  join kids 
+	on
+	parents.parent_id = kids.parent_id
+	where parents.parent_id =(SELECT parent_id from kids
+where kid_id = {kid_id}) and kids.kid_id={kid_id}''')
+            data = dict(zip(['email', 'parent_name', 'kid_name'], cursor.fetchone()))
+            r = send_api_mail_with_template(data['email'],subject,data)
+            return r
+        except Exception as e:
+            return {'message': str(e)}
+        finally:
+            connection.close()
+
+    @staticmethod
+    def send_email_subject_90(kid_id,sub_subject):
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        try:
+            subject= '90+'
+            cursor.execute(f''' select distinct email,parents.first_name,kids.first_name from parents
+	parents  join kids 
+	on
+	parents.parent_id = kids.parent_id
+	where parents.parent_id =(SELECT parent_id from kids
+where kid_id = {kid_id}) and kids.kid_id={kid_id}''')
+            data = dict(zip(['email', 'parent_name', 'kid_name'], cursor.fetchone()))
+            data['sub_subject_name'] = sub_subject
+            r = send_api_mail_with_template(data['email'],subject,data)
             return r
         except Exception as e:
             return {'message': str(e)}

@@ -610,7 +610,9 @@ class Crowns(Resource):
         if check_keys(kid, 'kid_id', 'crowns'):
             return {'Error': 'missing data'}, 400
         response = KidDAO.update_crowns(kid['kid_id'], kid['crowns'])
-
+        if response['success']:
+            sent=SendEmail.send_email_5_in_row(kid['kid_id'])
+            print(f'email for {kid['kid_id']} with status {sent}')
         return make_response(response, 200)
 
 
@@ -856,7 +858,7 @@ class Contact(Resource):
         try:
             email = ParentDAO.get_by_id(data['parent_id'])
             if isinstance(email, Parent):
-                receiver_email = email.email
+                receiver_email = 'thinkingwgsupp@gmail.com'
                 subject = data['title']
                 body = data['text']
                 r = EmailSender.send_email(receiver_email, subject, body)
@@ -887,8 +889,8 @@ class Answers(Resource):
                 KidQuestionDAO.update(data['kid_id'], math_q=data['question_id'])
 
             result = SessionDAO.create(session)
-
-            
+            sent=SendEmail.send_email_question_count(data['kid_id'])
+            print(f'sendint email to {data['kid_id']} status {sent}')
             if result:
                 return {'status': 'success', 'message': 'Done'}
             else:

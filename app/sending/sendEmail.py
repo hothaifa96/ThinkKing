@@ -9,8 +9,8 @@ class EmailSender:
     def send_email(receiver_email, subject, body):
         smtp_server = 'smtp.gmail.com'
         smtp_port = 465
-        sender_email = 'thinkigsuppportfsafasc@gmail.com'
-        sender_password = 'biyq dowe wbbz ipkt'
+        sender_email = 'thinkingwgsupp@gmail.com'
+        sender_password = 'hmlp dtgi rudc whpd'
         message = MIMEMultipart()
         message["From"] = sender_email
         message["To"] = receiver_email
@@ -35,7 +35,7 @@ class EmailSender:
 
 # Example usage:
 if __name__ == "__main__":
-    receiver_email = 'email@example.com'
+    receiver_email = 'thinkingwgsupp@gmail.com'
     subject = 'Test Email'
     body = 'This is a test email sent using Python.'
 
