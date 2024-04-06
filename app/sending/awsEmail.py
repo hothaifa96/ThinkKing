@@ -5,7 +5,7 @@ from email.mime.multipart import MIMEMultipart
 
 def send_api_mail_with_template(to_address, subject,values,title='New Achivment'):
     subjects_html={'finished_with_90':'''
-<!DOCTYPE html>
+<!DOCTYPE html >
 <html lang="he">
 <head>
 <meta charset="UTF-8">
@@ -22,7 +22,7 @@ def send_api_mail_with_template(to_address, subject,values,title='New Achivment'
 </style>
 </head>
 <body>
-<div class="container">
+<div dir="rtl" class="container">
   <h1>מטרה נוספת הושגה ב-'Thinking App'!</h1>
   <div class="content">
     <img src="https://thinking-images.s3.eu-central-1.amazonaws.com/mail90.jpeg" alt="הישג נוסף" class="achievement-img">
@@ -56,7 +56,7 @@ def send_api_mail_with_template(to_address, subject,values,title='New Achivment'
 </style>
 </head>
 <body>
-<div class="container">
+<div dir="rtl" class="container">
   <h1>🎉 ברכות! 100 שאלות וסופרים 🎉</h1>
   <div class="content">
     <img src="https://thinking-images.s3.eu-central-1.amazonaws.com/100questions.jpeg" alt="השלמת 100 שאלות" class="achievement-img">
@@ -90,7 +90,7 @@ def send_api_mail_with_template(to_address, subject,values,title='New Achivment'
 </style>
 </head>
 <body>
-<div class="container">
+<div dir="rtl" class="container">
   <h1>🎉 ברכות! 200 שאלות וסופרים 🎉</h1>
   <div class="content">
     <img src="https://thinking-images.s3.eu-central-1.amazonaws.com/200questions.jpeg" alt="השלמת 100 שאלות" class="achievement-img">
@@ -124,7 +124,7 @@ def send_api_mail_with_template(to_address, subject,values,title='New Achivment'
 </style>
 </head>
 <body>
-<div class="container">
+<div dir="rtl" class="container">
   <h1>🎉 ברכות! 500 שאלות וסופרים 🎉</h1>
   <div class="content">
     <img src="https://thinking-images.s3.eu-central-1.amazonaws.com/500questions.jpeg" alt="השלמת 100 שאלות" class="achievement-img">
@@ -158,7 +158,7 @@ def send_api_mail_with_template(to_address, subject,values,title='New Achivment'
 </style>
 </head>
 <body>
-<div class="container">
+<div dir="rtl" class="container">
   <h1>🎉 ברכות! 750 שאלות וסופרים 🎉</h1>
   <div class="content">
     <img src="https://thinking-images.s3.eu-central-1.amazonaws.com/750questions.jpeg" alt="השלמת 100 שאלות" class="achievement-img">
@@ -192,7 +192,7 @@ def send_api_mail_with_template(to_address, subject,values,title='New Achivment'
 </style>
 </head>
 <body>
-<div class="container">
+<div dir="rtl" class="container">
   <h1>🎉 ברכות! 1000 שאלות וסופרים 🎉</h1>
   <div class="content">
     <img src="https://thinking-images.s3.eu-central-1.amazonaws.com/1000questions.jpeg" alt="השלמת 100 שאלות" class="achievement-img">
@@ -226,7 +226,7 @@ def send_api_mail_with_template(to_address, subject,values,title='New Achivment'
 </style>
 </head>
 <body>
-<div class="container">
+<div dir="rtl" class="container">
   <h1>🎉 ברכות! 1500 שאלות וסופרים 🎉</h1>
   <div class="content">
     <img src="https://thinking-images.s3.eu-central-1.amazonaws.com/1500questions.jpeg" alt="השלמת 100 שאלות" class="achievement-img">
@@ -260,7 +260,7 @@ def send_api_mail_with_template(to_address, subject,values,title='New Achivment'
 </style>
 </head>
 <body>
-<div class="container">
+<div dir="rtl" class="container">
   <h1>🌟 חדשות נהדרות מהיום ב-'Thinking App'! 🌟</h1>
   <div class="content">
     <img src="https://thinking-images.s3.eu-central-1.amazonaws.com/5inrow.jpeg" alt="הישג מרשים!" class="achievement-img">
@@ -328,6 +328,6 @@ if  __name__=='__main__':
     values = {"sub_subject_name":'לולאה',
               "parent_name":'יוסי',
               "kid_name":'קים',
-              "number_of_quesstions":100} 
-    r = send_api_mail_with_template('thinkingwgsupp@gmail.com','5row',values)
+              "number_of_quesstions":1500} 
+    r = send_api_mail_with_template('thinkingwgsupp@gmail.com','questions',values)
     print(r)
