@@ -2,22 +2,21 @@ import pandas as pd
 import math
 
 files = [
-    'updated_trivia_questions.xlsx',
-    'ארתמטיקה כתה ד מעודכן.xlsx',
-    'ארתמטיקה כתה ו.xlsx',
-    'ידע עולם כתה ד 500 שאלות.xlsx',
-    'ידע עולם כתה ו 500 שאלות.xlsx',
-    'ארתמטיקה כתה ג.xlsx',
-    'ארתמטיקה כתה ה.xlsx',
-    'ידע עולם כתה ג 500 שאלות.xlsx',
-    'ידע עולם כתה ה 500 שאלות.xlsx',
+    './s3/ידע עולם כתה ג 500 שאלות.xlsx',
+    './s3/ידע עולם כתה ה 500 שאלות.xlsx',
+    './s3/ידע עולם כתה ו 500 שאלות.xlsx',
+    './s3/ידע עולם כתה ד 500 שאלות.xlsx',
+    './s3/ארתמטיקה כתה ג.xlsx',
+    './s3/ארתמטיקה כתה ד.xlsx',
+    './s3/ארתמטיקה כתה ה.xlsx',
+    './s3/ארתמטיקה כתה ו.xlsx',
 ]
 
 
 for url in files:
-    df = pd.read_excel(f'../s3/{url}')
-    print(f'../s3/{url}')
-    with open(f'/Users/hothaifa/Desktop/ThinkKing/hist/new.sql', 'a+') as insert_data_file:
+    print(f'{url}')
+    df = pd.read_excel(f'{url}')
+    with open(f'./code.sql', 'a+') as insert_data_file:
         insert_data_file.write(f'-- new file here {url[url.rfind("/") + 1:]}--\n')
 
         # Insert data into topics table (avoid duplicates)

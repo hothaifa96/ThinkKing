@@ -51,7 +51,7 @@ def sync_xlsx_files_from_s3(bucket_arn):
 
 if __name__ == "__main__":
     # Replace 'path/to/your/local/directory' with the actual path to your local directory
-    directory_path = '../s3'
+    directory_path = '/Users/hothaifa/Desktop/s3'
 
     # Scan the local directory for .xlsx files
     xlsx_files_list = scan_local_directory(directory_path)
