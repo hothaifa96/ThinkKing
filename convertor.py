@@ -2,13 +2,13 @@ import pandas as pd
 import math
 
 files = [
-    './s3/ידע עולם כתה ג 500 שאלות.xlsx',
-    './s3/ידע עולם כתה ה 500 שאלות.xlsx',
+    # './s3/ידע עולם כתה ג 500 שאלות.xlsx',
+    # './s3/ידע עולם כתה ה 500 שאלות.xlsx',
     './s3/ידע עולם כתה ו 500 שאלות.xlsx',
-    './s3/ידע עולם כתה ד 500 שאלות.xlsx',
-    './s3/ארתמטיקה כתה ג.xlsx',
-    './s3/ארתמטיקה כתה ד.xlsx',
-    './s3/ארתמטיקה כתה ה.xlsx',
+    # './s3/ידע עולם כתה ד 500 שאלות.xlsx',
+    # './s3/ארתמטיקה כתה ג.xlsx',
+    # './s3/ארתמטיקה כתה ד.xlsx',
+    # './s3/ארתמטיקה כתה ה.xlsx',
     './s3/ארתמטיקה כתה ו.xlsx',
 ]
 
@@ -16,7 +16,7 @@ files = [
 for url in files:
     print(f'{url}')
     df = pd.read_excel(f'{url}')
-    with open(f'./code.sql', 'a+') as insert_data_file:
+    with open(f'./vav.sql', 'a+') as insert_data_file:
         insert_data_file.write(f'-- new file here {url[url.rfind("/") + 1:]}--\n')
 
         # Insert data into topics table (avoid duplicates)
@@ -67,7 +67,7 @@ VALUES ('{question_id}', {language_id}, {topic_id}, {c_grade_id}, {sub_subject_i
                                                          "`").strip()  # Assuming the fourth column (index 3) is right_answer
             insert_data_file.write(f"""
 INSERT INTO answer_options (question_id, correct_answer, answer_text)
-VALUES ('{question_id}', TRUE, '{correct_answer}') ;
+VALUES ('{question_id}', TRUE, '{correct_answer}') ON CONFLICT (topic_id) DO NOTHING ;
 """)
 
             q_id = 4 if topic_id == 3 or topic_id ==4 else 5
@@ -80,7 +80,7 @@ VALUES ('{question_id}', TRUE, '{correct_answer}') ;
             for i, answer in enumerate(wrong_answers):
                 insert_data_file.write(f"""
 INSERT INTO answer_options (question_id, correct_answer, answer_text)
-VALUES ('{question_id}', FALSE, '{answer}')  ;
+VALUES ('{question_id}', FALSE, '{answer}')  ON CONFLICT (topic_id) DO NOTHING ;
 """)
     
 #     insert_data_file.write("""DELETE FROM answer_options
