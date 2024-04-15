@@ -612,7 +612,7 @@ class Crowns(Resource):
         response = KidDAO.update_crowns(kid['kid_id'], kid['crowns'])
         if response['success']:
             sent=SendEmail.send_email_5_in_row(kid['kid_id'])
-            print(f'email for {kid['kid_id']} with status {sent}')
+            print(f'email for {kid["kid_id"]} with status {sent}')
         return make_response(response, 200)
 
 
@@ -890,7 +890,7 @@ class Answers(Resource):
 
             result = SessionDAO.create(session)
             sent=SendEmail.send_email_question_count(data['kid_id'])
-            print(f'sendint email to {data['kid_id']} status {sent}')
+            print(f'sendint email to {data["kid_id"]} status {sent}')
             if result:
                 return {'status': 'success', 'message': 'Done'}
             else:
@@ -917,25 +917,26 @@ class GQuestions(Resource):
         try:
             kid = KidDAO.get_by_id_for_question(data.get('kid_id'))
             question_id = data.get('last_question_id')
+            print(f'last question id = {question_id}')
             if question_id == '':
+                print('here')
                 question_id = KidQuestionDAO.get(data.get('kid_id'))
+                print(question_id)
             if data.get('topic') != '':
                 topic = 1 if data.get('topic') == 'math' else 4 if data.get('topic') == 'english' else 3
             else:
                 topic = question_id[0]
             if isinstance(question_id, dict):
                 question_id = question_id[f'{topic}'] if question_id[f'{topic}'] is not None else "1"
-            print(f'question id = {question_id}\ntopic={topic}')
             sub_subject = SubSubjectDAO.get_topic_question(question_id).get('sub_subject_id')
+            print(f'question id = {question_id}\ntopic={topic}\nsub_subject-{sub_subject}')
             if sub_subject is not None :
                 sub_subjects = [sub_subject, sub_subject + 1]
             else:
-                sub_subjects = [0, 1]
+                sub_subjects = [3001, 3002]
+            print(sub_subjects)
             if kid.get('c_grade_id') is None:
-                raise Exception(f'{kid}')
-            print(f'sub subject = {sub_subjects}')
-            print(f'kid = {kid}')
-            print(f"c_grade_id = {kid.get('c_grade_id')}")
+                raise Exception(f'c_grade_id is none -> {kid}')
             questions_list = QuestionDAO.get_by_kid(topic, kid['c_grade_id'], question_id, sub_subjects)
             print(f"questions_list = {questions_list}")
 

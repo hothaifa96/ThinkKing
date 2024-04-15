@@ -945,16 +945,27 @@ class QuestionDAO:
             last_question_id = 0
         # Fetch the next 5 questions without their answer options based on the given question_id
         try:
-            query = f"""
+            if c_grade_id is None:
+                query = f"""
             SELECT *
             FROM questions
             WHERE question_id > '{last_question_id}'
             and topic_id = {topic_id}
-            and c_grade_id = {c_grade_id}
             and  level = ANY(ARRAY[{sub_subjects[0]%1000},{sub_subjects[1]%1000}]) 
             ORDER BY question_id
             LIMIT 5;
             """
+            else:
+                query = f"""
+                            SELECT *
+                            FROM questions
+                            WHERE question_id > '{last_question_id}'
+                            and topic_id = {topic_id}
+                            and c_grade_id = {c_grade_id}
+                            and  level = ANY(ARRAY[{sub_subjects[0] % 1000},{sub_subjects[1] % 1000}]) 
+                            ORDER BY question_id
+                            LIMIT 5;
+                            """
             cursor.execute(query)
             result = cursor.fetchall()
             questions = []
