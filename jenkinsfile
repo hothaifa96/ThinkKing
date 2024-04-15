@@ -1,50 +1,57 @@
 pipeline {
-    agent any
-
     environment {
-        AWS_DEFAULT_REGION = 'your_aws_region'
-        BUCKET_NAME = 'your_s3_bucket'
-        FILE_NAME = 'your_file.xlsx'
-        DATABASE_URL = 'your_database_url'
-        DATABASE_USER = 'your_database_user'
-        DATABASE_PASSWORD = 'your_database_password'
+        SERVER_IMAGE = 'red_proj_server:v1'
+        AWS_DEFAULT_REGION= 'eu-central-1'
+        AWS_ACCOUNT_ID ='339713109533'
+        ECR_REPO_NAME='thinking-api'
+        DOCKER_IMAGE_TAG = "${ECR_REPO_NAME}:${env.BUILD_NUMBER}"
     }
-
+    agent any
     stages {
-        stage('Install Dependencies') {
+        stage('Build Docker Image') {
+            steps {
+                // Build steps for the server
+                script{
+                    echo 'Building Docker Image...'
+                    sh "docker build -t ${DOCKER_IMAGE_TAG} ."
+                }
+            }
+        }
+        stage('push the image') {
             steps {
                 script {
-                    sh 'pip install -r requirements.txt'
+                        echo 'Pushing Docker Image to ECR...'
+                         withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: 'ecr-credentials',
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ]]) {
+                            sh "echo AWS_ACCESS_KEY_ID ${AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY ${AWS_SECRET_ACCESS_KEY}"
+                            sh "echo ${AWS_SECRET_ACCESS_KEY} | aws ecr get-login-password --region ${AWS_DEFAULT_REGION} |  docker login --username AWS --password-stdin 339713109533.dkr.ecr.eu-central-1.amazonaws.com/thinking-api"
+                            sh "docker images"
+                            sh "docker tag ${DOCKER_IMAGE_TAG} 339713109533.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:latest"
+                            sh "docker push 339713109533.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:latest"
+                         }
                 }
             }
         }
 
-        stage('Fetch XLSX from S3') {
+         stage('update the cluster') {
             steps {
                 script {
-                    sh 'aws s3 cp s3://${BUCKET_NAME}/${FILE_NAME} .'
+                        echo 'Pushing Docker Image to ECR...'
+                         withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: 'ecr-credentials',
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ]]) {
+                            sh "aws ecs update-service --cluster Thnking-api --service api-service-1 --force-new-deployment --region eu-central-1"
+                         }
                 }
             }
         }
 
-        stage('Run Converter Script') {
-            steps {
-                script {
-                    sh 'python converter.py'
-                }
-            }
-        }
-
-        stage('Install psql and Login to Server') {
-            steps {
-                script {
-                    // Install psql
-                    sh 'apt-get update && apt-get install -y postgresql-client'
-
-                    // Log in to the database server
-                    sh "psql -h ${DATABASE_URL} -U ${DATABASE_USER} -d ${DATABASE_NAME} -c 'your_sql_command;'"
-                }
-            }
-        }
     }
 }
