@@ -946,6 +946,10 @@ class GQuestions(Resource):
             for question in questions_list:
                 question['answers'] = AnswerOptionDAO.get_by_question_id(question['question_id'])
 
+            # if the question's list empty return error message
+            if len(questions_list) == 0:
+                raise Exception("no question's to show")
+
             questions_list.append(
                 {'rate': {'all questions': QuestionDAO.get_rate(data['kid_id'], topic, kid['c_grade_id']),
                           'kid progress': QuestionDAO.get_rate_kid(data['kid_id'], topic)}

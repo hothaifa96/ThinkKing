@@ -945,11 +945,11 @@ class QuestionDAO:
             last_question_id = 0
         # Fetch the next 5 questions without their answer options based on the given question_id
         try:
-            if c_grade_id is None:
+            if topic_id != 1 :
                 query = f"""
             SELECT *
             FROM questions
-            WHERE question_id > '{last_question_id}'
+            WHERE question_id > '{last_question_id}' 
             and topic_id = {topic_id}
             and  level = ANY(ARRAY[{sub_subjects[0]%1000},{sub_subjects[1]%1000}]) 
             ORDER BY question_id
