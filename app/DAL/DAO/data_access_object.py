@@ -951,10 +951,10 @@ class QuestionDAO:
             FROM questions
             WHERE question_id > '{last_question_id}' 
             and topic_id = {topic_id}
-            and  level = ANY(ARRAY[{sub_subjects[0]%1000},{sub_subjects[1]%1000}]) 
             ORDER BY question_id
             LIMIT 5;
             """
+                print(query)
             else:
                 query = f"""
                             SELECT *
@@ -962,7 +962,6 @@ class QuestionDAO:
                             WHERE question_id > '{last_question_id}'
                             and topic_id = {topic_id}
                             and c_grade_id = {c_grade_id}
-                            and  level = ANY(ARRAY[{sub_subjects[0] % 1000},{sub_subjects[1] % 1000}]) 
                             ORDER BY question_id
                             LIMIT 5;
                             """
