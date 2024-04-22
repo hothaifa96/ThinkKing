@@ -301,7 +301,6 @@ class Schools(Resource):
         if check_keys(kid_school, 'kid_id', 'school_id'):
             return {'Error': 'missing data'}, 400
         res = KidDAO.add_school(kid_school['kid_id'], kid_school['school_id'])
-        KidQuestionDAO.create_kq(kid_school['kid_id'])
         if res is None:
             return {'message': 'success'}
         else:
@@ -334,6 +333,7 @@ class Classes(Resource):
             return {'Error': 'missing data', 'message': f'missing -- {error} -- key'}, 400
         res = KidDAO.add_grade(kid_grade['kid_id'], kid_grade['grade_id'])
         if res is None:
+            KidQuestionDAO.create_kq(kid_grade)
             return {'message': 'success'}
         else:
             return make_response(jsonify(res), 400)

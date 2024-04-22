@@ -950,6 +950,7 @@ class QuestionDAO:
             SELECT *
             FROM questions
             WHERE question_id > '{last_question_id}' 
+            and question_id < '{topic_id}0{c_grade_id+1}999999'
             and topic_id = {topic_id}
             ORDER BY question_id
             LIMIT 5;
@@ -961,10 +962,11 @@ class QuestionDAO:
                             FROM questions
                             WHERE question_id > '{last_question_id}'
                             and topic_id = {topic_id}
-                            and c_grade_id = {c_grade_id}
+                            and question_id < '{topic_id}0{c_grade_id+1}999999'
                             ORDER BY question_id
                             LIMIT 5;
                             """
+            print(query)
             cursor.execute(query)
             result = cursor.fetchall()
             questions = []
@@ -1678,11 +1680,12 @@ class KidQuestionDAO:
         finally:
             connection.close()
     @staticmethod
-    def create_kq(kid_id):
+    def create_kq(kid):
         # Database interaction logic here (insert into the 'sessions' table)
         connection = get_db_connection()
+        print('kid--',kid)
         query = f"""INSERT INTO kid_question (kid_id, last_question_math, last_question_ck)
-VALUES ({kid_id}, '1', '1') ON CONFLICT (kid_id) DO NOTHING ; """
+VALUES ({kid['kid_id']}, '10{kid['grade_id']}', '30{kid['grade_id']}') ON CONFLICT (kid_id) DO NOTHING ; """
         cursor = connection.cursor()
         try:
             cursor.execute(query)
