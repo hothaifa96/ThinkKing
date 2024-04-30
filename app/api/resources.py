@@ -537,8 +537,9 @@ class Code(Resource):
         if parent.email == '':
             return {'status': 'error', "message": "this parent email isn't updated "}
 
-        pin = '{:04d}'.format(random.randint(0, 9999))
-        ParentDAO.update_pin(parent.parent_id, pin)
+        pin = parent.pin_code
+        print('pin---> ',pin)
+        # ParentDAO.update_pin(parent.parent_id, pin)
         receiver_email = parent.email
         subject = 'Password Email'
         body = f'your new pin is {pin}'
