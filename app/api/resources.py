@@ -611,9 +611,9 @@ class Crowns(Resource):
         if check_keys(kid, 'kid_id', 'crowns'):
             return {'Error': 'missing data'}, 400
         response = KidDAO.update_crowns(kid['kid_id'], kid['crowns'])
-        if response['success']:
-            sent=SendEmail.send_email_5_in_row(kid['kid_id'])
-            print(f'email for {kid["kid_id"]} with status {sent}')
+        # if response['success']:
+            # sent=SendEmail.send_email_5_in_row(kid['kid_id'])
+            # print(f'email for {kid["kid_id"]} with status {sent}')
         return make_response(response, 200)
 
 
@@ -883,7 +883,6 @@ class Answers(Resource):
             session = Session(None, data['question_id'], data['kid_id'], data['start_time'], data['completion_time'],
                               data['attempt'] if data['is_correct'] else 0, data['is_correct'], data['attempt'])
             KidDAO.update_screen_time(data.get('kid_id'), data.get('screen_time'))
-            print(f"question {data['question_id']}\nfirst digit= {data['question_id'][0]}")
             if data['question_id'][0] == '3':
                 KidQuestionDAO.update(data['kid_id'], ck_q=data['question_id'])
             else:
