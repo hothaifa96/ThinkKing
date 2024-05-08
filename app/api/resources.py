@@ -889,6 +889,7 @@ class Answers(Resource):
                 KidQuestionDAO.update(data['kid_id'], math_q=data['question_id'])
 
             result = SessionDAO.create(session)
+            print(result)
             sent=SendEmail.send_email_question_count(data['kid_id'])
             print(f'sendint email to {data["kid_id"]} status {sent}')
             if result:

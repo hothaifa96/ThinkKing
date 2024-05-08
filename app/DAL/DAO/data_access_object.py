@@ -1666,10 +1666,10 @@ class KidQuestionDAO:
         cursor = connection.cursor()
         try:
             cursor.execute(query)
-            print(f'query: {query}')
+            print(f'questions for kids query: {query}')
             rows_updated = cursor.rowcount
             connection.commit()
-            print(f'rows_updated {rows_updated}')
+            print(f'questions for kids rows_updated {rows_updated}')
             if rows_updated > 0:
                 return True
             else:
