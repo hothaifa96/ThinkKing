@@ -226,7 +226,6 @@ class KidDAO:
                     kid['last_time_question'] = l_q
                     ids = kid['kid_id']
                     topic = [1, 3]
-                    rates = []
                     for t in topic:
                         if t == 1:
                             kid['math_rate'] = {
