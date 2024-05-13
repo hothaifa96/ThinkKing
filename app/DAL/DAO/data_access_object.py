@@ -191,24 +191,25 @@ class KidDAO:
             if isinstance(results, list):
                 for result in results:
                     kid = Kid(*result).to_dict()
+                    print(kid)
                     school = SchoolDAO.get_by_id(kid['school_id']) if kid['school_id'] is not None else None
                     c_grade = CGradeDAO.get_by_id(kid['c_grade_id']).class_letter if kid['c_grade_id'] is not None else None
                     gender = GenderDAO.get_by_id(kid['gender_id']).gender if kid['gender_id'] is not None else None
                     avatar = AvatarDAO.get_by_id(kid['avatar_id']).avatar if kid['avatar_id'] is not None else None
                     classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid['class_id'] is not None else None
                     sessions = SessionDAO.get_all_by_id(kid['kid_id'])
-                    # answers_count = set([session['question_id'] for session in sessions])
-                    # answers_count = len(answers_count)
-                    # correct_answers_count = 0
-                    # percentage = 0
-                    # for session in sessions:
-                    #     if session['score'] > 0:
-                    #         correct_answers_count += 1
-                    # if answers_count != 0:
-                    #     percentage = int((float(correct_answers_count) / len(sessions)) * 100)
-                    # kid['answers_count'] = answers_count
-                    # kid['correct_answers_count'] = correct_answers_count
-                    # kid['correct_answers_percentage'] = percentage
+                    answers_count = set([session['question_id'] for session in sessions])
+                    answers_count = len(answers_count)
+                    correct_answers_count = 0
+                    percentage = 0
+                    for session in sessions:
+                        if session['score'] > 0:
+                            correct_answers_count += 1
+                    if answers_count != 0:
+                        percentage = int((float(correct_answers_count) / len(sessions)) * 100)
+                    kid['answers_count'] = answers_count
+                    kid['correct_answers_count'] = correct_answers_count
+                    kid['correct_answers_percentage'] = percentage
                     del kid['school_id']
                     kid['school'] = school
                     c_grade_id = kid['c_grade_id']
@@ -225,7 +226,6 @@ class KidDAO:
                     kid['last_time_question'] = l_q
                     ids = kid['kid_id']
                     topic = [1, 3]
-
                     rates = []
                     for t in topic:
                         if t == 1:
@@ -1188,12 +1188,14 @@ class SchoolDAO:
     def get_by_id(school_id):
         # Database interaction logic here (select from the 'schools' table by ID)
         if school_id is not None:
+            print(school_id)
             connection = get_db_connection()
             query = f"SELECT * FROM schools WHERE school_id = {school_id}"
             cursor = connection.cursor()
             try:
                 cursor.execute(query)
                 result = cursor.fetchone()
+                print(result)
                 return School(*result).school_id
 
             except psycopg2.Error as e:
