@@ -197,18 +197,18 @@ class KidDAO:
                     avatar = AvatarDAO.get_by_id(kid['avatar_id']).avatar if kid['avatar_id'] is not None else None
                     classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid['class_id'] is not None else None
                     sessions = SessionDAO.get_all_by_id(kid['kid_id'])
-                    answers_count = set([session['question_id'] for session in sessions])
-                    answers_count = len(answers_count)
-                    correct_answers_count = 0
-                    percentage = 0
-                    for session in sessions:
-                        if session['score'] > 0:
-                            correct_answers_count += 1
-                    if answers_count != 0:
-                        percentage = int((float(correct_answers_count) / len(sessions)) * 100)
-                    kid['answers_count'] = answers_count
-                    kid['correct_answers_count'] = correct_answers_count
-                    kid['correct_answers_percentage'] = percentage
+                    # answers_count = set([session['question_id'] for session in sessions])
+                    # answers_count = len(answers_count)
+                    # correct_answers_count = 0
+                    # percentage = 0
+                    # for session in sessions:
+                    #     if session['score'] > 0:
+                    #         correct_answers_count += 1
+                    # if answers_count != 0:
+                    #     percentage = int((float(correct_answers_count) / len(sessions)) * 100)
+                    # kid['answers_count'] = answers_count
+                    # kid['correct_answers_count'] = correct_answers_count
+                    # kid['correct_answers_percentage'] = percentage
                     del kid['school_id']
                     kid['school'] = school
                     c_grade_id = kid['c_grade_id']
@@ -235,7 +235,7 @@ class KidDAO:
                             kid['common_knowledge_rate'] = {
                                 QuestionDAO.get_rate_kid(ids, t): QuestionDAO.get_rate(ids, t, c_grade_id)}
 
-                    kid['progress'] = SubSubjectDAO.get_kid_all_time_statistics(kid['kid_id'])
+                    # kid['progress'] = SubSubjectDAO.get_kid_all_time_statistics(kid['kid_id'])
                     kid['last_questions'] = qss
                     res.append(kid)
             return res
@@ -1187,15 +1187,14 @@ class SchoolDAO:
     @staticmethod
     def get_by_id(school_id):
         # Database interaction logic here (select from the 'schools' table by ID)
-        if school_id is None:
+        if school_id is not None:
             connection = get_db_connection()
             query = f"SELECT * FROM schools WHERE school_id = {school_id}"
             cursor = connection.cursor()
             try:
                 cursor.execute(query)
                 result = cursor.fetchone()
-                print('$$$$$$', result)
-                return School(*result)
+                return School(*result).school_id
 
             except psycopg2.Error as e:
                 print("Error fetching school by ID:", e)

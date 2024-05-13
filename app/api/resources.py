@@ -230,6 +230,9 @@ class ParentLogin(Resource):
             return {'Error': 'missing data'}, 400
 
         parent = ParentDAO.get_by_email(parent_credentials['email'])
+        print('##########################')
+        print()
+        print(parent.to_dict())
         if parent.email == parent_credentials['email'] and \
                 parent.password == parent_credentials['password']:
             response = make_response(parent.to_dict(), 200)
@@ -237,7 +240,6 @@ class ParentLogin(Resource):
             return response
         else:
             return 'wrong credentials', 400
-    # TODO add jwt coding
 
 
 class Kid(Resource):
