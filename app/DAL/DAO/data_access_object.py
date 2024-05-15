@@ -234,7 +234,7 @@ class KidDAO:
                             kid['common_knowledge_rate'] = {
                                 QuestionDAO.get_rate_kid(ids, t): QuestionDAO.get_rate(ids, t, c_grade_id)}
 
-                    # kid['progress'] = SubSubjectDAO.get_kid_all_time_statistics(kid['kid_id'])
+                    kid['progress'] = SubSubjectDAO.get_kid_all_time_statistics(kid['kid_id'])
                     kid['last_questions'] = qss
                     res.append(kid)
             return res
