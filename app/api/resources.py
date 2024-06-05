@@ -901,6 +901,22 @@ class Answers(Resource):
             return result, 400
 
 
+class Mail(Resource):
+
+    def post(self):
+        data = request.json
+        if check_keys(data, 'kid_id'):
+            return {'Error': 'missing data'}, 400
+        try:
+            sent=SendEmail.send_email_question_count(data['kid_id'])
+            print(f'sending email to {data["kid_id"]} status {sent}')
+            if sent != '':
+                return {'status': 'success', 'message': 'Done'}
+            else:
+                raise Exception(sent)
+        except:
+            return sent, 400
+
 class GetQuestions(Resource):
 
     def get(self, id='303001100'):

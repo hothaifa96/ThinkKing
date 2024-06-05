@@ -2037,9 +2037,8 @@ FROM sessions
 WHERE kid_id = {kid_id}"""
         cursor = connection.cursor()
         try:
-            # {{tempates.get_kid_all_time_questions}}
             cursor.execute(query)
-            result = cursor.fetchall()
+            result = cursor.fetchone()[0]
             subject = 'questions'
             cursor.execute(f''' select distinct email,parents.first_name,kids.first_name from parents
 	parents  join kids 
