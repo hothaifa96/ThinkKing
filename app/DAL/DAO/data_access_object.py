@@ -193,10 +193,12 @@ class KidDAO:
                     kid = Kid(*result).to_dict()
                     print(kid)
                     school = SchoolDAO.get_by_id(kid['school_id']) if kid['school_id'] is not None else None
-                    c_grade = CGradeDAO.get_by_id(kid['c_grade_id']).class_letter if kid['c_grade_id'] is not None else None
+                    c_grade = CGradeDAO.get_by_id(kid['c_grade_id']).class_letter if kid[
+                                                                                         'c_grade_id'] is not None else None
                     gender = GenderDAO.get_by_id(kid['gender_id']).gender if kid['gender_id'] is not None else None
                     avatar = AvatarDAO.get_by_id(kid['avatar_id']).avatar if kid['avatar_id'] is not None else None
-                    classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid['class_id'] is not None else None
+                    classs = ClassDAO.get_by_id(kid['class_id']).to_dict()['class_name_id'] if kid[
+                                                                                                   'class_id'] is not None else None
                     sessions = SessionDAO.get_all_by_id(kid['kid_id'])
                     answers_count = set([session['question_id'] for session in sessions])
                     answers_count = len(answers_count)
@@ -255,7 +257,7 @@ class KidDAO:
     @staticmethod
     def delete_kid(kid_id):
         connection = get_db_connection()
-        cursor=connection.cursor()
+        cursor = connection.cursor()
         try:
             delete_queries = [
                 "DELETE FROM kid_question WHERE kid_id = %s;",
@@ -336,7 +338,6 @@ class KidDAO:
         finally:
             cursor.close()
             connection.close()
-
 
     @staticmethod
     def get_by_id_for_question(kid_id):
@@ -861,37 +862,37 @@ class ParentDAO:
                 for query in delete_queries:
                     for kid_id in kid_ids:
                         cursor.execute(query, (kid_id,))
-#             if isinstance(results, list):
-#                 for result in results:
-#                     kid = Kid(*result)
-#                     res.append(kid)
-#             for kidd in res:
-#                 query = f"""
-# DELETE FROM kid_question
-#     WHERE kid_id = {kidd.kid_id};
-#
-# DELETE FROM sessions
-#     WHERE kid_id = {kidd.kid_id};
-# DELETE FROM kid_subjects
-#     WHERE kid_id = {kidd.kid_id};
-#
-# DELETE FROM kids
-#     WHERE kid_id = {kidd.kid_id};
-#
-# DELETE FROM kids WHERE kid_id={kidd.kid_id};"""
-#             cursor.execute(query)
-#             # Check if the parent exists
-#             check_query = f"SELECT * FROM parents WHERE parent_id = {parent_id};"
-#             cursor.execute(check_query)
-#             result = cursor.fetchone()
-#
-#             if result:
-#                 KidDAO.get_by_parent_id(parent_id)
-#                 # Parent exists, proceed with deletion
-#                 delete_query = f""" DELETE FROM kids WHERE parent_id ={parent_id};
-#                 DELETE FROM parents WHERE parent_id = {parent_id};"""
-#                 cursor.execute(delete_query)
-#                 connection.commit()
+                #             if isinstance(results, list):
+                #                 for result in results:
+                #                     kid = Kid(*result)
+                #                     res.append(kid)
+                #             for kidd in res:
+                #                 query = f"""
+                # DELETE FROM kid_question
+                #     WHERE kid_id = {kidd.kid_id};
+                #
+                # DELETE FROM sessions
+                #     WHERE kid_id = {kidd.kid_id};
+                # DELETE FROM kid_subjects
+                #     WHERE kid_id = {kidd.kid_id};
+                #
+                # DELETE FROM kids
+                #     WHERE kid_id = {kidd.kid_id};
+                #
+                # DELETE FROM kids WHERE kid_id={kidd.kid_id};"""
+                #             cursor.execute(query)
+                #             # Check if the parent exists
+                #             check_query = f"SELECT * FROM parents WHERE parent_id = {parent_id};"
+                #             cursor.execute(check_query)
+                #             result = cursor.fetchone()
+                #
+                #             if result:
+                #                 KidDAO.get_by_parent_id(parent_id)
+                #                 # Parent exists, proceed with deletion
+                #                 delete_query = f""" DELETE FROM kids WHERE parent_id ={parent_id};
+                #                 DELETE FROM parents WHERE parent_id = {parent_id};"""
+                #                 cursor.execute(delete_query)
+                #                 connection.commit()
                 delete_kids_query = "DELETE FROM kids WHERE parent_id = %s"
                 cursor.execute(delete_kids_query, (parent_id,))
                 delete_parent_query = "DELETE FROM parents WHERE parent_id = %s"
@@ -936,7 +937,7 @@ class QuestionDAO:
             connection.close()
 
     @staticmethod
-    def get_by_kid(topic_id, c_grade_id, last_question_id,sub_subjects):
+    def get_by_kid(topic_id, c_grade_id, last_question_id, sub_subjects):
         connection = get_db_connection()
         cursor = connection.cursor()
         print(f'last_question_id: {last_question_id}')
@@ -944,12 +945,12 @@ class QuestionDAO:
             last_question_id = 0
         # Fetch the next 5 questions without their answer options based on the given question_id
         try:
-            if topic_id != 1 :
+            if topic_id != 1:
                 query = f"""
             SELECT *
             FROM questions
             WHERE question_id > '{last_question_id}' 
-            and question_id < '{topic_id}0{c_grade_id+1}999999'
+            and question_id < '{topic_id}0{c_grade_id + 1}999999'
             and topic_id = {topic_id}
             ORDER BY question_id
             LIMIT 5;
@@ -961,7 +962,7 @@ class QuestionDAO:
                             FROM questions
                             WHERE question_id > '{last_question_id}'
                             and topic_id = {topic_id}
-                            and question_id < '{topic_id}0{c_grade_id+1}999999'
+                            and question_id < '{topic_id}0{c_grade_id + 1}999999'
                             ORDER BY question_id
                             LIMIT 5;
                             """
@@ -1679,11 +1680,12 @@ class KidQuestionDAO:
             return {'error': str(e)}
         finally:
             connection.close()
+
     @staticmethod
     def create_kq(kid):
         # Database interaction logic here (insert into the 'sessions' table)
         connection = get_db_connection()
-        print('kid--',kid)
+        print('kid--', kid)
         query = f"""INSERT INTO kid_question (kid_id, last_question_math, last_question_ck)
 VALUES ({kid['kid_id']}, '10{kid['grade_id']}', '30{kid['grade_id']}') ON CONFLICT (kid_id) DO NOTHING ; """
         cursor = connection.cursor()
@@ -1914,7 +1916,7 @@ GROUP BY kid_id, question_id;"""
         try:
             answered_questions = SubSubjectDAO.get_kid_all_time_questions(kid_id)
         except:
-            answered_questions=[]
+            answered_questions = []
         print(f'answered_questions: {answered_questions}')
         counts = defaultdict(int)
         # Iterate through the data and count the occurrences of each sub_subject_name
@@ -1927,6 +1929,7 @@ GROUP BY kid_id, question_id;"""
             if count < all_questions:
                 kid_statistics[sub_subject_name] = [count, all_questions]
         return kid_statistics
+
 
 class WhitelistUsersDAO:
     @staticmethod
@@ -1968,7 +1971,7 @@ class WhitelistUsersDAO:
             else:
                 raise Exception('user not exists in the white list')
         except Exception as e:
-            return {'status':'error', 'message': str(e)}
+            return {'status': 'error', 'message': str(e)}
         finally:
             connection.close()
 
@@ -1987,19 +1990,18 @@ class WhitelistUsersDAO:
         finally:
             connection.close()
 
-
     @staticmethod
-    def delete_user( email):
+    def delete_user(email):
         query = f"DELETE FROM whitelist_users WHERE email ='{email}'"
         connection = get_db_connection()
         cursor = connection.cursor()
         try:
             cursor.execute(query)
             connection.commit()
-            return {'status':'success', 'message': f"{email} deleted"}
+            return {'status': 'success', 'message': f"{email} deleted"}
 
         except Exception as e:
-            return {'status':'error', 'message': str(e)}
+            return {'status': 'error', 'message': str(e)}
 
         finally:
             connection.close()
@@ -2016,13 +2018,14 @@ class WhitelistUsersDAO:
             if len(result) != 0:
                 user = User(*result)
                 if user.allowed_service == 'thinking':
-                    return {'status':'success'}
+                    return {'status': 'success'}
             else:
                 return False
         except Exception as e:
-            return {'status':'error', 'message': str(e)}
+            return {'status': 'error', 'message': str(e)}
         finally:
             connection.close()
+
 
 class SendEmail:
     @staticmethod
@@ -2037,7 +2040,7 @@ WHERE kid_id = {kid_id}"""
             # {{tempates.get_kid_all_time_questions}}
             cursor.execute(query)
             result = cursor.fetchall()
-            subject= 'questions'
+            subject = 'questions'
             cursor.execute(f''' select distinct email,parents.first_name,kids.first_name from parents
 	parents  join kids 
 	on
@@ -2045,38 +2048,39 @@ WHERE kid_id = {kid_id}"""
 	where parents.parent_id =(SELECT parent_id from kids
 where kid_id = {kid_id}) and kids.kid_id={kid_id}''')
             data = dict(zip(['email', 'parent_name', 'kid_name'], cursor.fetchone()))
-     
+            r=''
             if result == 100:
-                data['number_of_quesstions']=100
-                r = send_api_mail_with_template(to_address=data['email'],subject=subject,values=data)
+                data['number_of_quesstions'] = 100
+                r = send_api_mail_with_template(to_address=data['email'], subject=subject, values=data)
             elif result == 200:
-                data['number_of_quesstions']=200
-                r = send_api_mail_with_template(to_address=data['email'],subject=subject,values=data)
+                data['number_of_quesstions'] = 200
+                r = send_api_mail_with_template(to_address=data['email'], subject=subject, values=data)
             elif result == 500:
-                data['number_of_quesstions']=500
-                r = send_api_mail_with_template(to_address=data['email'],subject=subject,values=data)
+                data['number_of_quesstions'] = 500
+                r = send_api_mail_with_template(to_address=data['email'], subject=subject, values=data)
             elif result == 750:
-                data['number_of_quesstions']=750
-                r = send_api_mail_with_template(to_address=data['email'],subject=subject,values=data)
+                data['number_of_quesstions'] = 750
+                r = send_api_mail_with_template(to_address=data['email'], subject=subject, values=data)
             elif result == 1000:
-                data['number_of_quesstions']=1000
-                r = send_api_mail_with_template(to_address=data['email'],subject=subject,values=data)
+                data['number_of_quesstions'] = 1000
+                r = send_api_mail_with_template(to_address=data['email'], subject=subject, values=data)
             elif result == 1500:
-                data['number_of_quesstions']=1500
-                r = send_api_mail_with_template(to_address=data['email'],subject=subject,values=data) 
+                data['number_of_quesstions'] = 1500
+                r = send_api_mail_with_template(to_address=data['email'], subject=subject, values=data)
             return r
-        
+
         except Exception as e:
             return {'message': str(e)}
         finally:
             connection.close()
+
     @staticmethod
     def send_email_5_in_row(kid_id):
         connection = get_db_connection()
         cursor = connection.cursor()
         try:
             # {{tempates.get_kid_all_time_questions}}
-            subject= '5row'
+            subject = '5row'
             cursor.execute(f''' select distinct email,parents.first_name,kids.first_name from parents
 	parents  join kids 
 	on
@@ -2084,7 +2088,7 @@ where kid_id = {kid_id}) and kids.kid_id={kid_id}''')
 	where parents.parent_id =(SELECT parent_id from kids
 where kid_id = {kid_id}) and kids.kid_id={kid_id}''')
             data = dict(zip(['email', 'parent_name', 'kid_name'], cursor.fetchone()))
-            r = send_api_mail_with_template(data['email'],subject,data)
+            r = send_api_mail_with_template(data['email'], subject, data)
             return r
         except Exception as e:
             return {'message': str(e)}
@@ -2092,11 +2096,11 @@ where kid_id = {kid_id}) and kids.kid_id={kid_id}''')
             connection.close()
 
     @staticmethod
-    def send_email_subject_90(kid_id,sub_subject):
+    def send_email_subject_90(kid_id, sub_subject):
         connection = get_db_connection()
         cursor = connection.cursor()
         try:
-            subject= '90+'
+            subject = '90+'
             cursor.execute(f''' select distinct email,parents.first_name,kids.first_name from parents
 	parents  join kids 
 	on
@@ -2105,7 +2109,7 @@ where kid_id = {kid_id}) and kids.kid_id={kid_id}''')
 where kid_id = {kid_id}) and kids.kid_id={kid_id}''')
             data = dict(zip(['email', 'parent_name', 'kid_name'], cursor.fetchone()))
             data['sub_subject_name'] = sub_subject
-            r = send_api_mail_with_template(data['email'],subject,data)
+            r = send_api_mail_with_template(data['email'], subject, data)
             return r
         except Exception as e:
             return {'message': str(e)}

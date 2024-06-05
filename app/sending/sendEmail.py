@@ -35,7 +35,7 @@ class EmailSender:
 
 # Example usage:
 if __name__ == "__main__":
-    receiver_email = 'thinkingwgsupp@gmail.com'
+    receiver_email = 'hothaifazoubi@gmail.com'
     subject = 'Test Email'
     body = 'This is a test email sent using Python.'
 
