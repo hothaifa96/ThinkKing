@@ -987,11 +987,14 @@ class QuestionDAO:
         cursor = connection.cursor()
         # Fetch the next 5 questions without their answer options based on the given question_id
         try:
-            query = f"select count(*) from questions where topic_id = {topic_id} and c_grade_id={c_grade_id} ;"
-            cursor.execute(query)
-            result = cursor.fetchall()
-            res = result[0]
-            return res[0]
+            if c_grade_id:
+                query = f"select count(*) from questions where topic_id = {topic_id} and c_grade_id={c_grade_id} ;"
+                cursor.execute(query)
+                result = cursor.fetchall()
+                res = result[0]
+                return res[0]
+            else:
+                return 0
         except Exception as e:
             print(str(e))
             return {'error': str(e)}
