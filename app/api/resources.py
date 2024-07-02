@@ -62,7 +62,7 @@ class Hello(Resource):
         happy coding
         """
 
-        return {'message': f'Ping'}
+        return {'message': f'hello the service is up'}
 
     def post(self):
         """
